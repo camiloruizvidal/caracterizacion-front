@@ -11,7 +11,11 @@ export interface IUser {
   rol: any;
 }
 
-export interface IUserDetail extends Omit<IUser, 'password'> {}
+export interface IUserDetail extends Omit<IUser, 'password'> {
+  username?: string;
+  codigoInicial?: string;
+  codigoFinal?: string;
+}
 
 export interface IRols {
   id: number;

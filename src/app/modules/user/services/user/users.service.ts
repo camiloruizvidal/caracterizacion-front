@@ -20,7 +20,7 @@ export class UsersService {
     return this.http.get<IPagination<IUserDetail>>(this.apiUrl, { params });
   }
 
-  createUser(newUser: IUser): Observable<IUserDetail> {
+  createUser(newUser: IUserDetail): Observable<IUserDetail> {
     return this.http.post<IUserDetail>(this.apiUrl, newUser);
   }
 

@@ -1,7 +1,7 @@
 import { UsersService } from '../../services/user/users.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IDocumentType, IRols, IUser } from '../../interface/user';
+import { IDocumentType, IRols, IUser, IUserDetail } from '../../interface/user';
 
 @Component({
   selector: 'app-user',
@@ -12,6 +12,7 @@ export class UserComponent implements OnInit {
   public userForm: FormGroup;
   public roles: IRols[] = [];
   public documentosTipos: IDocumentType[] = [];
+  public isSaved: Boolean = false;
 
   public get esCaracterizador(): boolean {
     const controlInicio = this.userForm.get('codigoInicial');
@@ -70,7 +71,12 @@ export class UserComponent implements OnInit {
 
   public onSubmit() {
     if (this.userForm.valid) {
-      const userData: IUser = { ...this.userForm.value };
+      this.isSaved = true;
+      let userData: IUserDetail = {
+        username: this.userForm.get('documento')?.value,
+        ...this.userForm.value,
+      };
+      console.log({ userData });
       this.usersService.createUser(userData).subscribe(
         (response) => {
           console.log('Usuario creado exitosamente', response);
@@ -84,8 +90,9 @@ export class UserComponent implements OnInit {
 
   public isInvalidInput(name: string): boolean {
     return (
-      this.userForm.get(name)?.hasError('required') &&
-      this.userForm.get(name)?.touched
-    ) || false;
+      (this.userForm.get(name)?.hasError('required') &&
+        this.userForm.get(name)?.touched) ||
+      false
+    );
   }
 }

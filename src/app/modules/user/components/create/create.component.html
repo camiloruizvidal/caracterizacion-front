@@ -177,11 +177,20 @@
         </div>
         <div class="col-md-12 pt-5">
           <button
+            *ngIf="!isSaved"
             type="submit"
             class="btn btn-primary"
-            [disabled]="userForm.invalid"
+            [disabled]="userForm.invalid || isSaved"
           >
             Guardar Usuario
+          </button>
+          <button
+            *ngIf="isSaved"
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="true"
+          >
+            Guardando Usuario...
           </button>
         </div>
       </form>
