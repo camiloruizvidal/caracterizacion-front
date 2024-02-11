@@ -13,7 +13,7 @@ import { LoginModule } from './modules/login/login.module';
     AppRoutingModule,
     PacientesModule,
     UserModule,
-    LoginModule,
+    LoginModule
   ],
   providers: [],
   bootstrap: [AppComponent],
