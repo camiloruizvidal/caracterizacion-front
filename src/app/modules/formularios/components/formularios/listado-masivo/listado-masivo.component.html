@@ -1,30 +1,59 @@
-<h1>Tarjetas registradas</h1>
-<h2>Las tarjetas registradas se suben a las 12:00 AM o de forma manual.</h2>
-<button class="btn btn-primary">Cargar tarjetas que no se han subido</button>
-<table *ngIf="forms" class="table table-hover">
-  <thead>
-    <tr>
-      <th>Estado</th>
-      <th>Version de tarjeta</th>
-      <th>Codigo asignado</th>
-      <th>Personas registradas</th>
-      <th>Fecha de registro</th>
-      <th>Fecha de envío</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let form of forms.data">
-      <td>{{ form.status }}</td>
-      <td>{{ form.data.version }}</td>
-      <td>{{ form.data.code }}</td>
-      <td>{{ form.data.data.personCard.length }}</td>
-      <td>{{ form.data.dateRegister | date : "YYYY-MM-dd hh:mm a" }}</td>
-      <td>{{ form.createdAt | date : "YYYY-MM-dd hh:mm a" }}</td>
-    </tr>
-  </tbody>
-</table>
-<app-botones-paginacion
-  *ngIf="forms"
-  [dataPagination]="forms"
-  (pageChanged)="changePagination($event)"
-></app-botones-paginacion>
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Tarjetas registradas</h5>
+    <h6 class="card-subtitle mb-2 text-muted">
+      Las tarjetas registradas se suben a las 12:00 AM o de forma Automática.
+    </h6>
+    <div class="card-body">
+      <button class="btn btn-primary">
+        Cargar tarjetas que no se han subido
+      </button>
+      <table *ngIf="forms" class="table table-hover">
+        <thead>
+          <tr>
+            <th>Caracterizador</th>
+            <th>Estado</th>
+            <th>Version de tarjeta</th>
+            <th>Codigo asignado</th>
+            <th>Personas registradas</th>
+            <th>Fecha de registro</th>
+            <th>Fecha de envío</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let form of forms.data">
+            <td>
+              {{ form.user.nombrePrimero }}
+              {{ form.user.nombreSegundo }}
+              {{ form.user.apellidoPrimero }}
+              {{ form.user.apellidoSegundo }}
+            </td>
+            <td>{{ form.status }}</td>
+            <td>{{ form.data.version }}</td>
+            <td>{{ form.data.code }}</td>
+            <td>{{ form.data.data.personCard.length }}</td>
+            <td>
+              <i class="bi bi-calendar3"></i>
+              {{ form.data.dateRegister | date : "YYYY-MM-dd" }}<br />
+              <i class="bi bi-stopwatch"></i>
+              {{ form.data.dateRegister | date : "hh:mm a" }}
+            </td>
+            <td>
+              <i class="bi bi-calendar3"></i>
+              {{ form.createdAt | date : "YYYY-MM-dd" }}<br />
+              <i class="bi bi-stopwatch"></i>
+              {{ form.createdAt | date : "hh:mm a" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card-footer">
+    <app-botones-paginacion
+      *ngIf="forms"
+      [dataPagination]="forms"
+      (pageChanged)="changePagination($event)"
+    ></app-botones-paginacion>
+  </div>
+</div>
