@@ -1,0 +1,64 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      Registros por página
+      <select
+        [value]="dataPagination.itemsPerPage"
+        name="itemsPerPage"
+        id="itemsPerPage"
+        (change)="onItemsPerPageChange($event)"
+      >
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+    <div class="col-md-12">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li
+            class="page-item"
+            [class.disabled]="dataPagination.currentPage == 1"
+          >
+            <a
+              class="page-link"
+              (click)="changePage(dataPagination.currentPage - 1)"
+              aria-label="Previous"
+            >
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+
+          <li
+            *ngFor="let page of generatePagesArray()"
+            class="page-item"
+            [class.active]="page == dataPagination.currentPage"
+          >
+            <a class="page-link" (click)="changePage(page)">{{ page }}</a>
+          </li>
+
+          <li
+            class="page-item"
+            [class.disabled]="
+              dataPagination.currentPage == dataPagination.totalPages
+            "
+          >
+            <a
+              class="page-link"
+              (click)="changePage(dataPagination.currentPage + 1)"
+              aria-label="Next"
+            >
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="col-md-8">
+      Página {{ dataPagination.currentPage }} de
+      {{ dataPagination.totalPages }} de un total de
+      {{ dataPagination.totalItems }} registros.
+    </div>
+  </div>
+</div>
