@@ -1,0 +1,190 @@
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="row p-5">
+        <div class="col-md-6">
+          <label for="nombrePrimero">Primer Nombre</label>
+          <input
+            type="text"
+            class="form-control"
+            id="nombrePrimero"
+            formControlName="nombrePrimero"
+          />
+          <div class="invalid-feedback" *ngIf="isInvalidInput('nombrePrimero')">
+            El primer nombre es obligatorio.
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="nombreSegundo">Segundo Nombre</label>
+          <input
+            type="text"
+            class="form-control"
+            id="nombreSegundo"
+            formControlName="nombreSegundo"
+          />
+        </div>
+
+        <div class="col-md-6">
+          <label for="apellidoPrimero">Primer Apellido</label>
+          <input
+            type="text"
+            class="form-control"
+            id="apellidoPrimero"
+            formControlName="apellidoPrimero"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="isInvalidInput('apellidoPrimero')"
+          >
+            El primer apellido es obligatorio.
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="apellidoSegundo">Segundo Apellido</label>
+          <input
+            type="text"
+            class="form-control"
+            id="apellidoSegundo"
+            formControlName="apellidoSegundo"
+          />
+        </div>
+
+        <div class="col-md-4">
+          <label for="documento">Documento</label>
+          <input
+            type="text"
+            class="form-control"
+            id="documento"
+            formControlName="documento"
+          />
+          <div class="invalid-feedback" *ngIf="isInvalidInput('documento')">
+            El documento es obligatorio.
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="documentoTipoId">Tipo de Documento</label>
+          <select
+            class="form-control"
+            id="documentoTipoId"
+            formControlName="documentoTipoId"
+          >
+            <option value="">Seleccione el tipo de documento</option>
+            <option
+              *ngFor="let documentoTipo of documentosTipos"
+              [value]="documentoTipo.id"
+            >
+              {{ documentoTipo.nombre }}
+            </option>
+          </select>
+          <div
+            class="invalid-feedback"
+            *ngIf="isInvalidInput('documentoTipoId')"
+          >
+            El tipo de documento es obligatorio.
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="documentoTipoId">Roles</label>
+          <select
+            name="rolId"
+            id="rolId"
+            formControlName="rolId"
+            class="form form-control"
+            required
+          >
+            <option value="">Seleccione un rol</option>
+            <option *ngFor="let rol of roles" [value]="rol.id">
+              {{ rol.type }}
+            </option>
+          </select>
+          <div class="invalid-feedback" *ngIf="isInvalidInput('rolId')">
+            El rol es obligatorio.
+          </div>
+        </div>
+
+        <div class="col-md-6" *ngIf="esCaracterizador">
+          <label for="">Ingrese el codigo inicial</label>
+          <input
+            type="text"
+            id="codigoInicial"
+            formControlName="codigoInicial"
+            class="form form-control"
+          />
+          <div class="invalid-feedback" *ngIf="isInvalidInput('codigoInicial')">
+            El codigo inicial es obligatorio.
+          </div>
+        </div>
+
+        <div class="col-md-6" *ngIf="esCaracterizador">
+          <label for="">Ingrese el codigo final</label>
+          <input
+            type="text"
+            id="codigoFinal"
+            formControlName="codigoFinal"
+            class="form form-control"
+          />
+          <div class="invalid-feedback" *ngIf="isInvalidInput('codigoInicial')">
+            El codigo inicial es obligatorio.
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="password">Contraseña</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            formControlName="password"
+          />
+          <div class="invalid-feedback" *ngIf="isInvalidInput('password')">
+            La contraseña es obligatoria.
+          </div>
+          <div
+            *ngIf="
+              userForm.get('password')?.hasError('minlength') &&
+              userForm.get('password')?.touched
+            "
+          >
+            La contraseña debe tener al menos 6 caracteres.
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="passwordRepeat">Repita la contraseña</label>
+          <input
+            type="password"
+            class="form-control"
+            id="passwordRepeat"
+            formControlName="passwordRepeat"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="isInvalidInput('passwordRepeat')"
+          >
+            La contraseña es obligatoria.
+          </div>
+          <div
+            *ngIf="
+              userForm.get('passwordRepeat')?.hasError('minlength') &&
+              userForm.get('passwordRepeat')?.touched
+            "
+          >
+            La contraseña debe tener al menos 6 caracteres.
+          </div>
+        </div>
+        <div class="col-md-12 pt-5">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="userForm.invalid"
+          >
+            Guardar Usuario
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

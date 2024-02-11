@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IDocumentType, IRols, IUser, IUserDetail } from '../../interface/user';
 import { Observable } from 'rxjs';
+import { IPagination } from 'src/app/helpers/interface/interface';
 
 @Injectable({
   providedIn: 'root',
@@ -11,9 +12,12 @@ export class UsersService {
 
   constructor(private http: HttpClient) {}
 
-  getUsers(page: number = 1, pageSize: number = 10): Observable<any> {
+  getUsers(
+    page: number = 1,
+    pageSize: number = 10
+  ): Observable<IPagination<IUserDetail>> {
     const params = { page: page.toString(), pageSize: pageSize.toString() };
-    return this.http.get<IUserDetail[]>(this.apiUrl, { params });
+    return this.http.get<IPagination<IUserDetail>>(this.apiUrl, { params });
   }
 
   createUser(newUser: IUser): Observable<IUserDetail> {

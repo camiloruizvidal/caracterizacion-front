@@ -1,1 +1,42 @@
-<p>list works!</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <a routerLink="/users/create" class="btn btn-primary">
+        <i class="bi bi-pencil-square"></i>
+        <i class="bi bi-person-add"></i>
+        Nuevo usuario
+      </a>
+    </div>
+    <div class="col-md-12">
+      <table *ngIf="usersPagination" class="table table-hover w-100">
+        <thead>
+          <tr>
+            <th>Opciones</th>
+            <th>Documento</th>
+            <th>Nombre</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of usersPagination.data">
+            <td>
+              <a
+                [routerLink]="'/users/update/' + user.id"
+                class="btn btn-success"
+              >
+                <i class="bi bi-pencil-square"></i>
+                Editar
+              </a>
+            </td>
+            <td>{{ user.documento }}</td>
+            <td>
+              {{ user.nombrePrimero }}
+              {{ user.nombreSegundo }}
+              {{ user.apellidoPrimero }}
+              {{ user.apellidoSegundo }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

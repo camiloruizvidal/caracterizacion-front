@@ -7,6 +7,8 @@ export interface IUser {
   apellidoSegundo?: string;
   documento: string;
   documentoTipoId: number;
+  rolId: number;
+  rol: any;
 }
 
 export interface IUserDetail extends Omit<IUser, 'password'> {}
