@@ -1,19 +1,19 @@
 <h1>Tarjetas registradas</h1>
-<table *ngIf="forms" class="table table-hover" style="width: 100%">
+<table *ngIf="forms" class="table table-hover">
   <thead>
     <tr>
+      <th>Estado</th>
       <th>Version de tarjeta</th>
       <th>Codigo asignado</th>
-      <th>Estado</th>
       <th>Fecha de registro</th>
       <th>Fecha de envío</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let form of forms.data">
+      <td>{{ form.status }}</td>
       <td>{{ form.data.version }}</td>
       <td>{{ form.data.code }}</td>
-      <td>{{ form.status }}</td>
       <td>{{ form.data.dateRegister | date : "YYYY-MM-dd hh:mm a" }}</td>
       <td>{{ form.createdAt | date : "YYYY-MM-dd hh:mm a" }}</td>
     </tr>
