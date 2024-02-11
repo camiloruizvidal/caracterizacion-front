@@ -4,6 +4,7 @@
     <tr>
       <th>Version de tarjeta</th>
       <th>Codigo asignado</th>
+      <th>Estado</th>
       <th>Fecha de registro</th>
       <th>Fecha de envío</th>
     </tr>
@@ -12,9 +13,14 @@
     <tr *ngFor="let form of forms.data">
       <td>{{ form.data.version }}</td>
       <td>{{ form.data.code }}</td>
+      <td>{{ form.status }}</td>
       <td>{{ form.data.dateRegister | date : "YYYY-MM-dd hh:mm a" }}</td>
       <td>{{ form.createdAt | date : "YYYY-MM-dd hh:mm a" }}</td>
     </tr>
   </tbody>
 </table>
-<app-botones-paginacion *ngIf="forms" [dataPagination]="forms"></app-botones-paginacion>
+<app-botones-paginacion
+  *ngIf="forms"
+  [dataPagination]="forms"
+  (pageChanged)="changePagination($event)"
+></app-botones-paginacion>

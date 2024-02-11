@@ -17,23 +17,23 @@ export class BotonesPaginacionComponent implements OnInit {
   public currentPage: number = 1;
 
   public ngOnInit(): void {
-    this.itemsPerPage = this.dataPagination.itemsPerPage;
-    this.currentPage = this.dataPagination.currentPage;
+    this.itemsPerPage = Number(this.dataPagination.itemsPerPage);
+    this.currentPage = Number(this.dataPagination.currentPage);
   }
 
   public changePage(newPage: number): void {
     this.currentPage = newPage;
     this.pageChanged.emit({
-      itemsPerPage: this.itemsPerPage,
-      currentPage: this.currentPage,
+      itemsPerPage: Number(this.itemsPerPage),
+      currentPage: Number(this.currentPage),
     });
   }
 
   public onItemsPerPageChange(event: Event): void {
     this.itemsPerPage = Number((event.target as HTMLSelectElement).value);
     this.pageChanged.emit({
-      itemsPerPage: this.itemsPerPage,
-      currentPage: this.currentPage,
+      itemsPerPage: Number(this.itemsPerPage),
+      currentPage: Number(this.currentPage),
     });
   }
 

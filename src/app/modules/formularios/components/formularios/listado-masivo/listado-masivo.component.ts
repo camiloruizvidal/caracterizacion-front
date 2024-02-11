@@ -15,9 +15,18 @@ export class ListadoMasivoComponent implements OnInit {
     this.loadForms();
   }
 
-  public loadForms() {
-    this.formulariosService.obtenerFormularios().subscribe(response =>{
-      this.forms = response
-    })
+  public loadForms(page: number = 1, pageSize: number = 10): void {
+    this.formulariosService
+      .obtenerFormularios(page, pageSize)
+      .subscribe((response) => {
+        this.forms = response;
+      });
+  }
+
+  public changePagination(value: {
+    itemsPerPage: number;
+    currentPage: number;
+  }): void {
+    this.loadForms(value.currentPage, value.itemsPerPage);
   }
 }
