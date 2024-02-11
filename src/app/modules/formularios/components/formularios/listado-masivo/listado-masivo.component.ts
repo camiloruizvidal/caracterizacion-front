@@ -9,7 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ListadoMasivoComponent implements OnInit {
   public forms!: IPagination<any>;
-  constructor(private formulariosService: FormulariosService) {}
+
+  constructor(
+    private formulariosService: FormulariosService,
+  ) {}
 
   ngOnInit(): void {
     this.loadForms();
@@ -29,4 +32,5 @@ export class ListadoMasivoComponent implements OnInit {
   }): void {
     this.loadForms(value.currentPage, value.itemsPerPage);
   }
+
 }

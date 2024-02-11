@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { PacientesModule } from './modules/pacientes/pacientes.module';
 import { UserModule } from './modules/user/user.module';
 import { LoginModule } from './modules/login/login.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [AppComponent],
@@ -13,7 +14,8 @@ import { LoginModule } from './modules/login/login.module';
     AppRoutingModule,
     PacientesModule,
     UserModule,
-    LoginModule
+    LoginModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent],
