@@ -21,13 +21,13 @@
             class="page-item"
             [class.disabled]="dataPagination.currentPage == 1"
           >
-            <a
+            <button
               class="page-link"
               (click)="changePage(dataPagination.currentPage - 1)"
               aria-label="Previous"
             >
               <span aria-hidden="true">&laquo;</span>
-            </a>
+            </button>
           </li>
 
           <li
@@ -35,7 +35,9 @@
             class="page-item"
             [class.active]="page == dataPagination.currentPage"
           >
-            <a class="page-link" (click)="changePage(page)">{{ page }}</a>
+            <button class="page-link" (click)="changePage(page)">
+              {{ page }}
+            </button>
           </li>
 
           <li
@@ -44,13 +46,13 @@
               dataPagination.currentPage == dataPagination.totalPages
             "
           >
-            <a
+            <button
               class="page-link"
               (click)="changePage(dataPagination.currentPage + 1)"
               aria-label="Next"
             >
               <span aria-hidden="true">&raquo;</span>
-            </a>
+            </button>
           </li>
         </ul>
       </nav>

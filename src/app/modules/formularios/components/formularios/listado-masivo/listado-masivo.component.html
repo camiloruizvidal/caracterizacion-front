@@ -5,6 +5,7 @@
       <th>Estado</th>
       <th>Version de tarjeta</th>
       <th>Codigo asignado</th>
+      <th>Personas registradas</th>
       <th>Fecha de registro</th>
       <th>Fecha de envío</th>
     </tr>
@@ -14,6 +15,7 @@
       <td>{{ form.status }}</td>
       <td>{{ form.data.version }}</td>
       <td>{{ form.data.code }}</td>
+      <td>{{ form.data.data.personCard.length }}</td>
       <td>{{ form.data.dateRegister | date : "YYYY-MM-dd hh:mm a" }}</td>
       <td>{{ form.createdAt | date : "YYYY-MM-dd hh:mm a" }}</td>
     </tr>
