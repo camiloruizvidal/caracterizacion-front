@@ -6,6 +6,7 @@ import { UserComponent } from './components/create/create.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ListComponent } from './components/list/list.component';
 import { EditComponent } from './components/edit/edit.component';
+import { HelpersModule } from 'src/app/helpers/helpers.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { EditComponent } from './components/edit/edit.component';
     CommonModule,
     ReactiveFormsModule,
     UserRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    HelpersModule
   ]
 })
 export class UserModule { }

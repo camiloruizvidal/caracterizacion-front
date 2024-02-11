@@ -17,11 +17,18 @@ export class ListComponent implements OnInit {
     this.loadPaginationUsers();
   }
 
-  private loadPaginationUsers() {
+  private loadPaginationUsers(page: number = 1, pageSize: number = 10): void {
     this.usersService
-      .getUsers()
+      .getUsers(page, pageSize)
       .subscribe((response: IPagination<IUserDetail>) => {
         this.usersPagination = response;
       });
+  }
+
+  public changePagination(value: {
+    itemsPerPage: number;
+    currentPage: number;
+  }): void {
+    this.loadPaginationUsers(value.currentPage, value.itemsPerPage);
   }
 }

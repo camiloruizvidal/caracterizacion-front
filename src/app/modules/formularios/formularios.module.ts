@@ -3,17 +3,17 @@ import { CommonModule } from '@angular/common';
 
 import { FormulariosRoutingModule } from './formularios-routing.module';
 import { ListadoMasivoComponent } from './components/formularios/listado-masivo/listado-masivo.component';
-import { BotonesPaginacionComponent } from 'src/app/helpers/components/botones-paginacion/botones-paginacion.component';
+import { HelpersModule } from 'src/app/helpers/helpers.module';
 
 
 @NgModule({
   declarations: [
-    ListadoMasivoComponent,
-    BotonesPaginacionComponent
+    ListadoMasivoComponent
   ],
   imports: [
     CommonModule,
-    FormulariosRoutingModule
+    FormulariosRoutingModule,
+    HelpersModule
   ]
 })
 export class FormulariosModule { }

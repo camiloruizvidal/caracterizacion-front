@@ -37,6 +37,11 @@
           </tr>
         </tbody>
       </table>
+      <app-botones-paginacion
+        *ngIf="usersPagination"
+        [dataPagination]="usersPagination"
+        (pageChanged)="changePagination($event)"
+      ></app-botones-paginacion>
     </div>
   </div>
 </div>
