@@ -10,7 +10,16 @@ const routes: Routes = [
   {
     path: 'forms',
     loadChildren: () =>
-      import('../app/modules/formularios/formularios.module').then((m) => m.FormulariosModule),
+      import('../app/modules/formularios/formularios.module').then(
+        (m) => m.FormulariosModule
+      ),
+  },
+  {
+    path: 'pacientes',
+    loadChildren: () =>
+      import('../app/modules/pacientes/pacientes.module').then(
+        (m) => m.PacientesModule
+      ),
   },
 ];
 

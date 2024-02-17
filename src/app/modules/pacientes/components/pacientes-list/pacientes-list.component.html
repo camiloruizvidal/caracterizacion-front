@@ -1,0 +1,65 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Registro de pacientes</h5>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="btn-group" role="group">
+            <a routerLink="/users/create" class="btn btn-primary">
+              <i class="bi bi-person-add"></i>
+              Nuevo paciente
+            </a>
+            <button
+              (click)="changeShowUpload(true)"
+              class="btn btn-success"
+            >
+              <i class="bi bi-file-earmark-arrow-up"></i>
+              Carga masiva
+            </button>
+          </div>
+        </div>
+        <div class="col-md-12" *ngIf="isShowUpload">
+          
+        </div>
+        <div class="col-md-12">
+          <table *ngIf="patientPagination" class="table table-hover w-100">
+            <thead>
+              <tr>
+                <th>Opciones</th>
+                <th>Documento</th>
+                <th>Nombre</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let paciente of patientPagination.data">
+                <td>
+                  <a
+                    [routerLink]="'/pacientes/update/' + paciente.id"
+                    class="btn btn-success"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                    Editar
+                  </a>
+                </td>
+                <td>{{ paciente.documento_numero }}</td>
+                <td>
+                  {{ paciente.nombre_primero }}
+                  {{ paciente.nombre_segundo }}
+                  {{ paciente.apellido_primero }}
+                  {{ paciente.apellido_segundo }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <app-botones-paginacion
+      *ngIf="patientPagination"
+      [dataPagination]="patientPagination"
+      (pageChanged)="changePagination($event)"
+    ></app-botones-paginacion>
+  </div>
+</div>

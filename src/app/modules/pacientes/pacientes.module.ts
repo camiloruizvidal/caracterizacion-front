@@ -2,16 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PacientesRoutingModule } from './pacientes-routing.module';
-import { PacientesComponent } from './components/pacientes/pacientes.component';
-
+import { PacientesListComponent } from './components/pacientes-list/pacientes-list.component';
+import { HelpersModule } from 'src/app/helpers/helpers.module';
 
 @NgModule({
-  declarations: [
-    PacientesComponent
-  ],
-  imports: [
-    CommonModule,
-    PacientesRoutingModule
-  ]
+  declarations: [PacientesListComponent],
+  imports: [CommonModule, HelpersModule, PacientesRoutingModule],
 })
-export class PacientesModule { }
+export class PacientesModule {}
