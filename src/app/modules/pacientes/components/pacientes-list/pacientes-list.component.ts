@@ -11,6 +11,7 @@ import { IPacienteId } from '../../interface/pacientes';
 export class PacientesListComponent {
   public patientPagination!: IPagination<IPacienteId>;
   public isShowUpload: boolean = false;
+  public selectedFile: File | null = null;
 
   constructor(private pacientesService: PacientesService) {}
 
@@ -29,6 +30,16 @@ export class PacientesListComponent {
       });
   }
 
+  public onUpload() {
+    if (this.selectedFile) {
+      const formData: FormData = new FormData();
+      formData.append('pacientes', this.selectedFile, 'pacientes');
+      this.pacientesService.sendFile(formData).subscribe((response) => {
+        console.log('Archivo subido:', this.selectedFile);
+      });
+    }
+  }
+
   public changePagination(value: {
     itemsPerPage: number;
     currentPage: number;
@@ -37,6 +48,10 @@ export class PacientesListComponent {
   }
 
   public changeShowUpload(isShow: boolean) {
-    this.isShowUpload = isShow
+    this.isShowUpload = isShow;
+  }
+
+  public onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
   }
 }

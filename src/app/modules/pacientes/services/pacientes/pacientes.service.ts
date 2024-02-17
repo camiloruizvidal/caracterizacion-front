@@ -11,11 +11,15 @@ export class PacientesService {
   private apiUrl = 'http://localhost:3000/api/v1/pacientes';
   constructor(private http: HttpClient) {}
 
-  getPatients(
+  public getPatients(
     page: number = 1,
     pageSize: number = 10
   ): Observable<IPagination<IPacienteId>> {
     const params = { page: page.toString(), pageSize: pageSize.toString() };
     return this.http.get<IPagination<IPacienteId>>(this.apiUrl, { params });
+  }
+
+  public sendFile(formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/carga`, formData);
   }
 }

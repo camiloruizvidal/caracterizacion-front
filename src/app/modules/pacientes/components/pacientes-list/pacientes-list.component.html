@@ -16,47 +16,57 @@
           </div>
         </div>
         <div class="col-md-12" *ngIf="isShowUpload">
-          </div>
-          <div class="col-md-12">
-            <table *ngIf="patientPagination" class="table table-hover w-100">
-              <thead>
-                <tr>
-                  <th>Opciones</th>
-                  <th>Documento</th>
-                  <th>Nombre</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let paciente of patientPagination.data">
-                  <td>
-                    <a
-                      [routerLink]="'/pacientes/update/' + paciente.id"
-                      class="btn btn-success"
-                    >
-                      <i class="bi bi-pencil-square"></i>
-                      Editar
-                    </a>
-                  </td>
-                  <td>{{ paciente.documento_numero }}</td>
-                  <td>
-                    {{ paciente.nombre_primero }}
-                    {{ paciente.nombre_segundo }}
-                    {{ paciente.apellido_primero }}
-                    {{ paciente.apellido_segundo }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <h2>Carga de Archivos</h2>
+
+          <input type="file" (change)="onFileSelected($event)" />
+
+          <button
+            class="btn btn-primary"
+            (click)="onUpload()"
+            [disabled]="!selectedFile"
+          >
+            Subir Archivo
+          </button>
+        </div>
+        <div class="col-md-12">
+          <table *ngIf="patientPagination" class="table table-hover w-100">
+            <thead>
+              <tr>
+                <th>Opciones</th>
+                <th>Documento</th>
+                <th>Nombre</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let paciente of patientPagination.data">
+                <td>
+                  <a
+                    [routerLink]="'/pacientes/update/' + paciente.id"
+                    class="btn btn-success"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                    Editar
+                  </a>
+                </td>
+                <td>{{ paciente.documento_numero }}</td>
+                <td>
+                  {{ paciente.nombre_primero }}
+                  {{ paciente.nombre_segundo }}
+                  {{ paciente.apellido_primero }}
+                  {{ paciente.apellido_segundo }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
-    <div class="card-footer">
-      <app-botones-paginacion
-        *ngIf="patientPagination"
-        [dataPagination]="patientPagination"
-        (pageChanged)="changePagination($event)"
-      ></app-botones-paginacion>
-    </div>
+  </div>
+  <div class="card-footer">
+    <app-botones-paginacion
+      *ngIf="patientPagination"
+      [dataPagination]="patientPagination"
+      (pageChanged)="changePagination($event)"
+    ></app-botones-paginacion>
   </div>
 </div>
