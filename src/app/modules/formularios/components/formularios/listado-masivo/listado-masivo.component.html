@@ -5,9 +5,34 @@
       Las tarjetas registradas se suben a las 12:00 AM o de forma Automática.
     </h6>
     <div class="card-body">
-      <button class="btn btn-primary">
-        Cargar tarjetas que no se han subido
-      </button>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="btn-group" role="group">
+            <button
+              [disabled]="isLoading"
+              class="btn btn-primary"
+              (click)="cargarTarjetasNoSubidas()"
+            >
+              <i class="bi bi-database-fill-gear"></i>
+              Cargar tarjetas
+            </button>
+            <br />
+            <a
+              [href]="exportarTarjetas"
+              target="_blank"
+              class="btn btn-success"
+            >
+              <i class="bi bi-download"></i>
+              Exportar excel
+            </a>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <span class="badge bg-warning text-dark" *ngIf="isLoading">
+            Se están procesando las tarjetas
+          </span>
+        </div>
+      </div>
       <table *ngIf="forms" class="table table-hover">
         <thead>
           <tr>

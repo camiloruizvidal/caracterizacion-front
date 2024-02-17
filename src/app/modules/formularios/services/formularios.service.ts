@@ -18,4 +18,8 @@ export class FormulariosService {
     const params = { page: page.toString(), pageSize: pageSize.toString() };
     return this.http.get<IPagination<any>>(this.apiUrl + '/backup', { params });
   }
+
+  public procesarTarjetasUltimaVersion(): Observable<any> {
+    return this.http.get<any>(this.apiUrl + '/procesar');
+  }
 }
