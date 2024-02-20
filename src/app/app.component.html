@@ -48,7 +48,11 @@
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link text-white">
+        <a
+          routerLink="/maps"
+          [class]="getActiveClass('maps')"
+          class="nav-link text-white"
+        >
           <i class="bi bi-geo-alt-fill"></i>
           Filtrar en mapa
         </a>

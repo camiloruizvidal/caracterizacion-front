@@ -21,6 +21,13 @@ const routes: Routes = [
         (m) => m.PacientesModule
       ),
   },
+  {
+    path: 'maps',
+    loadChildren: () =>
+      import('../app/modules/filtro-maps/filtro-maps.module').then(
+        (m) => m.FiltroMapsModule
+      ),
+  },
 ];
 
 @NgModule({
