@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { IFichaFmiliar } from 'src/app/helpers/interface/interface';
+import { FormulariosService } from './../../../../formularios/services/formularios.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-map',
@@ -14,19 +16,29 @@ export class MapComponent implements OnInit {
     zoomControl: true,
     scrollwheel: true,
     disableDoubleClickZoom: true
-    //maxZoom: 15,
-    //minZoom: 8
   };
 
+  constructor(private formulariosService: FormulariosService) {}
+
   ngOnInit(): void {
-    for (let i = 0; i < 10; i++) {
-      this.addMarker();
-    }
-    this.calculateCenter();
+    this.addMarker();
   }
+
+  public addMarker() {
+    this.formulariosService
+      .obtenerDatosFicha()
+      .subscribe((response: IFichaFmiliar[]) => {
+        this.markers = response.map((tarjeta: IFichaFmiliar) => ({
+          position: tarjeta.tarjetasFamiliares.ubicacion_gps
+        }));
+
+        this.calculateCenter();
+      });
+  }
+
   private calculateCenter(): void {
     if (this.markers.length === 0) {
-      this.center = { lat: 0, lng: 0 };
+      this.center = { lat: 2.4387, lng: -76.6147 };
       return;
     }
 
@@ -41,43 +53,5 @@ export class MapComponent implements OnInit {
     const avgLat = sumLat / this.markers.length;
     const avgLng = sumLng / this.markers.length;
     this.center = { lat: avgLat, lng: avgLng };
-  }
-
-  private randomPosition(
-    basePosition: google.maps.LatLngLiteral,
-    distanceInKilometers: number = 4
-  ): google.maps.LatLngLiteral {
-    const earthRadius = 6371;
-    const randomLat =
-      (Math.random() - 0.5) *
-      (distanceInKilometers / earthRadius) *
-      (360 / (2 * Math.PI));
-    const randomLng =
-      (Math.random() - 0.5) *
-      (distanceInKilometers /
-        (earthRadius * Math.cos((basePosition.lat * Math.PI) / 180))) *
-      (360 / (2 * Math.PI));
-
-    const lat = basePosition.lat + randomLat;
-    const lng = basePosition.lng + randomLng;
-
-    return { lat, lng };
-  }
-
-  addMarker() {
-    this.markers.push({
-      position: this.randomPosition(
-        {
-          lat: 2.473984,
-          lng: -76.726272
-        },
-        10
-      ),
-      label: {
-        color: 'white',
-        text: (this.markers.length + 1).toString()
-      },
-      title: 'Marker title ' + (this.markers.length + 1)
-    });
   }
 }

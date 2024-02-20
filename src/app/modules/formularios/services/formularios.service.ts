@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IPagination } from 'src/app/helpers/interface/interface';
+import { IFichaFmiliar, IPagination } from 'src/app/helpers/interface/interface';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class FormulariosService {
   private apiUrl = 'http://localhost:3000/api/v1/ficha';
@@ -21,5 +21,9 @@ export class FormulariosService {
 
   public procesarTarjetasUltimaVersion(): Observable<any> {
     return this.http.get<any>(this.apiUrl + '/procesar');
+  }
+
+  public obtenerDatosFicha(): Observable<IFichaFmiliar[]> {
+    return this.http.get<IFichaFmiliar[]>(this.apiUrl + '/detalle');
   }
 }
