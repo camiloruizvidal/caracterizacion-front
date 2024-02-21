@@ -5,7 +5,6 @@ import {
   IFichaDescripcion,
   IFichaYDescripcion
 } from 'src/app/helpers/interface/interface';
-import * as html2pdf from 'html2pdf.js';
 
 @Component({
   selector: 'app-detalle',
