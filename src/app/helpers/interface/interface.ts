@@ -18,6 +18,27 @@ export interface IFichaFmiliar {
   psicosocialPersonas: IPsicosocialPersona[];
 }
 
+export interface IFichaYDescripcion {
+  ficha: IFichaFmiliar;
+  descripcion: IFichaDescripcion[];
+}
+
+export interface IFichaDescripcion {
+  id: number;
+  columnName: string;
+  orden: number;
+  label: string;
+  description: null;
+  type: string;
+  options: string;
+  default: null;
+  visibility: string;
+  required: string;
+  ficha_grupo_id: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface IPsicosocialPersona {
   id: number;
   ustedesRecibieronAyuda: null;
