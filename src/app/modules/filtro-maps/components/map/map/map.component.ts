@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import { IFichaFmiliar } from 'src/app/helpers/interface/interface';
 import { FormulariosService } from './../../../../formularios/services/formularios.service';
 import { Component, OnInit } from '@angular/core';
@@ -8,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit {
+  public cards!: IFichaFmiliar[];
   public markers: any[] = [];
   public zoom: number = 12;
   public center!: google.maps.LatLngLiteral;
@@ -28,8 +30,13 @@ export class MapComponent implements OnInit {
     this.formulariosService
       .obtenerDatosFicha()
       .subscribe((response: IFichaFmiliar[]) => {
+        this.cards = response;
         this.markers = response.map((tarjeta: IFichaFmiliar) => ({
-          position: tarjeta.tarjetasFamiliares.ubicacion_gps
+          position: tarjeta.tarjetasFamiliares.ubicacion_gps,
+          label: {
+            color: 'red'
+          },
+          title: 'India Warning Location'
         }));
 
         this.calculateCenter();

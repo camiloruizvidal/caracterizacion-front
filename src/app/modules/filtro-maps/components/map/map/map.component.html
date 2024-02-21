@@ -1,16 +1,83 @@
-<google-map
-  height="100%"
-  width="100%"
-  [zoom]="zoom"
-  [options]="options"
-  [center]="center"
->
-  <map-marker
-    *ngFor="let marker of markers"
-    [position]="marker.position"
-    [label]="marker.label"
-    [title]="marker.title"
-    [options]="marker.options"
-  >
-  </map-marker>
-</google-map>
+<div class="card full-height-card">
+  <div class="card-header">Registros</div>
+  <div class="card-body">
+    <div class="row row-full">
+      <div class="col-md-6">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <label for="filtroTipo">Seleccione un filtro</label>
+              <select
+                id="filtroTipo"
+                name="filtroTipo"
+                class="form form-control"
+              >
+                <option value="">Seleccione</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label for="busqueda">Ingrese la busqueda</label>
+              <input id="busqueda" type="text" class="form form-control" />
+            </div>
+          </div>
+          <hr />
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Detalle</th>
+                <th>C&oacute;digo</th>
+                <th>Fecha de registro</th>
+                <th>Dirección</th>
+                <th>Caracterizadas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let card of cards">
+                <td>
+                  <a
+                    [routerLink]="'/ficha/' + card.id"
+                    class="btn btn-primary"
+                  >
+                    <i class="bi bi-person-badge-fill"></i>
+                    Tarjeta
+                  </a>
+                </td>
+                <td>{{ card.codigo }}</td>
+                <td>
+                  {{ card.fecha_registro | date : 'YYYY-MM-dd' }}<br />
+                  {{ card.fecha_registro | date : 'HH:mm a' }}
+                </td>
+                <td>
+                  {{ card.tarjetasFamiliares.municipio }}
+                  <br />
+                  {{ card.tarjetasFamiliares.direccion }}
+                </td>
+                <td>
+                  {{ card.psicosocialPersonas.length }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <google-map
+          height="100%"
+          width="100%"
+          [zoom]="zoom"
+          [options]="options"
+          [center]="center"
+        >
+          <map-marker
+            *ngFor="let marker of markers"
+            [position]="marker.position"
+            [label]="marker.label"
+            [options]="marker.options"
+            [title]="marker.title"
+          >
+          </map-marker>
+        </google-map>
+      </div>
+    </div>
+  </div>
+</div>
