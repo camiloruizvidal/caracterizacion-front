@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IDocumentType, IRols, IUser, IUserDetail } from '../../interface/user';
+import { IDocumentType, IRols, IUserDetail } from '../../interface/user';
 import { Observable } from 'rxjs';
 import { IPagination } from 'src/app/helpers/interface/interface';
+import { environment } from 'enviroment/enviroment';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class UsersService {
-  private apiUrl = 'http://localhost:3000/api/v1/usuarios';
+  private apiUrl = `${environment.apiUrl}/v1/usuarios`;
 
   constructor(private http: HttpClient) {}
 

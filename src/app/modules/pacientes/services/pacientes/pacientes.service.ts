@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { IPacienteId } from '../../interface/pacientes';
 import { IPagination } from 'src/app/helpers/interface/interface';
 import { Observable } from 'rxjs';
+import { environment } from 'enviroment/enviroment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PacientesService {
-  private apiUrl = 'http://localhost:3000/api/v1/pacientes';
+  private apiUrl = `${environment.apiUrl}/v1/pacientes`;
   constructor(private http: HttpClient) {}
 
   public getPatients(

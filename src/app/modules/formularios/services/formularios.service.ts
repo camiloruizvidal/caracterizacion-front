@@ -1,13 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'enviroment/enviroment';
 import { Observable } from 'rxjs';
-import { IFichaFmiliar, IPagination } from 'src/app/helpers/interface/interface';
+import {
+  IFichaFmiliar,
+  IPagination
+} from 'src/app/helpers/interface/interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FormulariosService {
-  private apiUrl = 'http://localhost:3000/api/v1/ficha';
+  private apiUrl = `${environment.apiUrl}/v1/ficha`;
 
   constructor(private http: HttpClient) {}
 

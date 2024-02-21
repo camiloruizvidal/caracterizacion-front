@@ -1,11 +1,12 @@
 import { IPagination } from 'src/app/helpers/interface/interface';
 import { FormulariosService } from './../../../services/formularios.service';
 import { Component, OnInit } from '@angular/core';
+import { environment } from 'enviroment/enviroment';
 
 @Component({
   selector: 'app-listado-masivo',
   templateUrl: './listado-masivo.component.html',
-  styleUrls: ['./listado-masivo.component.scss'],
+  styleUrls: ['./listado-masivo.component.scss']
 })
 export class ListadoMasivoComponent implements OnInit {
   public isLoading: boolean = false;
@@ -23,11 +24,11 @@ export class ListadoMasivoComponent implements OnInit {
       totalItems: 1,
       currentPage: 1,
       totalPages: 1,
-      itemsPerPage: 10,
+      itemsPerPage: 10
     };
     this.formulariosService
       .obtenerFormularios(page, pageSize)
-      .subscribe((response) => {
+      .subscribe(response => {
         this.forms = response;
       });
   }
@@ -39,7 +40,7 @@ export class ListadoMasivoComponent implements OnInit {
     this.loadForms(value.currentPage, value.itemsPerPage);
   }
   public sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
   public async cargarTarjetasNoSubidas(): Promise<void> {
     this.isLoading = true;
@@ -58,6 +59,6 @@ export class ListadoMasivoComponent implements OnInit {
   }
 
   get exportarTarjetas(): string {
-    return 'http://localhost:3000/api/v1/ficha/informecompleto';
+    return `${environment.apiUrl}/v1/ficha/informecompleto`;
   }
 }
