@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   IFichaDescripcion,
-  IFichaYDescripcion
+  IFichaYDescripcion,
+  IPsicosocialPersona
 } from 'src/app/helpers/interface/interface';
 
 @Component({
@@ -34,21 +35,53 @@ export class DetalleComponent implements OnInit {
       });
   }
 
-  public getLabel(key: string): IFichaDescripcion | null {
+  public getLabelDescription(key: string): IFichaDescripcion | null {
     const value = this.fichaFamiliar.descripcion.find(
       descripcion => descripcion.columnName === key
     );
     return value || null;
   }
 
+  public getLabelForm(key: string): IFichaDescripcion | null {
+    const value = this.fichaFamiliar.descripcion.find(descripcion => {
+      return descripcion.columnName === key;
+    });
+    return value || null;
+  }
+
+  private snakeCaseToCamelCase(text: string) {
+    return text.replace(/_([a-z])/g, function (match, group1) {
+      return group1.toUpperCase();
+    });
+  }
+
   public getKeys(object: any): string[] {
-    return Object.keys(object);
+    const keysNotInclude = [
+      'id',
+      'personaId',
+      'fichaId',
+      'created_at',
+      'updated_at',
+      'persona'
+    ];
+    const keys = Object.keys(object);
+    return keys.filter(key => !keysNotInclude.includes(key));
+  }
+
+  public getKeysPerson(object: IPsicosocialPersona): string[] {
+    const keysNotInclude = ['id', 'created_at', 'updated_at'];
+    const keys = Object.keys(object.persona);
+    return keys.filter(key => !keysNotInclude.includes(key));
   }
 
   public getValue(objectData: any, key: string): any {
+    let value = objectData[key];
     if (key == 'ubicacion_gps') {
-      return `Longitud: ${objectData[key].lng}, latitud: ${objectData[key].lat}.`;
+      value = `Longitud: ${objectData[key].lng}, latitud: ${objectData[key].lat}.`;
     }
-    return objectData[key];
+    if (value === null) {
+      value = '-';
+    }
+    return value;
   }
 }
