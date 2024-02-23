@@ -44,12 +44,10 @@ export class DetalleComponent implements OnInit {
 
   public getLabelForm(key: string): IFichaDescripcion | undefined {
     const keyName = this.snakeCaseToCamelCase(key);
-    const value = this.fichaFamiliar.descripcion.find(
+    return this.fichaFamiliar.descripcion.find(
       descripcion =>
         this.snakeCaseToCamelCase(descripcion.columnName) === keyName
     );
-    console.log({ value, key });
-    return value;
   }
 
   private snakeCaseToCamelCase(text: string) {
