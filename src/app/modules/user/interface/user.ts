@@ -9,6 +9,7 @@ export interface IUser {
   documentoTipoId: number;
   rolId: number;
   rol: any;
+  inactivo: boolean;
 }
 
 export interface IUserDetail extends Omit<IUser, 'password'> {

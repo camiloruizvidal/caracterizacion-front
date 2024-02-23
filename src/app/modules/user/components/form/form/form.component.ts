@@ -56,7 +56,8 @@ export class FormComponent implements OnInit {
       documentoTipoId: ['', Validators.required],
       rolId: ['', Validators.required],
       codigoInicial: [''],
-      codigoFinal: ['']
+      codigoFinal: [''],
+      inactivo: [false, Validators.required]
     });
   }
 
@@ -64,6 +65,11 @@ export class FormComponent implements OnInit {
     this.loadRols();
     this.loadDocumentsTypes();
     this.loadUser();
+  }
+
+  public onInactivoChange(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value === 'true';
+    this.userForm.get('inactivo')?.setValue(value);
   }
 
   private loadUser(): void {
@@ -112,7 +118,6 @@ export class FormComponent implements OnInit {
   }
 
   public onSubmit() {
-    console.log({ valid: this.userForm.valid, x: this.userForm });
     if (this.userForm.valid) {
       this.isSaved = true;
       const userData: IUserDetail = {

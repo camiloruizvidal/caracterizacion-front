@@ -106,6 +106,21 @@
           </div>
         </div>
 
+        <div class="col-md-4">
+          <label for="inactivo">Estado</label>
+          <select
+            name="inactivo"
+            id="inactivo"
+            formControlName="inactivo"
+            class="form form-control"
+            (change)="onInactivoChange($event)"
+            required
+          >
+            <option [value]="false">Activo</option>
+            <option [value]="true">Inactivo</option>
+          </select>
+        </div>
+
         <div class="col-md-6" *ngIf="esCaracterizador && isCreate">
           <label for="">Ingrese el codigo inicial</label>
           <input
