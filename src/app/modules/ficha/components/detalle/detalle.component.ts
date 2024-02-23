@@ -42,11 +42,14 @@ export class DetalleComponent implements OnInit {
     return value || null;
   }
 
-  public getLabelForm(key: string): IFichaDescripcion | null {
-    const value = this.fichaFamiliar.descripcion.find(descripcion => {
-      return descripcion.columnName === key;
-    });
-    return value || null;
+  public getLabelForm(key: string): IFichaDescripcion | undefined {
+    const keyName = this.snakeCaseToCamelCase(key);
+    const value = this.fichaFamiliar.descripcion.find(
+      descripcion =>
+        this.snakeCaseToCamelCase(descripcion.columnName) === keyName
+    );
+    console.log({ value, key });
+    return value;
   }
 
   private snakeCaseToCamelCase(text: string) {
