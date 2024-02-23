@@ -6,6 +6,8 @@ import {
   IFichaYDescripcion,
   IPsicosocialPersona
 } from 'src/app/helpers/interface/interface';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-detalle',
@@ -25,6 +27,18 @@ export class DetalleComponent implements OnInit {
 
   public ngOnInit(): void {
     this.cargarFichas();
+  }
+
+  public generatePdf() {
+    const elementToPrint: HTMLElement = document.getElementById(
+      'tarjetas'
+    ) as HTMLElement;
+    html2canvas(elementToPrint, { scale: 2 }).then(canvas => {
+      const pdf = new jsPDF();
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 211, 298);
+      pdf.setFontSize(12);
+      pdf.save('Caracterizacion.pdf');
+    });
   }
 
   private cargarFichas(): void {

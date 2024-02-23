@@ -1,6 +1,7 @@
-<div class="card" *ngIf="fichaFamiliar">
+<button (click)="generatePdf()" class="btn btn-success">Generar PDF</button>
+<div class="card" *ngIf="fichaFamiliar" id="tarjetas">
   <div class="card-header">Detalle de la tarjeta familiar</div>
-  <div class="card-body" #contenidoPDF>
+  <div class="card-body">
     <h1>Datos de la ficha</h1>
     <table
       class="table table-hover table-responsive table-sm table-light table-striped"
