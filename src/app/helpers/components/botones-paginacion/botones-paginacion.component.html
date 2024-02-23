@@ -1,66 +1,74 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      Registros por página
-      <select
-        [value]="dataPagination.itemsPerPage"
-        name="itemsPerPage"
-        id="itemsPerPage"
-        (change)="onItemsPerPageChange($event)"
-      >
-        <option value="10">10</option>
-        <option value="20">20</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-      </select>
-    </div>
-    <div class="col-md-12">
-      <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          <li
-            class="page-item"
-            [class.disabled]="dataPagination.currentPage == 1"
+<div class="row">
+  <div class="col-md-12">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <button
+            class="page-link"
+            [disabled]="dataPagination.currentPage === 1"
+            (click)="changePage(1)"
           >
+            <i class="bi bi-chevron-bar-left"></i>
+          </button>
+        </li>
+        <li class="page-item">
+          <button
+            class="page-link"
+            [disabled]="dataPagination.currentPage === 1"
+            (click)="changePage(dataPagination.currentPage - 1)"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+        </li>
+        <ng-container *ngFor="let page of getPages()">
+          <li class="page-item">
             <button
               class="page-link"
-              (click)="changePage(dataPagination.currentPage - 1)"
-              aria-label="Previous"
+              [class.active]="page === dataPagination.currentPage"
+              (click)="changePage(page)"
             >
-              <span aria-hidden="true">&laquo;</span>
-            </button>
-          </li>
-
-          <li
-            *ngFor="let page of generatePagesArray()"
-            class="page-item"
-            [class.active]="page == dataPagination.currentPage"
-          >
-            <button class="page-link" (click)="changePage(page)">
               {{ page }}
             </button>
           </li>
-
-          <li
-            class="page-item"
-            [class.disabled]="
-              dataPagination.currentPage == dataPagination.totalPages
+        </ng-container>
+        <li class="page-item">
+          <button
+            class="page-link"
+            [disabled]="
+              dataPagination.currentPage === dataPagination.totalPages
             "
+            (click)="changePage(dataPagination.currentPage + 1)"
           >
-            <button
-              class="page-link"
-              (click)="changePage(dataPagination.currentPage + 1)"
-              aria-label="Next"
-            >
-              <span aria-hidden="true">&raquo;</span>
-            </button>
-          </li>
-        </ul>
-      </nav>
-    </div>
-    <div class="col-md-8">
-      Página {{ dataPagination.currentPage }} de
-      {{ dataPagination.totalPages }} de un total de
-      {{ dataPagination.totalItems }} registros.
-    </div>
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </li>
+        <li class="page-item">
+          <button
+            class="page-link"
+            [disabled]="
+              dataPagination.currentPage === dataPagination.totalPages
+            "
+            (click)="changePage(dataPagination.totalPages)"
+          >
+            <i class="bi bi-chevron-bar-right"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="col-md-1">
+      Regitros por página:
+  </div>
+  <div class="col-md-3">
+    <select
+      class="form-control"
+      id="itemsPerPage"
+      [(ngModel)]="itemsPerPage"
+      (change)="onItemsPerPageChange($event)"
+    >
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="20">20</option>
+    </select>
   </div>
 </div>
