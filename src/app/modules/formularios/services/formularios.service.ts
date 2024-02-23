@@ -28,16 +28,16 @@ export class FormulariosService {
   }
 
   public obtenerDatosFicha(filtro: {
-    fechaInicio: string;
-    fechaFin: string;
-    usuarioId: string;
-    municipio: string;
+    fechaInicio?: string;
+    fechaFin?: string;
+    usuarioId?: string;
+    municipio?: string;
   }): Observable<IFichaFmiliar[]> {
     const params = new HttpParams()
-      .set('fechaInicio', filtro.fechaInicio)
-      .set('fechaFin', filtro.fechaFin)
-      .set('usuarioId', filtro.usuarioId)
-      .set('municipio', filtro.municipio);
+      .set('fechaInicio', filtro.fechaInicio ?? '')
+      .set('fechaFin', filtro.fechaFin ?? '')
+      .set('usuarioId', filtro.usuarioId ?? '')
+      .set('municipio', filtro.municipio ?? '');
 
     return this.http.get<IFichaFmiliar[]>(this.apiUrl + '/detalle', { params });
   }
