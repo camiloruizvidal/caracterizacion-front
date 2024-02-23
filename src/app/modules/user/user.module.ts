@@ -7,12 +7,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { ListComponent } from './components/list/list.component';
 import { EditComponent } from './components/edit/edit.component';
 import { HelpersModule } from 'src/app/helpers/helpers.module';
+import { FormComponent } from './components/form/form/form.component';
 
 @NgModule({
   declarations: [
     UserComponent,
     ListComponent,
-    EditComponent
+    EditComponent,
+    FormComponent
   ],
   imports: [
     CommonModule,

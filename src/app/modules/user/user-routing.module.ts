@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { UserComponent } from './components/create/create.component';
 import { ListComponent } from './components/list/list.component';
+import { EditComponent } from './components/edit/edit.component';
 
 const routes: Routes = [{
   path: '',
@@ -11,7 +12,7 @@ const routes: Routes = [{
   component: UserComponent
 },{
   path: 'update/:id',
-  component: UserComponent
+  component: EditComponent
 }];
 
 @NgModule({
