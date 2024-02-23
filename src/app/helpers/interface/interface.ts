@@ -10,6 +10,17 @@ export interface IFichaFmiliar {
   id: number;
   version: number;
   usuario_creacion_id: number;
+  usuario_creacion: {
+    id: number;
+    username: string;
+    nombrePrimero: string;
+    nombreSegundo: string;
+    apellidoPrimero: string;
+    apellidoSegundo: string;
+    documento: string;
+    documentoTipoId: number;
+    rolId: number;
+  };
   codigo: number;
   fecha_registro: Date;
   created_at: Date;

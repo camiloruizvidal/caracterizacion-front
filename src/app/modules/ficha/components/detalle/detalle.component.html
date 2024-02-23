@@ -2,13 +2,16 @@
   <div class="card-header">Detalle de la tarjeta familiar</div>
   <div class="card-body" #contenidoPDF>
     <h1>Datos de la ficha</h1>
-    <table class="table table-hover table-responsive table-sm table-light table-striped">
+    <table
+      class="table table-hover table-responsive table-sm table-light table-striped"
+    >
       <thead>
         <tr>
           <th>Versi&oacute;n</th>
           <th>C&oacute;digo</th>
           <th>Fecha de registro</th>
           <th>Fecha de creaci&oacute;n</th>
+          <th>Caracterizador</th>
         </tr>
       </thead>
       <tbody>
@@ -17,12 +20,27 @@
           <td>{{ fichaFamiliar.ficha.codigo }}</td>
           <td>{{ fichaFamiliar.ficha.fecha_registro }}</td>
           <td>{{ fichaFamiliar.ficha.created_at }}</td>
+          <td>
+            <a
+              [routerLink]="[
+                '/users/update/' + fichaFamiliar.ficha.usuario_creacion.id
+              ]"
+              routerLinkActive="router-link-active"
+            >
+              {{ fichaFamiliar.ficha.usuario_creacion.nombrePrimero }}
+              {{ fichaFamiliar.ficha.usuario_creacion.nombreSegundo }}
+              {{ fichaFamiliar.ficha.usuario_creacion.apellidoPrimero }}
+              {{ fichaFamiliar.ficha.usuario_creacion.apellidoSegundo }}
+            </a>
+          </td>
         </tr>
       </tbody>
     </table>
 
     <h1>Tarjeta familiar</h1>
-    <table class="table table-hover table-responsive table-sm table-light table-striped">
+    <table
+      class="table table-hover table-responsive table-sm table-light table-striped"
+    >
       <tbody>
         <ng-container
           *ngFor="let item of getKeys(fichaFamiliar.ficha.tarjetasFamiliares)"
@@ -38,7 +56,9 @@
     </table>
 
     <h1>Registros personales</h1>
-    <table class="table table-hover table-responsive table-sm table-light table-striped">
+    <table
+      class="table table-hover table-responsive table-sm table-light table-striped"
+    >
       <tbody>
         <ng-container
           *ngFor="let item of fichaFamiliar.ficha.psicosocialPersonas"
@@ -56,7 +76,9 @@
     </table>
 
     <h1>Registros Psicosociales</h1>
-    <table class="table table-hover table-responsive table-sm table-light table-striped">
+    <table
+      class="table table-hover table-responsive table-sm table-light table-striped"
+    >
       <tbody>
         <ng-container
           *ngFor="let psicosocial of fichaFamiliar.ficha.psicosocialPersonas"

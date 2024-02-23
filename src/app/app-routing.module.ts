@@ -22,7 +22,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'maps',
+    path: 'ficha',
     loadChildren: () =>
       import('../app/modules/filtro-maps/filtro-maps.module').then(
         m => m.FiltroMapsModule
