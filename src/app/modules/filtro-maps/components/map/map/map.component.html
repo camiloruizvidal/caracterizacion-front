@@ -4,23 +4,81 @@
     <div class="row row-full">
       <div class="col-md-6">
         <div class="container-fluid">
-          <div class="row">
-            <div class="col-12">
-              <label for="filtroTipo">Seleccione un filtro</label>
-              <select
-                id="filtroTipo"
-                name="filtroTipo"
+          <form [formGroup]="miFormulario" class="row">
+            <div class="col-md-6">
+              <label for="fechaInicio">Fecha de inicio</label>
+              <input
+                id="fechaInicio"
+                formControlName="fechaInicio"
+                type="text"
                 class="form form-control"
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="fechaFin">Fecha de fin</label>
+              <input
+                id="fechaFin"
+                formControlName="fechaFin"
+                type="text"
+                class="form form-control"
+              />
+            </div>
+            <div class="col-md-12">
+              <label for="usuarioId">Filtrar por caracterizador</label>
+              <select
+                class="form form-control"
+                id="usuarioId"
+                name="usuarioId"
+                formControlName="usuarioId"
               >
-                <option value="">Seleccione</option>
-                <option value="fecha">Fecha</option>
+                <option value="">Todos</option>
+                <option *ngFor="let user of users" [value]="user.id">
+                  {{ user.nombrePrimero }}
+                  {{ user.nombreSegundo }}
+                  {{ user.apellidoPrimero }}
+                  {{ user.apellidoSegundo }}
+                </option>
               </select>
             </div>
-            <div class="col-12">
-              <label for="busqueda">Ingrese la busqueda</label>
-              <input id="busqueda" type="text" class="form form-control" />
+            <div class="col-md-12">
+              <label for="municipio">Filtrar por municipio</label>
+              <select
+                class="form form-control"
+                formControlName="municipio"
+                id="municipio"
+                name="municipio"
+              >
+                <option value="">Todos</option>
+                <option
+                  *ngFor="let municipality of municipalities"
+                  [value]="municipality.value"
+                >
+                  {{ municipality.option }}
+                </option>
+              </select>
             </div>
-          </div>
+            <div class="col-md-12 pt-3">
+              <div class="btn-group" role="group">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  type="submit"
+                  (click)="enviarFormulario()"
+                >
+                  <i class="bi bi-search"></i>
+                  Buscar
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-success"
+                  (click)="reiniciarForm()"
+                >
+                  <i class="bi bi-arrow-clockwise"></i>
+                  Reiniciar
+                </button>
+              </div>
+            </div>
+          </form>
           <hr />
           <table class="table table-hover">
             <thead>
@@ -35,10 +93,7 @@
             <tbody>
               <tr *ngFor="let card of cards">
                 <td>
-                  <a
-                    [routerLink]="'/ficha/' + card.id"
-                    class="btn btn-primary"
-                  >
+                  <a [routerLink]="'/ficha/' + card.id" class="btn btn-primary">
                     <i class="bi bi-person-badge-fill"></i>
                     Tarjeta
                   </a>

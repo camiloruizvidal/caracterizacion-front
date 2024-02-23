@@ -215,3 +215,8 @@ export interface UbicacionGps {
   lat: number;
   lng: number;
 }
+
+export interface ISelect {
+  value: string;
+  option: string;
+}

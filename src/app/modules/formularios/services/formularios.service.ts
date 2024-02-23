@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'enviroment/enviroment';
 import { Observable } from 'rxjs';
@@ -27,7 +27,18 @@ export class FormulariosService {
     return this.http.get<any>(this.apiUrl + '/procesar');
   }
 
-  public obtenerDatosFicha(): Observable<IFichaFmiliar[]> {
-    return this.http.get<IFichaFmiliar[]>(this.apiUrl + '/detalle');
+  public obtenerDatosFicha(filtro: {
+    fechaInicio: string;
+    fechaFin: string;
+    usuarioId: string;
+    municipio: string;
+  }): Observable<IFichaFmiliar[]> {
+    const params = new HttpParams()
+      .set('fechaInicio', filtro.fechaInicio)
+      .set('fechaFin', filtro.fechaFin)
+      .set('usuarioId', filtro.usuarioId)
+      .set('municipio', filtro.municipio);
+
+    return this.http.get<IFichaFmiliar[]>(this.apiUrl + '/detalle', { params });
   }
 }

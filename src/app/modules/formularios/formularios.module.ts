@@ -13,7 +13,6 @@ import { HelpersModule } from 'src/app/helpers/helpers.module';
   imports: [
     CommonModule,
     FormulariosRoutingModule,
-    HelpersModule,
     HelpersModule
   ]
 })

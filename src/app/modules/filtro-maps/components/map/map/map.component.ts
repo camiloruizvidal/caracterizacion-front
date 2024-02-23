@@ -1,7 +1,11 @@
+import { ISelect } from './../../../../../helpers/interface/interface';
+import { DataService } from './../../../services/data/data.service';
 import * as moment from 'moment';
 import { IFichaFmiliar } from 'src/app/helpers/interface/interface';
 import { FormulariosService } from './../../../../formularios/services/formularios.service';
 import { Component, OnInit } from '@angular/core';
+import { IUser } from 'src/app/modules/user/interface/user';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-map',
@@ -9,7 +13,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit {
+  public miFormulario: FormGroup;
   public cards!: IFichaFmiliar[];
+  public municipalities: ISelect[] = [];
+  public users: IUser[] = [];
   public markers: any[] = [];
   public zoom: number = 12;
   public center!: google.maps.LatLngLiteral;
@@ -20,15 +27,42 @@ export class MapComponent implements OnInit {
     disableDoubleClickZoom: true
   };
 
-  constructor(private formulariosService: FormulariosService) {}
-
-  ngOnInit(): void {
-    this.addMarker();
+  constructor(
+    private formulariosService: FormulariosService,
+    private dataService: DataService,
+    private formBuilder: FormBuilder
+  ) {
+    this.miFormulario = this.formBuilder.group({
+      fechaInicio: ['', Validators.required],
+      fechaFin: ['', Validators.required],
+      usuarioId: ['', Validators.required],
+      municipio: ['', Validators.required]
+    });
   }
 
-  public addMarker() {
+  ngOnInit(): void {
+    this.enviarFormulario();
+    this.loadMunicipalities();
+    this.loadUsers();
+  }
+
+  private loadMunicipalities(): void {
+    this.dataService
+      .getMunicipalities()
+      .subscribe((municipalities: ISelect[]) => {
+        this.municipalities = municipalities;
+      });
+  }
+
+  private loadUsers(): void {
+    this.dataService.getUsers().subscribe((users: IUser[]) => {
+      this.users = users;
+    });
+  }
+
+  public enviarFormulario() {
     this.formulariosService
-      .obtenerDatosFicha()
+      .obtenerDatosFicha(this.miFormulario.value)
       .subscribe((response: IFichaFmiliar[]) => {
         this.cards = response;
         this.markers = response.map((tarjeta: IFichaFmiliar) => ({
@@ -60,5 +94,9 @@ export class MapComponent implements OnInit {
     const avgLat = sumLat / this.markers.length;
     const avgLng = sumLng / this.markers.length;
     this.center = { lat: avgLat, lng: avgLng };
+  }
+
+  public reiniciarForm(): void {
+    this.miFormulario.reset();
   }
 }
