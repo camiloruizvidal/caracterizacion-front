@@ -135,7 +135,7 @@
                 let indexPsicosocual = index
               "
             >
-              <tr *ngIf="getLabelForm(keyPsicosocial)?.label">
+              <tr *ngIf="isVisible(fichaFamiliar.ficha.psicosocialPersonas[indexPerson], keyPsicosocial)">
                 <th class="text-title">
                   {{ indexPsicosocual + 1 }})
                   {{ getLabelForm(keyPsicosocial)?.label }}

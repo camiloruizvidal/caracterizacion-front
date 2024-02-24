@@ -8,6 +8,7 @@ import {
 } from 'src/app/helpers/interface/interface';
 import { jsPDF } from 'jspdf';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ValidationsService } from 'src/app/helpers/services/validations.service';
 
 @Component({
   selector: 'app-detalle',
@@ -22,7 +23,8 @@ export class DetalleComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
-    private detalleService: DetalleService
+    private detalleService: DetalleService,
+    private validationsService: ValidationsService
   ) {
     this.id = Number(this.route.snapshot.params['id']);
   }
@@ -58,17 +60,12 @@ export class DetalleComponent implements OnInit {
   }
 
   public getLabelForm(key: string): IFichaDescripcion | undefined {
-    const keyName = this.snakeCaseToCamelCase(key);
+    const keyName = this.validationsService.snakeCaseToCamelCase(key);
     return this.fichaFamiliar.descripcion.find(
       descripcion =>
-        this.snakeCaseToCamelCase(descripcion.columnName) === keyName
+        this.validationsService.snakeCaseToCamelCase(descripcion.columnName) ===
+        keyName
     );
-  }
-
-  private snakeCaseToCamelCase(text: string) {
-    return text.replace(/_([a-z])/g, function (match, group1) {
-      return group1.toUpperCase();
-    });
   }
 
   public getKeys(object: any): string[] {
@@ -126,5 +123,41 @@ export class DetalleComponent implements OnInit {
     return `${index + 1} de ${
       this.fichaFamiliar.ficha.psicosocialPersonas.length
     }`;
+  }
+
+  public isVisible(
+    psicosocialPersona: IPsicosocialPersona,
+    keyPsicosocial: string
+  ): boolean {
+    let isVisibility: boolean = true;
+    const value: any = this.getLabelForm(keyPsicosocial);
+
+    if (value === undefined) {
+      return true;
+    }
+    let valueVisibility: any;
+    try {
+      valueVisibility = JSON.parse(value?.visibility ?? '');
+    } catch (error) {
+      valueVisibility = true;
+    }
+    if (typeof valueVisibility === 'boolean') {
+      return valueVisibility;
+    }
+
+    if (valueVisibility === '') {
+      return true;
+    }
+
+    if (typeof valueVisibility === 'object') {
+      value.visibility = valueVisibility;
+      return this.validationsService.isVisibility(
+        value,
+        psicosocialPersona,
+        true
+      );
+    }
+
+    return true;
   }
 }
