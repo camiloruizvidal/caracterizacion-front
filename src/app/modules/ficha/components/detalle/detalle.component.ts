@@ -93,14 +93,20 @@ export class DetalleComponent implements OnInit {
   public getValue(objectData: any, key: string): string | SafeHtml {
     let value = objectData[key];
     if (key == 'ubicacion_gps') {
+      const url =
+        'https://www.google.com/maps/dir//' +
+        `${objectData[key].lat},` +
+        `${objectData[key].lng}/` +
+        `@${objectData[key].lat},` +
+        `${objectData[key].lng}z` +
+        '/data=!4m2!4m1!3e0?entry=ttu';
+
       value = `Longitud: ${objectData[key].lng}<br>Latitud: ${objectData[key].lat}.
               <br>
-              <a
-                target="_blank"
-                href="https://www.google.com/maps/@${objectData[key].lat},${objectData[key].lng}z?entry=ttu"
-              >
+              <a target="_blank" href="${url}">
+                <i class="bi bi-globe-americas"></i>
                 ir al sitio
-              </a>`
+              </a>`;
       value = this.sanitizer.bypassSecurityTrustHtml(value);
     }
     if (value === null) {
