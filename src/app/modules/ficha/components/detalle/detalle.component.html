@@ -52,7 +52,7 @@
           <tr *ngIf="getLabelDescription(item)?.label">
             <th>{{ getLabelDescription(item)?.label }}</th>
             <td>
-              {{ getValue(fichaFamiliar.ficha.tarjetasFamiliares, item) }}
+              <div [innerHTML]="getValue(fichaFamiliar.ficha.tarjetasFamiliares, item)"></div>
             </td>
           </tr>
         </ng-container>

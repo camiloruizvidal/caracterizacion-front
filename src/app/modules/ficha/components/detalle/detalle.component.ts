@@ -7,6 +7,7 @@ import {
   IPsicosocialPersona
 } from 'src/app/helpers/interface/interface';
 import { jsPDF } from 'jspdf';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-detalle',
@@ -20,6 +21,7 @@ export class DetalleComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private sanitizer: DomSanitizer,
     private detalleService: DetalleService
   ) {
     this.id = Number(this.route.snapshot.params['id']);
@@ -88,10 +90,18 @@ export class DetalleComponent implements OnInit {
     return keys.filter(key => !keysNotInclude.includes(key));
   }
 
-  public getValue(objectData: any, key: string): any {
+  public getValue(objectData: any, key: string): string | SafeHtml {
     let value = objectData[key];
     if (key == 'ubicacion_gps') {
-      value = `Longitud: ${objectData[key].lng}, latitud: ${objectData[key].lat}.`;
+      value = `Longitud: ${objectData[key].lng}<br>Latitud: ${objectData[key].lat}.
+              <br>
+              <a
+                target="_blank"
+                href="https://www.google.com/maps/@${objectData[key].lat},${objectData[key].lng}z?entry=ttu"
+              >
+                ir al sitio
+              </a>`
+      value = this.sanitizer.bypassSecurityTrustHtml(value);
     }
     if (value === null) {
       value = '-';
