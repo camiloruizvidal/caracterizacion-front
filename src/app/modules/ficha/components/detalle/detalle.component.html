@@ -103,7 +103,7 @@
 <div class="d-none">
   <div *ngIf="fichaFamiliar" class="p-4" id="tarjetas" #tarjetas>
     <h1>Datos de la ficha</h1>
-    <table class="table table-light table-striped">
+    <table>
       <thead>
         <tr>
           <th>Versi&oacute;n</th>
@@ -132,7 +132,7 @@
     </table>
 
     <h1>Tarjeta familiar</h1>
-    <table class="aswer-question table table-light table-striped">
+    <table>
       <tbody>
         <ng-container
           *ngFor="let item of getKeys(fichaFamiliar.ficha.tarjetasFamiliares)"
@@ -148,7 +148,7 @@
     </table>
 
     <h1>Registros personales</h1>
-    <table class="aswer-question table table-light table-striped">
+    <table>
       <tbody>
         <ng-container
           *ngFor="let item of fichaFamiliar.ficha.psicosocialPersonas"
@@ -166,7 +166,7 @@
     </table>
 
     <h1>Registros Psicosociales</h1>
-    <table class="aswer-question table table-light table-striped">
+    <table>
       <tbody>
         <ng-container
           *ngFor="let psicosocial of fichaFamiliar.ficha.psicosocialPersonas"

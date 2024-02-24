@@ -7,7 +7,6 @@ import {
   IPsicosocialPersona
 } from 'src/app/helpers/interface/interface';
 import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-detalle',
@@ -32,22 +31,13 @@ export class DetalleComponent implements OnInit {
 
   public generatePdf() {
     let pdf = new jsPDF('p', 'pt', 'letter');
-    console.log(this.elementRef.nativeElement);
+    pdf.setLanguage('es-CO');
     pdf.html(this.elementRef.nativeElement, {
       callback: pdf => {
         pdf.save('prueba.pdf');
-      }
+      },
+      margin: [30, 0, 30, 0]
     });
-    //const elementToPrint: HTMLElement = document.getElementById(
-    //  'tarjetas'
-    //) as HTMLElement;
-    //html2canvas(elementToPrint, { scale: 2 }).then(canvas => {
-    //  const pdf = new jsPDF('p', 'pt', 'letter');
-    //  pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 211, 298);
-    //  pdf.setFontSize(12);
-    //  //pdf.save('Caracterizacion.pdf');
-    //  pdf.save();
-    //});
   }
 
   private cargarFichas(): void {

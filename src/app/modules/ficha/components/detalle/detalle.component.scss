@@ -2,6 +2,12 @@
   width: 16.192cm;
   max-height: 100%;
   font-size: 9px;
+  table, tr, td, th {
+    border: 1px solid;
+  }
+  td {
+    padding: 5px 20px 5px 20px;
+  }
   h1 {
     font-size: 15px;
   }
