@@ -1,235 +1,279 @@
-<button (click)="generatePdf()" class="btn btn-success mb-4">
-  <i class="bi bi-file-pdf-fill"></i>
-  Generar PDF
-</button>
-<div class="card" *ngIf="fichaFamiliar && false">
-  <div class="card-header">Detalle de la tarjeta familiar</div>
-  <div class="card-body">
-    <h1>Datos de la ficha</h1>
-    <table
-      class="table table-hover table-responsive table-sm table-light table-striped"
-    >
-      <caption>
-        Informacion de la ficha
-      </caption>
-      <thead>
-        <tr>
-          <th>Versi&oacute;n</th>
-          <th>C&oacute;digo</th>
-          <th>Fecha de registro</th>
-          <th>Fecha de creaci&oacute;n</th>
-          <th>Caracterizador</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{ fichaFamiliar.ficha.version }}</td>
-          <td>{{ fichaFamiliar.ficha.codigo }}</td>
-          <td>{{ fichaFamiliar.ficha.fecha_registro }}</td>
-          <td>{{ fichaFamiliar.ficha.created_at }}</td>
-          <td>
-            <a
-              [routerLink]="[
-                '/users/update/' + fichaFamiliar.ficha.usuario_creacion.id
-              ]"
-              routerLinkActive="router-link-active"
-            >
-              {{ fichaFamiliar.ficha.usuario_creacion.nombrePrimero }}
-              {{ fichaFamiliar.ficha.usuario_creacion.nombreSegundo }}
-              {{ fichaFamiliar.ficha.usuario_creacion.apellidoPrimero }}
-              {{ fichaFamiliar.ficha.usuario_creacion.apellidoSegundo }}
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h1>Tarjeta familiar</h1>
-    <table
-      class="table table-hover table-responsive table-sm table-light table-striped"
-    >
-      <caption>
-        Tabla familiar
-      </caption>
-      <tbody>
-        <ng-container
-          *ngFor="let item of getKeys(fichaFamiliar.ficha.tarjetasFamiliares)"
-        >
-          <tr *ngIf="getLabelDescription(item)?.label">
-            <th>{{ getLabelDescription(item)?.label }}</th>
-            <td>
-              <div
-                [innerHTML]="
-                  getValue(fichaFamiliar.ficha.tarjetasFamiliares, item)
-                "
-              ></div>
-            </td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
+<div *ngIf="!fichaFamiliar" class="text-center">
+  <div class="spinner-border text-primary" role="status">
+    <span class="sr-only"></span>
   </div>
+  Cargando ficha. Por favor espere...
 </div>
 
-<ng-container
-  *ngFor="
-    let psicosocialPersonas of fichaFamiliar.ficha.psicosocialPersonas;
-    let indexPerson = index
-  "
->
-  <div class="card mt-4" *ngIf="fichaFamiliar">
-    <div class="card-header">
-      {{ getNumberPage(indexPerson) }} -Detalle de la ficha personal
-    </div>
+<div *ngIf="fichaFamiliar">
+  <button (click)="generatePdf()" class="btn btn-success mb-4">
+    <i class="bi bi-file-pdf-fill"></i>
+    Generar PDF
+  </button>
+  <h1>Registros de la ficha</h1>
+  <div class="card">
+    <div class="card-header">Detalle de la tarjeta familiar</div>
     <div class="card-body">
-      <h1>Registros personales</h1>
-
+      <h2>Datos de la ficha</h2>
       <table
         class="table table-hover table-responsive table-sm table-light table-striped"
       >
         <caption>
-          Tabla con los registros de una persona
+          Informacion de la ficha
+        </caption>
+        <thead>
+          <tr>
+            <th>Versi&oacute;n</th>
+            <th>C&oacute;digo</th>
+            <th>Fecha de registro</th>
+            <th>Fecha de creaci&oacute;n</th>
+            <th>Caracterizador</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ fichaFamiliar.ficha.version }}</td>
+            <td>{{ fichaFamiliar.ficha.codigo }}</td>
+            <td>{{ fichaFamiliar.ficha.fecha_registro }}</td>
+            <td>{{ fichaFamiliar.ficha.created_at }}</td>
+            <td>
+              <a
+                [routerLink]="[
+                  '/users/update/' + fichaFamiliar.ficha.usuario_creacion.id
+                ]"
+                routerLinkActive="router-link-active"
+              >
+                {{ fichaFamiliar.ficha.usuario_creacion.nombrePrimero }}
+                {{ fichaFamiliar.ficha.usuario_creacion.nombreSegundo }}
+                {{ fichaFamiliar.ficha.usuario_creacion.apellidoPrimero }}
+                {{ fichaFamiliar.ficha.usuario_creacion.apellidoSegundo }}
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Tarjeta familiar</h2>
+      <table
+        class="table table-hover table-responsive table-sm table-light table-striped"
+      >
+        <caption>
+          Tabla familiar
         </caption>
         <tbody>
           <ng-container
-            *ngFor="
-              let keyPerson of getKeysPerson(psicosocialPersonas);
-              let indexPersons = index
-            "
+            *ngFor="let item of getKeys(fichaFamiliar.ficha.tarjetasFamiliares)"
           >
-            <tr *ngIf="getLabelForm(keyPerson)?.label">
-              <th>
-                {{ indexPersons + 1 }}) {{ getLabelForm(keyPerson)?.label }}
+            <tr *ngIf="getLabelDescription(item)?.label">
+              <th class="text-title">
+                {{ getLabelDescription(item)?.label }}
               </th>
-              <td>
-                {{ getValue(psicosocialPersonas.persona, keyPerson) }}
+              <td class="text-end">
+                <div
+                  [innerHTML]="
+                    getValue(fichaFamiliar.ficha.tarjetasFamiliares, item)
+                  "
+                ></div>
               </td>
             </tr>
           </ng-container>
         </tbody>
       </table>
-      <h1>Registros Psicosociales</h1>
-      <table
-        class="table table-hover table-responsive table-sm table-light table-striped"
-      >
-        <caption>
-          Tabla del formulario psicosocial
-        </caption>
-        <tbody>
-          <ng-container
-            *ngFor="let psicosocial of fichaFamiliar.ficha.psicosocialPersonas"
-          >
+    </div>
+  </div>
+  <h1>Registros de las personas</h1>
+  <ng-container
+    *ngFor="
+      let psicosocialPersonas of fichaFamiliar.ficha.psicosocialPersonas;
+      let indexPerson = index
+    "
+  >
+    <div class="card mt-4">
+      <div class="card-header">
+        {{ getNumberPage(indexPerson) }} - Detalle de la ficha personal
+      </div>
+      <div class="card-body">
+        <h2>Registros personales</h2>
+
+        <table
+          class="table table-hover table-responsive table-sm table-light table-striped"
+        >
+          <caption>
+            Tabla con los registros de una persona
+          </caption>
+          <tbody>
             <ng-container
               *ngFor="
-                let keyPsicosocial of getKeys(psicosocial);
+                let keyPerson of getKeysPerson(psicosocialPersonas);
+                let indexPersons = index
+              "
+            >
+              <tr *ngIf="getLabelForm(keyPerson)?.label">
+                <th class="text-title">
+                  {{ indexPersons + 1 }}) {{ getLabelForm(keyPerson)?.label }}
+                </th>
+                <td class="text-end">
+                  {{ getValue(psicosocialPersonas.persona, keyPerson) }}
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+        <h2>Registros Psicosociales</h2>
+        <table
+          class="table table-hover table-responsive table-sm table-light table-striped"
+        >
+          <caption>
+            Tabla del formulario psicosocial
+          </caption>
+          <tbody>
+            <ng-container
+              *ngFor="
+                let keyPsicosocial of getKeys(
+                  fichaFamiliar.ficha.psicosocialPersonas[indexPerson]
+                );
                 let indexPsicosocual = index
               "
             >
               <tr *ngIf="getLabelForm(keyPsicosocial)?.label">
-                <th>
+                <th class="text-title">
                   {{ indexPsicosocual + 1 }})
                   {{ getLabelForm(keyPsicosocial)?.label }}
                 </th>
-                <td>
-                  {{ getValue(psicosocial, keyPsicosocial) }}
+                <td class="text-end">
+                  {{
+                    getValue(
+                      fichaFamiliar.ficha.psicosocialPersonas[indexPerson],
+                      keyPsicosocial
+                    )
+                  }}
                 </td>
               </tr>
-              </ng-container
-            >
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+  <div class="d-none">
+    <div class="p-4" id="tarjetas" #tarjetas>
+      <h1>Registros de la ficha</h1>
+
+      <h2>Datos de la ficha</h2>
+      <table
+        class="table table-hover table-responsive table-sm table-light table-striped"
+      >
+        <thead>
+          <tr>
+            <th>Versi&oacute;n</th>
+            <th>C&oacute;digo</th>
+            <th>Fecha de registro</th>
+            <th>Fecha de creaci&oacute;n</th>
+            <th>Caracterizador</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ fichaFamiliar.ficha.version }}</td>
+            <td>{{ fichaFamiliar.ficha.codigo }}</td>
+            <td>{{ fichaFamiliar.ficha.fecha_registro }}</td>
+            <td>{{ fichaFamiliar.ficha.created_at }}</td>
+            <td>
+              {{ fichaFamiliar.ficha.usuario_creacion.nombrePrimero }}
+              {{ fichaFamiliar.ficha.usuario_creacion.nombreSegundo }}
+              {{ fichaFamiliar.ficha.usuario_creacion.apellidoPrimero }}
+              {{ fichaFamiliar.ficha.usuario_creacion.apellidoSegundo }}
+              -
+              {{ fichaFamiliar.ficha.usuario_creacion.documento }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Tarjeta familiar</h2>
+      <table
+        class="table table-hover table-responsive table-sm table-light table-striped"
+      >
+        <tbody>
+          <ng-container
+            *ngFor="let item of getKeys(fichaFamiliar.ficha.tarjetasFamiliares)"
+          >
+            <tr *ngIf="getLabelDescription(item)?.label">
+              <th class="text-title">
+                {{ getLabelDescription(item)?.label }}
+              </th>
+              <td class="text-end">
+                {{
+                  getValue(fichaFamiliar.ficha.tarjetasFamiliares, item, false)
+                }}
+              </td>
+            </tr>
           </ng-container>
         </tbody>
       </table>
+
+      <h1>Registros de las personas</h1>
+      <ng-container
+        *ngFor="
+          let psicosocialPersonas of fichaFamiliar.ficha.psicosocialPersonas;
+          let indexPerson = index
+        "
+      >
+        <h2>Registros personales</h2>
+
+        <table
+          class="table table-hover table-responsive table-sm table-light table-striped"
+        >
+          <tbody>
+            <ng-container
+              *ngFor="
+                let keyPerson of getKeysPerson(psicosocialPersonas);
+                let indexPersons = index
+              "
+            >
+              <tr *ngIf="getLabelForm(keyPerson)?.label">
+                <th class="text-title">
+                  {{ indexPersons + 1 }}) {{ getLabelForm(keyPerson)?.label }}
+                </th>
+                <td class="text-end">
+                  {{ getValue(psicosocialPersonas.persona, keyPerson, false) }}
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+        <h2>Registros Psicosociales</h2>
+        <table
+          class="table table-hover table-responsive table-sm table-light table-striped"
+        >
+          <tbody>
+            <ng-container
+              *ngFor="
+                let keyPsicosocial of getKeys(
+                  fichaFamiliar.ficha.psicosocialPersonas[indexPerson]
+                );
+                let indexPsicosocual = index
+              "
+            >
+              <tr *ngIf="getLabelForm(keyPsicosocial)?.label">
+                <th class="text-title">
+                  {{ indexPsicosocual + 1 }})
+                  {{ getLabelForm(keyPsicosocial)?.label }}
+                </th>
+                <td class="text-end">
+                  {{
+                    getValue(
+                      fichaFamiliar.ficha.psicosocialPersonas[indexPerson],
+                      keyPsicosocial,
+                      false
+                    )
+                  }}
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </ng-container>
     </div>
-  </div>
-</ng-container>
-
-<div class="d-none">
-  <div *ngIf="fichaFamiliar" class="p-4" id="tarjetas" #tarjetas>
-    <h1>Datos de la ficha</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>Versi&oacute;n</th>
-          <th>C&oacute;digo</th>
-          <th>Fecha de registro</th>
-          <th>Fecha de creaci&oacute;n</th>
-          <th>Caracterizador</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{ fichaFamiliar.ficha.version }}</td>
-          <td>{{ fichaFamiliar.ficha.codigo }}</td>
-          <td>{{ fichaFamiliar.ficha.fecha_registro }}</td>
-          <td>{{ fichaFamiliar.ficha.created_at }}</td>
-          <td>
-            {{ fichaFamiliar.ficha.usuario_creacion.nombrePrimero }}
-            {{ fichaFamiliar.ficha.usuario_creacion.nombreSegundo }}
-            {{ fichaFamiliar.ficha.usuario_creacion.apellidoPrimero }}
-            {{ fichaFamiliar.ficha.usuario_creacion.apellidoSegundo }}
-            -
-            {{ fichaFamiliar.ficha.usuario_creacion.documento }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h1>Tarjeta familiar</h1>
-    <table>
-      <tbody>
-        <ng-container
-          *ngFor="let item of getKeys(fichaFamiliar.ficha.tarjetasFamiliares)"
-        >
-          <tr *ngIf="getLabelDescription(item)?.label">
-            <th class="text-title">
-              {{ getLabelDescription(item)?.label }}
-            </th>
-            <td class="text-end">
-              {{ getValue(fichaFamiliar.ficha.tarjetasFamiliares, item) }}
-            </td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
-
-    <h1>Registros personales</h1>
-    <table>
-      <tbody>
-        <ng-container
-          *ngFor="let item of fichaFamiliar.ficha.psicosocialPersonas"
-        >
-          <ng-container *ngFor="let keyPerson of getKeysPerson(item)">
-            <tr *ngIf="getLabelForm(keyPerson)?.label">
-              <th class="text-title">
-                {{ getLabelForm(keyPerson)?.label }}
-              </th>
-              <td class="text-end">
-                {{ getValue(item.persona, keyPerson) }}
-              </td>
-            </tr></ng-container
-          >
-        </ng-container>
-      </tbody>
-    </table>
-
-    <h1>Registros Psicosociales</h1>
-    <table>
-      <tbody>
-        <ng-container
-          *ngFor="let psicosocial of fichaFamiliar.ficha.psicosocialPersonas"
-        >
-          <ng-container *ngFor="let keyPsicosocial of getKeys(psicosocial)">
-            <tr *ngIf="getLabelForm(keyPsicosocial)?.label">
-              <th class="text-title">
-                {{ getLabelForm(keyPsicosocial)?.label }}
-              </th>
-              <td class="text-end">
-                {{ getValue(psicosocial, keyPsicosocial) }}
-              </td>
-            </tr></ng-container
-          >
-        </ng-container>
-      </tbody>
-    </table>
   </div>
 </div>
