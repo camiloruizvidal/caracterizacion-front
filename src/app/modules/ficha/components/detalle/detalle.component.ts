@@ -90,10 +90,14 @@ export class DetalleComponent implements OnInit {
     return keys.filter(key => !keysNotInclude.includes(key));
   }
 
-  public getValue(objectData: any, key: string, isShow: boolean = true): string | SafeHtml {
+  public getValue(
+    objectData: any,
+    key: string,
+    isShow: boolean = true
+  ): string | SafeHtml {
     let value = objectData[key];
-    if(key == 'ubicacion_gps' && !isShow) {
-      value = `Longitud: ${objectData[key].lng}. Latitud: ${objectData[key].lat}`
+    if (key == 'ubicacion_gps' && !isShow) {
+      value = `Longitud: ${objectData[key].lng}. Latitud: ${objectData[key].lat}`;
     }
     if (key == 'ubicacion_gps' && isShow) {
       const url =
