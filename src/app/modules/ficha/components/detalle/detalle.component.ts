@@ -114,4 +114,10 @@ export class DetalleComponent implements OnInit {
     }
     return value;
   }
+
+  public getNumberPage(index: number): string {
+    return `${index + 1} de ${
+      this.fichaFamiliar.ficha.psicosocialPersonas.length
+    }`;
+  }
 }
