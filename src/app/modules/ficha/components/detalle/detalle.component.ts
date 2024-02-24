@@ -1,5 +1,5 @@
 import { DetalleService } from './../../services/detalle/detalle.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   IFichaDescripcion,
@@ -15,6 +15,7 @@ import html2canvas from 'html2canvas';
   styleUrls: ['./detalle.component.scss']
 })
 export class DetalleComponent implements OnInit {
+  @ViewChild('tarjetas', { static: false }) elementRef!: ElementRef;
   private id: number;
   public fichaFamiliar!: IFichaYDescripcion;
 
@@ -30,15 +31,23 @@ export class DetalleComponent implements OnInit {
   }
 
   public generatePdf() {
-    const elementToPrint: HTMLElement = document.getElementById(
-      'tarjetas'
-    ) as HTMLElement;
-    html2canvas(elementToPrint, { scale: 2 }).then(canvas => {
-      const pdf = new jsPDF();
-      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 211, 298);
-      pdf.setFontSize(12);
-      pdf.save('Caracterizacion.pdf');
+    let pdf = new jsPDF('p', 'pt', 'letter');
+    console.log(this.elementRef.nativeElement);
+    pdf.html(this.elementRef.nativeElement, {
+      callback: pdf => {
+        pdf.save('prueba.pdf');
+      }
     });
+    //const elementToPrint: HTMLElement = document.getElementById(
+    //  'tarjetas'
+    //) as HTMLElement;
+    //html2canvas(elementToPrint, { scale: 2 }).then(canvas => {
+    //  const pdf = new jsPDF('p', 'pt', 'letter');
+    //  pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 211, 298);
+    //  pdf.setFontSize(12);
+    //  //pdf.save('Caracterizacion.pdf');
+    //  pdf.save();
+    //});
   }
 
   private cargarFichas(): void {

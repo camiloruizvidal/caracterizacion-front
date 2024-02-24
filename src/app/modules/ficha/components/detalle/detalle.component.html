@@ -1,5 +1,8 @@
-<button (click)="generatePdf()" class="btn btn-success">Generar PDF</button>
-<div class="card" *ngIf="fichaFamiliar" id="tarjetas">
+<button (click)="generatePdf()" class="btn btn-success mb-4">
+  <i class="bi bi-file-pdf-fill"></i>
+  Generar PDF
+</button>
+<div class="card" *ngIf="fichaFamiliar">
   <div class="card-header">Detalle de la tarjeta familiar</div>
   <div class="card-body">
     <h1>Datos de la ficha</h1>
@@ -88,6 +91,92 @@
             <tr *ngIf="getLabelForm(keyPsicosocial)?.label">
               <th>{{ getLabelForm(keyPsicosocial)?.label }}</th>
               <td>
+                {{ getValue(psicosocial, keyPsicosocial) }}
+              </td>
+            </tr></ng-container
+          >
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="d-none">
+  <div *ngIf="fichaFamiliar" class="p-4" id="tarjetas" #tarjetas>
+    <h1>Datos de la ficha</h1>
+    <table class="table table-light table-striped">
+      <thead>
+        <tr>
+          <th>Versi&oacute;n</th>
+          <th>C&oacute;digo</th>
+          <th>Fecha de registro</th>
+          <th>Fecha de creaci&oacute;n</th>
+          <th>Caracterizador</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ fichaFamiliar.ficha.version }}</td>
+          <td>{{ fichaFamiliar.ficha.codigo }}</td>
+          <td>{{ fichaFamiliar.ficha.fecha_registro }}</td>
+          <td>{{ fichaFamiliar.ficha.created_at }}</td>
+          <td>
+            {{ fichaFamiliar.ficha.usuario_creacion.nombrePrimero }}
+            {{ fichaFamiliar.ficha.usuario_creacion.nombreSegundo }}
+            {{ fichaFamiliar.ficha.usuario_creacion.apellidoPrimero }}
+            {{ fichaFamiliar.ficha.usuario_creacion.apellidoSegundo }}
+            -
+            {{ fichaFamiliar.ficha.usuario_creacion.documento }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h1>Tarjeta familiar</h1>
+    <table class="aswer-question table table-light table-striped">
+      <tbody>
+        <ng-container
+          *ngFor="let item of getKeys(fichaFamiliar.ficha.tarjetasFamiliares)"
+        >
+          <tr *ngIf="getLabelDescription(item)?.label">
+            <th class="text-title">{{ getLabelDescription(item)?.label }}</th>
+            <td class="text-end">
+              {{ getValue(fichaFamiliar.ficha.tarjetasFamiliares, item) }}
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+
+    <h1>Registros personales</h1>
+    <table class="aswer-question table table-light table-striped">
+      <tbody>
+        <ng-container
+          *ngFor="let item of fichaFamiliar.ficha.psicosocialPersonas"
+        >
+          <ng-container *ngFor="let keyPerson of getKeysPerson(item)">
+            <tr *ngIf="getLabelForm(keyPerson)?.label">
+              <th class="text-title">{{ getLabelForm(keyPerson)?.label }}</th>
+              <td class="text-end">
+                {{ getValue(item.persona, keyPerson) }}
+              </td>
+            </tr></ng-container
+          >
+        </ng-container>
+      </tbody>
+    </table>
+
+    <h1>Registros Psicosociales</h1>
+    <table class="aswer-question table table-light table-striped">
+      <tbody>
+        <ng-container
+          *ngFor="let psicosocial of fichaFamiliar.ficha.psicosocialPersonas"
+        >
+          <ng-container *ngFor="let keyPsicosocial of getKeys(psicosocial)">
+            <tr *ngIf="getLabelForm(keyPsicosocial)?.label">
+              <th class="text-title">
+                {{ getLabelForm(keyPsicosocial)?.label }}
+              </th>
+              <td class="text-end">
                 {{ getValue(psicosocial, keyPsicosocial) }}
               </td>
             </tr></ng-container

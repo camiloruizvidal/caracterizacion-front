@@ -48,7 +48,6 @@ export class BotonesPaginacionComponent implements OnInit {
     ) {
       pages.push(i);
     }
-    console.log({ pages });
     return pages;
   }
 }

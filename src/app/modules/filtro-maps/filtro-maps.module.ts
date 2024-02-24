@@ -5,6 +5,7 @@ import { FiltroMapsRoutingModule } from './filtro-maps-routing.module';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HelpersModule } from 'src/app/helpers/helpers.module';
 
 @NgModule({
   declarations: [MapComponent],
@@ -13,6 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     FiltroMapsRoutingModule,
     GoogleMapsModule,
     HttpClientModule,
+    HelpersModule,
     ReactiveFormsModule
   ]
 })

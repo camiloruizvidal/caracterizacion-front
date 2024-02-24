@@ -91,7 +91,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let card of cards">
+              <tr *ngFor="let card of cards.data">
                 <td>
                   <a [routerLink]="'/ficha/' + card.id" class="btn btn-primary">
                     <i class="bi bi-person-badge-fill"></i>
@@ -135,5 +135,13 @@
         </google-map>
       </div>
     </div>
+  </div>
+
+  <div class="card-footer">
+    <app-botones-paginacion
+      *ngIf="cards"
+      [dataPagination]="cards"
+      (pageChanged)="changePagination($event)"
+    ></app-botones-paginacion>
   </div>
 </div>

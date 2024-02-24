@@ -1,4 +1,7 @@
-import { ISelect } from './../../../../../helpers/interface/interface';
+import {
+  IPagination,
+  ISelect
+} from './../../../../../helpers/interface/interface';
 import { DataService } from './../../../services/data/data.service';
 import * as moment from 'moment';
 import { IFichaFmiliar } from 'src/app/helpers/interface/interface';
@@ -14,12 +17,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class MapComponent implements OnInit {
   public miFormulario: FormGroup;
-  public cards!: IFichaFmiliar[];
+  public cards!: IPagination<IFichaFmiliar>;
   public municipalities: ISelect[] = [];
   public users: IUser[] = [];
   public markers: any[] = [];
   public zoom: number = 12;
   public center!: google.maps.LatLngLiteral;
+  public page: number = 1;
+  public pageSize: number = 10;
   public options: google.maps.MapOptions = {
     mapTypeId: 'hybrid',
     zoomControl: true,
@@ -60,12 +65,22 @@ export class MapComponent implements OnInit {
     });
   }
 
-  public enviarFormulario() {
+  public changePagination(page: { itemsPerPage: number; currentPage: number }) {
+    this.enviarFormulario(page.currentPage, page.itemsPerPage);
+  }
+
+  public enviarFormulario(page: number = 1, pageSize = 10) {
+    this.page = page;
+    this.pageSize = pageSize;
     this.formulariosService
-      .obtenerDatosFicha(this.miFormulario.value)
-      .subscribe((response: IFichaFmiliar[]) => {
+      .obtenerDatosFicha({
+        ...this.miFormulario.value,
+        page: this.page,
+        pageSize: this.pageSize
+      })
+      .subscribe((response: IPagination<IFichaFmiliar>) => {
         this.cards = response;
-        this.markers = response.map((tarjeta: IFichaFmiliar) => ({
+        this.markers = response.data.map((tarjeta: IFichaFmiliar) => ({
           position: tarjeta.tarjetasFamiliares.ubicacion_gps,
           label: {
             color: 'red'
