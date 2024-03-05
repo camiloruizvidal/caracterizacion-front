@@ -10,8 +10,13 @@ export interface IUser {
   rolId: number;
   rol: any;
   inactivo: boolean;
+  codigos?: codigos[];
 }
 
+export interface codigos {
+  start: number;
+  finish: number;
+}
 export interface IUserDetail extends Omit<IUser, 'password'> {
   username?: string;
   codigoInicial?: string;
