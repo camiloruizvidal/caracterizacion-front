@@ -252,3 +252,8 @@ export enum ESteperType {
   Ruta = 'ruta_atencion',
   selectMultiple = 'select_multiple'
 }
+
+export enum EFichaTipo {
+  FichaFamliiar = 'familyCard',
+  FichaPersonal = 'personCard'
+}

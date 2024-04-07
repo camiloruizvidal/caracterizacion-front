@@ -44,6 +44,12 @@ const routes: Routes = [
     canActivate: [loginGuard]
   },
   {
+    path: 'generador',
+    loadChildren: () =>
+      import('../app/modules/generador/generador.module').then(m =>m.GeneradorModule)
+    //canActivate: [loginGuard]
+  },
+  {
     path: '',
     redirectTo: '/users',
     pathMatch: 'full'
