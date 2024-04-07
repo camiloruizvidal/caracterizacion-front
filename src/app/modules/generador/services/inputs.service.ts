@@ -13,4 +13,8 @@ export class InputsService {
   public obtenerGruposFichas(): Observable<any> {
     return this.http.get<any>(this.apiUrl + '/obtener/grupos');
   }
+
+  public guardarFormulario(data: any): Observable<any> {
+    return this.http.post(this.apiUrl + '/ficha/nueva', data);
+  }
 }

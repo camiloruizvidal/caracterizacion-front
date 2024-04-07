@@ -4107,6 +4107,10 @@ export class InputsGeneratorComponent implements OnInit {
     }
   }
 
+  private nombreColumna(steperValues: ISteperValues) {
+    
+  }
+
   public getKeys(value: any): string[] {
     const values = Object.keys(value);
     const valuesDelete = [
@@ -4143,5 +4147,9 @@ export class InputsGeneratorComponent implements OnInit {
         break;
     }
     return this.grupos.filter(grupo => grupo.ficha_tipo_id === tipoid);
+  }
+  
+  public guardarFormulario() {
+    
   }
 }
