@@ -1,24 +1,30 @@
 export interface IGruposFicha {
   id: number;
   title: string;
-  subtitle?: string;
+  subtitle?: string | null;
   orden: number;
   ficha_tipo_id: number;
 }
 
 //Formulario
 export interface IFamilyCard {
-  version: string;
-  dateLastVersion: Date;
+  isFinish: boolean;
+  version?: string;
+  dateLastVersion?: Date;
   familyCard: IStepers[];
   personCard: IStepers[];
 }
 
 export interface IStepers {
+  id?: number | string;
+  orden?: number;
   title: string;
-  subtitle?: string;
-  table: string;
-  values: ISteperValues[];
+  subtitle?: string | null;
+  table?: string;
+  ficha_tipo_id?: string | number;
+  values?: ISteperValues[];
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
 }
 
 export interface ISteperValues {
@@ -26,13 +32,16 @@ export interface ISteperValues {
   columnName: string;
   orden: number;
   label: string;
-  description: string;
-  type: ESteperType;
-  options: IOptionsCheck | IOptionsSelect[] | IOptionsSelectFilter;
-  default: boolean | string;
+  description?: string | null;
+  type: ESteperType | string;
+  options: IOptionsCheck | IOptionsSelect[] | IOptionsSelectFilter | null | any;
+  default: boolean | string | null;
   visibility: IOptionsVisibility | boolean | null;
   required: IOptionsRequired | boolean | null;
   value?: any;
+  ficha_grupo_id?: string | number | null;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }
 
 export enum ESteperType {
@@ -63,7 +72,7 @@ export interface IOptionsCheck {
 
 export interface IOptionsSelect {
   value: string;
-  option: string;
+  option: any;
 }
 
 export interface IOptionsRequired {
@@ -74,7 +83,7 @@ export interface IOptionsRequired {
 
 export interface IOptionsVisibility {
   isDepent: boolean;
-  rules: Array<IOptionsRule[]> | null;
+  rules: IOptionsRule[] | null;
   isShow: boolean;
 }
 

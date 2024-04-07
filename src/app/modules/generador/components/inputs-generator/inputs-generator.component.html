@@ -68,8 +68,7 @@
                   />
                   <label class="form-check-label" for="esRequerido">
                     Es requerido
-                  </label
-                  >
+                  </label>
                 </div>
               </div>
             </div>
@@ -80,6 +79,14 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6"></div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <pre>{{ formularioGenerado | json }}</pre>
+          <hr />
+          <pre>{{ formulario.value| json }}</pre>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
