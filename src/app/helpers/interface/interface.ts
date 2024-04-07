@@ -231,3 +231,24 @@ export interface ISelect {
   value: string;
   option: string;
 }
+
+export enum ESteperType {
+  Address = 'address',
+  Calendar = 'calendar',
+  Photo = 'photo',
+  Check = 'check',
+  Email = 'email',
+  Filter = 'filter',
+  GPS = 'gps',
+  Numbers = 'numbers',
+  Phone = 'phone',
+  Relationship = 'relationship',
+  Select = 'select',
+  SelectFilter = 'selectFilter',
+  Text = 'text',
+  TextArea = 'textarea',
+  Title = 'title',
+  SubTitle = 'subtitle',
+  Ruta = 'ruta_atencion',
+  selectMultiple = 'select_multiple'
+}
