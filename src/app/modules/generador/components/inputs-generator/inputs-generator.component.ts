@@ -2,6 +2,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   IFamilyCard,
   IGruposFicha,
+  ISteperValues,
   IStepers
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
@@ -4045,8 +4046,16 @@ export class InputsGeneratorComponent implements OnInit {
       fichaTipo: ['', Validators.required],
       grupo: ['', Validators.required],
       tipo: [''],
-      textoPregunta: ['', Validators.required],
-      esRequerido: [false]
+      esRequerido: [false],
+
+      label: ['', Validators.required], //textoPregunta: ['', Validators.required],
+      description: [null],
+      type: [''],
+      options: [null],
+      default: [null],
+      visibility: [true],
+      required: [false],
+      value: null
     });
   }
 
@@ -4069,19 +4078,70 @@ export class InputsGeneratorComponent implements OnInit {
 
   public agregar() {
     if (this.formulario.valid) {
-      const stepers: IStepers = {
-        title: '',
-        values: []
+      let index = -1;
+      const steperValues: ISteperValues = {
+        label: this.formulario.value.label,
+        type: this.formulario.value.tipo,
+        options: null,
+        default: null,
+        visibility: true,
+        required: this.formulario.value.esRequerido,
+        value: null,
       };
 
       if (this.formulario.value.fichaTipo === 'familyCard') {
-        this.formularioGenerado.familyCard.push(stepers);
+        index = this.formularioGenerado.familyCard.findIndex(
+          value => value.id === Number(this.formulario.value.grupo)
+        );
+        this.formularioGenerado.familyCard[index].values?.push(steperValues);
       } else if (this.formulario.value.fichaTipo === 'personCard') {
-        this.formularioGenerado.personCard.push(stepers);
+        index = this.formularioGenerado.personCard.findIndex(
+          value => value.id === Number(this.formulario.value.grupo)
+        );
+        this.formularioGenerado.personCard[index].values?.push(steperValues);
       }
+      debugger;
       //this.formulario.reset();
     } else {
       this.formulario.markAllAsTouched();
     }
+  }
+
+  public getKeys(value: any): string[] {
+    const values = Object.keys(value);
+    const valuesDelete = [
+      'id',
+      'columnName',
+      'createdAt',
+      'updatedAt',
+      'orden',
+      'ficha_grupo_id'
+    ];
+    return values.filter(value => !valuesDelete.includes(value));
+  }
+
+  public editar(tipo: string, index: number, value: any) {
+    console.log({ tipo, index, value });
+  }
+
+  public eliminar(tipo: string, index: number) {
+    console.log({ tipo, index });
+  }
+
+  public getValue(key: string, value: any): any {
+    return value[key] as any;
+  }
+
+  public get gruposFiltrado(): any[] {
+    let tipoid: number = 0;
+    switch (this.formulario.value.fichaTipo) {
+      case 'familyCard':
+        tipoid = 1;
+        break;
+      case 'personCard':
+        tipoid = 2;
+        break;
+    }
+    return this.grupos.filter(grupo => grupo.ficha_tipo_id === tipoid);
   }
 }

@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
       <div class="card">
         <div class="card-header">Generador de formulario dinámico</div>
         <div class="card-body">
@@ -28,7 +28,10 @@
                   required
                 >
                   <option value="">Seleccione</option>
-                  <option *ngFor="let grupo of grupos" [value]="grupo.id">
+                  <option
+                    *ngFor="let grupo of gruposFiltrado"
+                    [value]="grupo.id"
+                  >
                     {{ grupo.title }}
                   </option>
                 </select>
@@ -48,12 +51,12 @@
                 </select>
               </div>
               <div class="col-md-12">
-                <label for="textoPregunta"
+                <label for="label"
                   >Ingrese un texto para la pregunta</label
                 >
                 <input
-                  formControlName="textoPregunta"
-                  id="textoPregunta"
+                  formControlName="label"
+                  id="label"
                   class="form-control"
                   type="text"
                 />
@@ -79,12 +82,76 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="card">
+    <div class="col-md-8">
+      <div class="card card-success">
+        <div class="card-header">Tarjeta Familiar</div>
         <div class="card-body">
-          <pre>{{ formularioGenerado | json }}</pre>
-          <hr />
-          <pre>{{ formulario.value| json }}</pre>
+          <div
+            class="card mb-4"
+            *ngFor="let steper of formularioGenerado.familyCard"
+          >
+            <div class="card card-header">{{ steper.title }}</div>
+            <div class="card card-body">
+              <table>
+                <tr *ngFor="let value of steper.values; let indexValue = index">
+                  <td>
+                    {{ value.label }}
+                    <br />
+                    <div
+                      class="btn-group"
+                      role="group"
+                      aria-label="Basic example"
+                    >
+                      <button
+                        (click)="editar('familyCard', indexValue, value)"
+                        type="button"
+                        class="btn btn-primary"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        (click)="eliminar('familyCard', indexValue)"
+                        type="button"
+                        class="btn btn-danger"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                  <td>
+                    <hr />
+                    <ul>
+                      <li *ngFor="let item of getKeys(value)">
+                        <strong>{{ item }}</strong
+                        >:
+                        {{ getValue(item, value) | json }}
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 card card-success">
+        <div class="card-header">Tarjeta Personal</div>
+        <div class="card-body">
+          <div
+            class="card mb-4"
+            *ngFor="let steper of formularioGenerado.personCard"
+          >
+            <div class="card card-header">{{ steper.title }}</div>
+            <div class="card card-body">
+              <ul>
+                <li *ngFor="let value of steper.values">
+                  {{ value.label }}
+                  -
+                  {{ value.type }}
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
