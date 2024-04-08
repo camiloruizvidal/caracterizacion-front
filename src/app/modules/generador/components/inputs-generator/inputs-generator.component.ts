@@ -9,6 +9,8 @@ import { InputsService } from './../../services/inputs.service';
 import { Component, OnInit } from '@angular/core';
 import { ESteperType } from 'src/app/helpers/interface/interface';
 
+type TipoForm = 'familyCard' | 'personCard';
+
 @Component({
   selector: 'app-inputs-generator',
   templateUrl: './inputs-generator.component.html',
@@ -19,7 +21,6 @@ export class InputsGeneratorComponent implements OnInit {
   public formulario: FormGroup;
   public agregarGrupoForm: FormGroup;
   public tipos: string[] = [];
-
   public formularioGenerado!: IFamilyCard;
 
   constructor(
@@ -74,7 +75,6 @@ export class InputsGeneratorComponent implements OnInit {
 
   public agregar() {
     if (this.formulario.valid) {
-      let index = -1;
       const steperValues: ISteperValues = {
         label: this.formulario.value.label,
         type: this.formulario.value.tipo,
@@ -85,22 +85,36 @@ export class InputsGeneratorComponent implements OnInit {
         value: null
       };
 
-      if (this.formulario.value.fichaTipo === 'familyCard') {
-        index = this.formularioGenerado.familyCard.findIndex(
-          value => value.id === Number(this.formulario.value.grupo)
-        );
-        this.formularioGenerado.familyCard[index].values?.push(steperValues);
-      } else if (this.formulario.value.fichaTipo === 'personCard') {
-        index = this.formularioGenerado.personCard.findIndex(
-          value => value.id === Number(this.formulario.value.grupo)
-        );
-        this.formularioGenerado.personCard[index].values?.push(steperValues);
-      }
-      debugger;
-      //this.formulario.reset();
+      const fichaTipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
+      let index = this.agregarGrupoAForm(
+        this.formulario.value.grupo,
+        fichaTipo
+      );
+      this.formularioGenerado[fichaTipo][index].values?.push(steperValues);
+
+      this.formulario.value.label = '';
     } else {
       this.formulario.markAllAsTouched();
     }
+  }
+
+  private agregarGrupoAForm(tipoGrupo: any, tipoForm: TipoForm) {
+    let index = this.formularioGenerado[tipoForm].findIndex(
+      value => value.id === Number(this.formulario.value.grupo)
+    );
+    if (index === -1) {
+      const grupo = this.grupos.find(grupo => grupo.id === Number(tipoGrupo));
+      if (grupo) {
+        this.formularioGenerado[tipoForm].push({
+          ...grupo,
+          values: []
+        });
+        index = this.formularioGenerado[tipoForm].findIndex(
+          value => value.id === Number(this.formulario.value.grupo)
+        );
+      }
+    }
+    return index;
   }
 
   private crearNombreColumna(steperValues: ISteperValues) {}
@@ -153,7 +167,7 @@ export class InputsGeneratorComponent implements OnInit {
 
   public agregarGrupo() {
     if (this.agregarGrupoForm.valid) {
-      console.log(this.agregarGrupoForm.value)
+      console.log(this.agregarGrupoForm.value);
       this.inputsService
         .crearGrupo({
           title: this.agregarGrupoForm.value.nombreGrupo,
