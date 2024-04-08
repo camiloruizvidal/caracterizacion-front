@@ -51,9 +51,7 @@
                 </select>
               </div>
               <div class="col-md-12">
-                <label for="label"
-                  >Ingrese un texto para la pregunta</label
-                >
+                <label for="label">Ingrese un texto para la pregunta</label>
                 <input
                   formControlName="label"
                   id="label"
@@ -78,11 +76,54 @@
           </form>
         </div>
         <div class="card-footer">
-          <button class="btn btn-success" (click)="agregar()">Agregar</button>
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button class="btn btn-success" (click)="agregar()">Agregar</button>
+            <button class="btn btn-primary" (click)="guardarFormulario()">
+              Guardar Formulario
+            </button>
+          </div>
         </div>
       </div>
+
+      <div class="card mt-4">
+        <div class="card-header">Agregar grupos</div>
+        <form [formGroup]="agregarGrupoForm" (ngSubmit)="agregarGrupo()">
+          <div class="card-body">
+            <div class="col-md-12">
+              <label for="nuevoFichaTipo">Tipo de ficha</label>
+              <select
+                formControlName="nuevoFichaTipo"
+                id="nuevoFichaTipo"
+                class="form-control"
+              >
+                <option value="">Seleccione</option>
+                <option value="1">Ficha Familiar</option>
+                <option value="2">Ficha Personal</option>
+              </select>
+            </div>
+            <div class="col-md-12 mt-3">
+              <label for="nombreGrupo">Ingrese el nombre del grupo</label>
+              <input
+                type="text"
+                formControlName="nombreGrupo"
+                id="nombreGrupo"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="card-footer">
+            <button
+              type="submit"
+              [disabled]="agregarGrupoForm.invalid"
+              class="btn btn-success"
+            >
+              Agregar grupo
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-8" *ngIf="formularioGenerado !== null">
       <div class="card card-success">
         <div class="card-header">Tarjeta Familiar</div>
         <div class="card-body">
