@@ -2,12 +2,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   IFamilyCard,
   IGruposFicha,
-  ISteperValues,
-  IStepers
+  ISteperValues
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
 import { Component, OnInit } from '@angular/core';
 import { ESteperType } from 'src/app/helpers/interface/interface';
+import { v4 as uuid } from 'uuid';
 
 type TipoForm = 'familyCard' | 'personCard';
 
@@ -32,7 +32,7 @@ export class InputsGeneratorComponent implements OnInit {
       grupo: ['', Validators.required],
       tipo: [''],
       esRequerido: [false],
-
+      esVisibleSi: [false],
       label: ['', Validators.required],
       description: [null],
       type: [''],
@@ -40,7 +40,11 @@ export class InputsGeneratorComponent implements OnInit {
       default: [null],
       visibility: [true],
       required: [false],
-      value: null
+      value: null,
+      nombre_columna: [''],
+
+      fichaTipoVisible: ['', Validators.required],
+      grupoVisible: ['', Validators.required]
     });
 
     this.agregarGrupoForm = this.formBuilder.group({
@@ -82,6 +86,7 @@ export class InputsGeneratorComponent implements OnInit {
         default: null,
         visibility: true,
         required: this.formulario.value.esRequerido,
+        columnName: this.crearNombreColumna(),
         value: null
       };
 
@@ -117,7 +122,15 @@ export class InputsGeneratorComponent implements OnInit {
     return index;
   }
 
-  private crearNombreColumna(steperValues: ISteperValues) {}
+  private crearNombreColumna(): string {
+    return (
+      this.formulario.value.label
+        .normalize('NFD')
+        .toLowerCase()
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, '_') + `-${uuid()}`
+    );
+  }
 
   public getKeys(value: any): string[] {
     const values = Object.keys(value);
@@ -155,6 +168,39 @@ export class InputsGeneratorComponent implements OnInit {
         break;
     }
     return this.grupos.filter(grupo => grupo.ficha_tipo_id === tipoid);
+  }
+
+  public get gruposVisiblesFiltrado(): any[] {
+    let tipoid: number = 0;
+    switch (this.formulario.value.fichaTipoVisible) {
+      case 'familyCard':
+        tipoid = 1;
+        break;
+      case 'personCard':
+        tipoid = 2;
+        break;
+    }
+    return this.grupos.filter(grupo => grupo.ficha_tipo_id === tipoid);
+  }
+
+  public get camposVisibles(): any[] {
+    try {
+      const fichaTipo: TipoForm = this.formulario.value.fichaTipoVisible;
+
+      this.formularioGenerado[fichaTipo];
+      return (
+        this.formularioGenerado[fichaTipo].find(
+          (ficha: any) =>
+            ficha.id === Number(this.formulario.value.grupoVisible)
+        )?.values || []
+      );
+    } catch (error) {
+      return [];
+    }
+  }
+
+  public get esVisibleSi(): boolean {
+    return this.formulario.value.esVisibleSi;
   }
 
   public guardarFormulario() {

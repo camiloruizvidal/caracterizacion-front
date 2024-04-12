@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-4">
       <div class="card">
-        <div class="card-header">Generador de formulario dinámico</div>
+        <div class="card-header">Generador de formulario din&aacute;mico</div>
         <div class="card-body">
           <h1>Por favor seleccione la ficha</h1>
           <form [formGroup]="formulario">
@@ -72,6 +72,74 @@
                   </label>
                 </div>
               </div>
+              <div class="col-md-12">
+                <div class="form-check">
+                  <input
+                    formControlName="esVisibleSi"
+                    id="esVisibleSi"
+                    class="form-check-input"
+                    type="checkbox"
+                  />
+                  <label class="form-check-label" for="esVisibleSi">
+                    Visible con condici&oacute;n
+                  </label>
+                </div>
+              </div>
+              <ng-container *ngIf="esVisibleSi">
+                <hr />
+                <span class="text-bg-primary text-center">
+                  Visible con condici&oacute;n
+                </span>
+                <div>
+                  <label for="fichaTipoVisible">Tipo ficha</label>
+                  <select
+                    formControlName="fichaTipoVisible"
+                    id="fichaTipoVisible"
+                    class="form-control"
+                  >
+                    <option value="">Seleccione</option>
+                    <option value="familyCard">Ficha Familiar</option>
+                    <option value="personCard">Ficha Personal</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="grupoVisible">Seleccione el grupo</label>
+                  <select
+                    name="grupoVisible"
+                    formControlName="grupoVisible"
+                    id="grupoVisible"
+                    class="form form-control"
+                  >
+                    <option value="">Seleccione</option>
+                    <option
+                      *ngFor="let grupo of gruposVisiblesFiltrado"
+                      [value]="grupo.id"
+                    >
+                      {{ grupo.title }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label for="">Campo</label>
+                  <select name="" id="" class="form form-control">
+                    <option value="">Seleccione</option>
+                    <option
+                      *ngFor="let campos of camposVisibles"
+                      [value]="campos.columnName"
+                    >
+                      {{ campos.label }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label for="">Condicion</label>
+                  <input
+                    type="text"
+                    placeholder="En formato JSON"
+                    class="form form-control"
+                  />
+                </div>
+              </ng-container>
             </div>
           </form>
         </div>
