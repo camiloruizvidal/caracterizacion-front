@@ -157,11 +157,21 @@
             <div class="card-footer">
               <div class="btn-group" role="group" aria-label="Basic example">
                 <button
+                  *ngIf="!esEditable"
                   type="submit"
                   class="btn btn-success"
                   [disabled]="!isValidForm"
                 >
                   Agregar
+                </button>
+                <button
+                  *ngIf="esEditable"
+                  type="button"
+                  (click)="guardarEdicion()"
+                  class="btn btn-primary"
+                  [disabled]="!isValidForm"
+                >
+                  Editar
                 </button>
                 <button
                   type="button"
@@ -246,7 +256,9 @@
                       aria-label="Basic example"
                     >
                       <button
-                        (click)="editar('familyCard', indexSteper, value)"
+                        (click)="
+                          editar('familyCard', indexSteper, indexValue, value)
+                        "
                         type="button"
                         class="btn btn-primary"
                       >

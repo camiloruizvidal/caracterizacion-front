@@ -23,6 +23,8 @@ export class InputsGeneratorComponent implements OnInit {
   public agregarGrupoForm: FormGroup;
   public tipos: string[] = [];
   public formularioGenerado!: IFamilyCard;
+  public esEditable: boolean = false;
+  private indexEditar: number = -1;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -54,7 +56,7 @@ export class InputsGeneratorComponent implements OnInit {
       nombreGrupo: ['', Validators.required]
     });
   }
-
+  //#region temporal
   ngOnInit(): void {
     this.cargarFormulario(2);
     this.cargarGrupos();
@@ -79,14 +81,7 @@ export class InputsGeneratorComponent implements OnInit {
       });
   }
 
-  public get isValidForm(): boolean {
-    return (
-      this.formulario.value.fichaTipo.trim() !== '' &&
-      this.formulario.value.grupo.trim() !== '' &&
-      this.formulario.value.label.trim() !== ''
-    );
-  }
-  public agregar() {
+  public agregar(): void {
     if (this.isValidForm) {
       const steperValues: ISteperValues = {
         label: this.formulario.value.label.trim(),
@@ -162,9 +157,36 @@ export class InputsGeneratorComponent implements OnInit {
     ];
     return values.filter(value => !valuesDelete.includes(value));
   }
+  //#endregion
 
-  public editar(tipo: string, index: number, value: any) {
-    //console.log({ tipo, index, value });
+  public editar(tipo: TipoForm, index: number, indexValue: number, value: any) {
+    this.formulario.patchValue({
+      fichaTipo: tipo,
+      tipo: value.type,
+      label: value.label,
+      grupo: this.formularioGenerado[tipo][index].id
+    });
+    this.indexEditar = indexValue;
+    this.esEditable = true;
+  }
+
+  public guardarEdicion() {
+    const tipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
+
+    const indexGrupo = this.formularioGenerado[tipo].findIndex(
+      value => value.id === Number(this.formulario.value.grupo)
+    );
+
+    const values =
+      this.formularioGenerado?.[tipo]?.[indexGrupo]?.values?.[this.indexEditar];
+
+    if (values) {
+      values.label = this.formulario.value.label.trim();
+      values.type = this.formulario.value.tipo;
+      values.visibility = true;
+      values.required = this.formulario.value.esRequerido;
+      this.guardarFormulario();
+    }
   }
 
   public eliminar(tipo: string, index: number, indexValue: number, value: any) {
@@ -187,6 +209,44 @@ export class InputsGeneratorComponent implements OnInit {
 
   public getValue(key: string, value: any): any {
     return value[key] as any;
+  }
+
+  public guardarFormulario() {
+    this.inputsService
+      .guardarFormulario(this.formularioGenerado)
+      .subscribe(response => {
+        this.toastr.success(
+          'Se actualizó el formulario',
+          'El nuevo item ha sido agregado'
+        );
+      });
+  }
+
+  public agregarGrupo() {
+    if (this.agregarGrupoForm.valid) {
+      this.inputsService
+        .crearGrupo({
+          title: this.agregarGrupoForm.value.nombreGrupo,
+          ficha_tipo_id: Number(this.agregarGrupoForm.value.nuevoFichaTipo)
+        })
+        .subscribe(response => {
+          this.cargarGrupos();
+          this.toastr.success(
+            'Se actualizó el grupo',
+            'El grupo ha sido agregado'
+          );
+        });
+    }
+  }
+
+  public selectAllText(event: MouseEvent) {
+    const inputElement = event.target as HTMLInputElement;
+    inputElement.select();
+  }
+
+  public obtenerTipoInput(value: string): string {
+    const values = ESteperType as any;
+    return values[value];
   }
 
   public get gruposFiltrado(): any[] {
@@ -238,41 +298,11 @@ export class InputsGeneratorComponent implements OnInit {
     return this.formulario.value.esVisibleSi;
   }
 
-  public guardarFormulario() {
-    this.inputsService
-      .guardarFormulario(this.formularioGenerado)
-      .subscribe(response => {
-        this.toastr.success(
-          'Se actualizó el formulario',
-          'El nuevo item ha sido agregado'
-        );
-      });
-  }
-
-  public agregarGrupo() {
-    if (this.agregarGrupoForm.valid) {
-      this.inputsService
-        .crearGrupo({
-          title: this.agregarGrupoForm.value.nombreGrupo,
-          ficha_tipo_id: Number(this.agregarGrupoForm.value.nuevoFichaTipo)
-        })
-        .subscribe(response => {
-          this.cargarGrupos();
-          this.toastr.success(
-            'Se actualizó el grupo',
-            'El grupo ha sido agregado'
-          );
-        });
-    }
-  }
-
-  public selectAllText(event: MouseEvent) {
-    const inputElement = event.target as HTMLInputElement;
-    inputElement.select();
-  }
-
-  public obtenerTipoInput(value: string): string {
-    const values = ESteperType as any;
-    return values[value];
+  public get isValidForm(): boolean {
+    return (
+      this.formulario.value.fichaTipo.trim() !== '' &&
+      `${this.formulario.value.grupo}`.trim() !== '' &&
+      this.formulario.value.label.trim() !== ''
+    );
   }
 }
