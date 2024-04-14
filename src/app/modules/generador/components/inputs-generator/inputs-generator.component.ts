@@ -8,6 +8,7 @@ import { InputsService } from './../../services/inputs.service';
 import { Component, OnInit } from '@angular/core';
 import { ESteperType } from 'src/app/helpers/interface/interface';
 import { v4 as uuid } from 'uuid';
+import { ToastrService } from 'ngx-toastr';
 
 type TipoForm = 'familyCard' | 'personCard';
 
@@ -25,7 +26,8 @@ export class InputsGeneratorComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private inputsService: InputsService
+    private inputsService: InputsService,
+    private toastr: ToastrService
   ) {
     this.formulario = this.formBuilder.group({
       fichaTipo: ['', Validators.required],
@@ -43,8 +45,8 @@ export class InputsGeneratorComponent implements OnInit {
       value: null,
       nombre_columna: [''],
 
-      fichaTipoVisible: ['', Validators.required],
-      grupoVisible: ['', Validators.required]
+      fichaTipoVisible: [''],
+      grupoVisible: ['']
     });
 
     this.agregarGrupoForm = this.formBuilder.group({
@@ -54,7 +56,7 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cargarFormulario(1);
+    this.cargarFormulario(2);
     this.cargarGrupos();
     this.cargarTipos();
   }
@@ -77,12 +79,19 @@ export class InputsGeneratorComponent implements OnInit {
       });
   }
 
+  public get isValidForm(): boolean {
+    return (
+      this.formulario.value.fichaTipo.trim() !== '' &&
+      this.formulario.value.grupo.trim() !== '' &&
+      this.formulario.value.label.trim() !== ''
+    );
+  }
   public agregar() {
-    if (this.formulario.valid) {
+    if (this.isValidForm) {
       const steperValues: ISteperValues = {
-        label: this.formulario.value.label,
+        label: this.formulario.value.label.trim(),
         type: this.formulario.value.tipo,
-        options: null,
+        options: this.getOptions(),
         default: null,
         visibility: true,
         required: this.formulario.value.esRequerido,
@@ -98,9 +107,18 @@ export class InputsGeneratorComponent implements OnInit {
       this.formularioGenerado[fichaTipo][index].values?.push(steperValues);
 
       this.formulario.value.label = '';
+      this.guardarFormulario();
     } else {
       this.formulario.markAllAsTouched();
     }
+  }
+
+  private getOptions() {
+    return ['selectFilter', 'select_multiple', 'select'].includes(
+      this.formulario.value.tipo
+    )
+      ? []
+      : null;
   }
 
   private agregarGrupoAForm(tipoGrupo: any, tipoForm: TipoForm) {
@@ -146,11 +164,25 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public editar(tipo: string, index: number, value: any) {
-    console.log({ tipo, index, value });
+    //console.log({ tipo, index, value });
   }
 
-  public eliminar(tipo: string, index: number) {
-    console.log({ tipo, index });
+  public eliminar(tipo: string, index: number, indexValue: number, value: any) {
+    const tipoForm: TipoForm = tipo as TipoForm;
+    this.formularioGenerado[tipoForm][index].values?.splice(indexValue, 1);
+
+    if (this.formularioGenerado[tipoForm][index].values?.length === 0) {
+      this.formularioGenerado[tipoForm].splice(index, 1);
+    }
+
+    this.inputsService
+      .guardarFormulario(this.formularioGenerado)
+      .subscribe(response => {
+        this.toastr.error(
+          'Se actualizó el formulario',
+          'El nuevo item ha sido eliminado'
+        );
+      });
   }
 
   public getValue(key: string, value: any): any {
@@ -167,7 +199,11 @@ export class InputsGeneratorComponent implements OnInit {
         tipoid = 2;
         break;
     }
-    return this.grupos.filter(grupo => grupo.ficha_tipo_id === tipoid);
+    return this.grupos
+      .filter(grupo => grupo.ficha_tipo_id === tipoid)
+      .sort((fichaOld, fichaCurrenly) =>
+        fichaOld.orden < fichaCurrenly.orden ? 1 : -1
+      );
   }
 
   public get gruposVisiblesFiltrado(): any[] {
@@ -187,7 +223,6 @@ export class InputsGeneratorComponent implements OnInit {
     try {
       const fichaTipo: TipoForm = this.formulario.value.fichaTipoVisible;
 
-      this.formularioGenerado[fichaTipo];
       return (
         this.formularioGenerado[fichaTipo].find(
           (ficha: any) =>
@@ -207,13 +242,15 @@ export class InputsGeneratorComponent implements OnInit {
     this.inputsService
       .guardarFormulario(this.formularioGenerado)
       .subscribe(response => {
-        console.log({ response });
+        this.toastr.success(
+          'Se actualizó el formulario',
+          'El nuevo item ha sido agregado'
+        );
       });
   }
 
   public agregarGrupo() {
     if (this.agregarGrupoForm.valid) {
-      console.log(this.agregarGrupoForm.value);
       this.inputsService
         .crearGrupo({
           title: this.agregarGrupoForm.value.nombreGrupo,
@@ -221,7 +258,21 @@ export class InputsGeneratorComponent implements OnInit {
         })
         .subscribe(response => {
           this.cargarGrupos();
+          this.toastr.success(
+            'Se actualizó el grupo',
+            'El grupo ha sido agregado'
+          );
         });
     }
+  }
+
+  public selectAllText(event: MouseEvent) {
+    const inputElement = event.target as HTMLInputElement;
+    inputElement.select();
+  }
+
+  public obtenerTipoInput(value: string): string {
+    const values = ESteperType as any;
+    return values[value];
   }
 }

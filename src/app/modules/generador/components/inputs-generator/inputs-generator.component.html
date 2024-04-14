@@ -5,13 +5,96 @@
         <div class="card-header">Generador de formulario din&aacute;mico</div>
         <div class="card-body">
           <h1>Por favor seleccione la ficha</h1>
-          <form [formGroup]="formulario">
-            <div class="row">
-              <div class="col-md-12">
-                <label for="fichaTipo">Tipo de ficha</label>
+          <form [formGroup]="formulario" (ngSubmit)="agregar()">
+            <div class="col-md-12">
+              <label for="fichaTipo">Tipo de ficha</label>
+              <select
+                formControlName="fichaTipo"
+                id="fichaTipo"
+                class="form-control"
+              >
+                <option value="">Seleccione</option>
+                <option value="familyCard">Ficha Familiar</option>
+                <option value="personCard">Ficha Personal</option>
+              </select>
+            </div>
+            <div class="col-md-12">
+              <label for="grupo">Seleccione el grupo</label>
+              <select
+                formControlName="grupo"
+                id="grupo"
+                class="form-control"
+                required
+              >
+                <option value="">Seleccione</option>
+                <option *ngFor="let grupo of gruposFiltrado" [value]="grupo.id">
+                  {{ grupo.title }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-12">
+              <label for="tipo">Seleccione el tipo de pregunta</label>
+              <select
+                formControlName="tipo"
+                id="tipo"
+                class="form-control"
+                required
+              >
+                <option value="">Seleccione</option>
+                <option
+                  *ngFor="let tipo of tipos"
+                  [value]="obtenerTipoInput(tipo)"
+                >
+                  {{ tipo }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-12">
+              <label for="label">Ingrese un texto para la pregunta</label>
+              <input
+                (click)="selectAllText($event)"
+                formControlName="label"
+                id="label"
+                class="form-control"
+                type="text"
+              />
+            </div>
+            <div class="col-md-12">
+              <div class="form-check">
+                <input
+                  formControlName="esRequerido"
+                  id="esRequerido"
+                  class="form-check-input"
+                  type="checkbox"
+                />
+                <label class="form-check-label" for="esRequerido">
+                  Es requerido
+                </label>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-check">
+                <input
+                  formControlName="esVisibleSi"
+                  id="esVisibleSi"
+                  class="form-check-input"
+                  type="checkbox"
+                />
+                <label class="form-check-label" for="esVisibleSi">
+                  Visible con condici&oacute;n
+                </label>
+              </div>
+            </div>
+            <ng-container *ngIf="esVisibleSi">
+              <hr />
+              <span class="text-bg-primary text-center">
+                Visible con condici&oacute;n
+              </span>
+              <div>
+                <label for="fichaTipoVisible">Tipo ficha</label>
                 <select
-                  formControlName="fichaTipo"
-                  id="fichaTipo"
+                  formControlName="fichaTipoVisible"
+                  id="fichaTipoVisible"
                   class="form-control"
                 >
                   <option value="">Seleccione</option>
@@ -19,190 +102,141 @@
                   <option value="personCard">Ficha Personal</option>
                 </select>
               </div>
-              <div class="col-md-12">
-                <label for="grupo">Seleccione el grupo</label>
+              <div>
+                <label for="grupoVisible">Seleccione el grupo</label>
                 <select
-                  formControlName="grupo"
-                  id="grupo"
-                  class="form-control"
-                  required
+                  name="grupoVisible"
+                  formControlName="grupoVisible"
+                  id="grupoVisible"
+                  class="form form-control"
                 >
                   <option value="">Seleccione</option>
                   <option
-                    *ngFor="let grupo of gruposFiltrado"
+                    *ngFor="let grupo of gruposVisiblesFiltrado"
                     [value]="grupo.id"
                   >
                     {{ grupo.title }}
                   </option>
                 </select>
               </div>
-              <div class="col-md-12">
-                <label for="tipo">Seleccione el tipo de pregunta</label>
-                <select
-                  formControlName="tipo"
-                  id="tipo"
-                  class="form-control"
-                  required
-                >
+              <div>
+                <label for="">Campo</label>
+                <select name="" id="" class="form form-control">
                   <option value="">Seleccione</option>
-                  <option *ngFor="let tipo of tipos" [value]="tipo">
-                    {{ tipo }}
+                  <option
+                    *ngFor="let campos of camposVisibles"
+                    [value]="campos.columnName"
+                  >
+                    {{ campos.label }}
                   </option>
                 </select>
               </div>
-              <div class="col-md-12">
-                <label for="label">Ingrese un texto para la pregunta</label>
+              <div>
+                <label for="">Condici&oacute;n</label>
                 <input
-                  formControlName="label"
-                  id="label"
-                  class="form-control"
                   type="text"
+                  placeholder="En formato JSON"
+                  class="form form-control"
                 />
+                <pre><code>
+  &lbrace;
+    &quot;isDepent&quot;: true,
+    &quot;rules&quot;: [
+      &lbrace;
+        &quot;columnDepend&quot;: &quot;tipo_vivienda&quot;,
+        &quot;rule&quot;: &quot;=&quot;,
+        &quot;value&quot;: &quot;En arriendo&quot;
+      &rbrace;
+    ],
+    &quot;isShow&quot;: true
+  &rbrace;
+  </code></pre>
               </div>
-              <div class="col-md-12">
-                <div class="form-check">
-                  <input
-                    formControlName="esRequerido"
-                    id="esRequerido"
-                    class="form-check-input"
-                    type="checkbox"
-                  />
-                  <label class="form-check-label" for="esRequerido">
-                    Es requerido
-                  </label>
-                </div>
+            </ng-container>
+
+            <div class="card-footer">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button
+                  type="submit"
+                  class="btn btn-success"
+                  [disabled]="!isValidForm"
+                >
+                  Agregar
+                </button>
+                <button
+                  type="button"
+                  style="display: none"
+                  class="btn btn-primary"
+                  (click)="guardarFormulario()"
+                >
+                  Guardar Formulario
+                </button>
               </div>
-              <div class="col-md-12">
-                <div class="form-check">
-                  <input
-                    formControlName="esVisibleSi"
-                    id="esVisibleSi"
-                    class="form-check-input"
-                    type="checkbox"
-                  />
-                  <label class="form-check-label" for="esVisibleSi">
-                    Visible con condici&oacute;n
-                  </label>
-                </div>
-              </div>
-              <ng-container *ngIf="esVisibleSi">
-                <hr />
-                <span class="text-bg-primary text-center">
-                  Visible con condici&oacute;n
-                </span>
-                <div>
-                  <label for="fichaTipoVisible">Tipo ficha</label>
-                  <select
-                    formControlName="fichaTipoVisible"
-                    id="fichaTipoVisible"
-                    class="form-control"
-                  >
-                    <option value="">Seleccione</option>
-                    <option value="familyCard">Ficha Familiar</option>
-                    <option value="personCard">Ficha Personal</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="grupoVisible">Seleccione el grupo</label>
-                  <select
-                    name="grupoVisible"
-                    formControlName="grupoVisible"
-                    id="grupoVisible"
-                    class="form form-control"
-                  >
-                    <option value="">Seleccione</option>
-                    <option
-                      *ngFor="let grupo of gruposVisiblesFiltrado"
-                      [value]="grupo.id"
-                    >
-                      {{ grupo.title }}
-                    </option>
-                  </select>
-                </div>
-                <div>
-                  <label for="">Campo</label>
-                  <select name="" id="" class="form form-control">
-                    <option value="">Seleccione</option>
-                    <option
-                      *ngFor="let campos of camposVisibles"
-                      [value]="campos.columnName"
-                    >
-                      {{ campos.label }}
-                    </option>
-                  </select>
-                </div>
-                <div>
-                  <label for="">Condicion</label>
-                  <input
-                    type="text"
-                    placeholder="En formato JSON"
-                    class="form form-control"
-                  />
-                </div>
-              </ng-container>
             </div>
           </form>
         </div>
-        <div class="card-footer">
-          <div class="btn-group" role="group" aria-label="Basic example">
-            <button class="btn btn-success" (click)="agregar()">Agregar</button>
-            <button class="btn btn-primary" (click)="guardarFormulario()">
-              Guardar Formulario
-            </button>
-          </div>
+
+        <div class="card mt-4">
+          <div class="card-header">Agregar grupos</div>
+          <form [formGroup]="agregarGrupoForm" (ngSubmit)="agregarGrupo()">
+            <div class="card-body">
+              <div class="col-md-12">
+                <label for="nuevoFichaTipo">Tipo de ficha</label>
+                <select
+                  formControlName="nuevoFichaTipo"
+                  id="nuevoFichaTipo"
+                  class="form-control"
+                >
+                  <option value="">Seleccione</option>
+                  <option value="1">Ficha Familiar</option>
+                  <option value="2">Ficha Personal</option>
+                </select>
+              </div>
+              <div class="col-md-12 mt-3">
+                <label for="nombreGrupo">Ingrese el nombre del grupo</label>
+                <input
+                  type="text"
+                  formControlName="nombreGrupo"
+                  id="nombreGrupo"
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <div class="card-footer">
+              <button
+                type="submit"
+                [disabled]="agregarGrupoForm.invalid"
+                class="btn btn-success"
+              >
+                Agregar grupo
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-
-      <div class="card mt-4">
-        <div class="card-header">Agregar grupos</div>
-        <form [formGroup]="agregarGrupoForm" (ngSubmit)="agregarGrupo()">
-          <div class="card-body">
-            <div class="col-md-12">
-              <label for="nuevoFichaTipo">Tipo de ficha</label>
-              <select
-                formControlName="nuevoFichaTipo"
-                id="nuevoFichaTipo"
-                class="form-control"
-              >
-                <option value="">Seleccione</option>
-                <option value="1">Ficha Familiar</option>
-                <option value="2">Ficha Personal</option>
-              </select>
-            </div>
-            <div class="col-md-12 mt-3">
-              <label for="nombreGrupo">Ingrese el nombre del grupo</label>
-              <input
-                type="text"
-                formControlName="nombreGrupo"
-                id="nombreGrupo"
-                class="form-control"
-              />
-            </div>
-          </div>
-          <div class="card-footer">
-            <button
-              type="submit"
-              [disabled]="agregarGrupoForm.invalid"
-              class="btn btn-success"
-            >
-              Agregar grupo
-            </button>
-          </div>
-        </form>
-      </div>
     </div>
-    <div class="col-md-8" *ngIf="formularioGenerado !== null">
+    <div
+      class="col-md-8"
+      style="max-height: 96.5vh; overflow: scroll"
+      *ngIf="formularioGenerado !== null"
+    >
       <div class="card card-success">
         <div class="card-header">Tarjeta Familiar</div>
         <div class="card-body">
           <div
             class="card mb-4"
-            *ngFor="let steper of formularioGenerado?.familyCard"
+            *ngFor="
+              let steper of formularioGenerado?.familyCard;
+              let indexSteper = index
+            "
           >
             <div class="card card-header">{{ steper.title }}</div>
             <div class="card card-body">
               <table>
-                <tr *ngFor="let value of steper.values; let indexValue = index">
+                <tr
+                  class="table-group-divider"
+                  *ngFor="let value of steper.values; let indexValue = index"
+                >
                   <td>
                     {{ value.label }}
                     <br />
@@ -212,14 +246,16 @@
                       aria-label="Basic example"
                     >
                       <button
-                        (click)="editar('familyCard', indexValue, value)"
+                        (click)="editar('familyCard', indexSteper, value)"
                         type="button"
                         class="btn btn-primary"
                       >
                         Editar
                       </button>
                       <button
-                        (click)="eliminar('familyCard', indexValue)"
+                        (click)="
+                          eliminar('familyCard', indexSteper, indexValue, value)
+                        "
                         type="button"
                         class="btn btn-danger"
                       >
@@ -228,7 +264,6 @@
                     </div>
                   </td>
                   <td>
-                    <hr />
                     <ul>
                       <li *ngFor="let item of getKeys(value)">
                         <strong>{{ item }}</strong

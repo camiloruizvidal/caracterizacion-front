@@ -6,18 +6,28 @@ import { PacientesModule } from './modules/pacientes/pacientes.module';
 import { UserModule } from './modules/user/user.module';
 import { LoginModule } from './modules/login/login.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  BrowserAnimationsModule,
+  provideAnimations
+} from '@angular/platform-browser/animations';
+import { ToastrModule, provideToastr } from 'ngx-toastr';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({ timeOut: 100000 }),
     AppRoutingModule,
     PacientesModule,
     LoginModule,
     UserModule,
     NgbModule
   ],
-  providers: [],
+  providers: [
+    provideAnimations(), // required animations providers
+    provideToastr() // Toastr providers
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
