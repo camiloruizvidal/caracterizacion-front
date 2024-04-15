@@ -25,9 +25,9 @@ export class InputsGeneratorComponent implements OnInit {
   public formularioGenerado!: IFamilyCard;
   public esEditable: boolean = false;
   private indexEditar: number = -1;
-  public tipoCards: { nombre: TipoForm; titulo: string }[] = [
-    { nombre: 'familyCard', titulo: 'Tarjeta Familiar' },
-    { nombre: 'personCard', titulo: 'Tarjeta Personal' }
+  public tipoCards: { nombre: TipoForm; tituloTexto: string }[] = [
+    { nombre: 'familyCard', tituloTexto: 'Tarjeta Familiar' },
+    { nombre: 'personCard', tituloTexto: 'Tarjeta Personal' }
   ];
 
   constructor(

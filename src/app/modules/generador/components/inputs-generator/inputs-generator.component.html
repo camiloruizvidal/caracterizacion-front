@@ -290,13 +290,13 @@
           </div>
         </div>
       </div>
-      <div class="mt-4 card card-success">
-        <div class="card-header">Tarjeta Personal</div>
+      <div class="mt-4 card card-success" *ngFor="let tipo of tipoCards">
+        <div class="card-header">{{tipo.tituloTexto}}</div>
         <div class="card-body">
           <div
             class="card mb-4"
             *ngFor="
-              let steper of formularioGenerado?.personCard;
+              let steper of formularioGenerado?.[tipo.nombre];
               let indexSteper = index
             "
           >
@@ -317,7 +317,7 @@
                     >
                       <button
                         (click)="
-                          editar('personCard', indexSteper, indexValue, value)
+                          editar(tipo.nombre, indexSteper, indexValue, value)
                         "
                         type="button"
                         class="btn btn-primary"
@@ -326,7 +326,7 @@
                       </button>
                       <button
                         (click)="
-                          eliminar('personCard', indexSteper, indexValue, value)
+                          eliminar(tipo.nombre, indexSteper, indexValue, value)
                         "
                         type="button"
                         class="btn btn-danger"
