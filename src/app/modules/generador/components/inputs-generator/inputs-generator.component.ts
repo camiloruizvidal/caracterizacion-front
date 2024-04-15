@@ -99,13 +99,12 @@ export class InputsGeneratorComponent implements OnInit {
         label: this.formulario.value.label.trim(),
         type: this.getTipo(),
         options: this.getOptions(),
-        default: null,
         visibility: true,
         required: this.formulario.value.esRequerido,
         columnName: this.crearNombreColumna(),
+        default: this.formulario.value.default,
         value: null
       };
-
       const fichaTipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
       let index = this.agregarGrupoAForm(
         this.formulario.value.grupo,
@@ -125,7 +124,8 @@ export class InputsGeneratorComponent implements OnInit {
     if (this.formulario.value.tipo === ESteperType.CheckSiNo) {
       options = { valueTrue: 'Sí', valueFalse: 'No' };
       this.formulario.patchValue({
-        options
+        options,
+        default: 'No'
       });
       return options;
     } else {
@@ -193,7 +193,8 @@ export class InputsGeneratorComponent implements OnInit {
       tipo: value.type,
       options: value.options,
       label: value.label,
-      grupo: this.formularioGenerado[tipo][index].id
+      grupo: this.formularioGenerado[tipo][index].id,
+      default: this.formulario.value.default
     });
     try {
       this.formulario.patchValue({
@@ -221,16 +222,16 @@ export class InputsGeneratorComponent implements OnInit {
     if (values) {
       values.label = this.formulario.value.label.trim();
       values.options = this.getOptions();
+      values.type = this.getTipo();
       values.visibility = true;
       values.required = this.formulario.value.esRequerido;
-      values.type = this.getTipo();
+      values.default = this.formulario.value.default;
       this.guardarFormulario();
       this.esEditable = false;
     }
   }
 
   public eliminar(tipo: string, index: number, indexValue: number, value: any) {
-    return;
     const tipoForm: TipoForm = tipo as TipoForm;
     this.formularioGenerado[tipoForm][index].values?.splice(indexValue, 1);
 
