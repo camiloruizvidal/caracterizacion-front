@@ -191,9 +191,19 @@ export class InputsGeneratorComponent implements OnInit {
     this.formulario.patchValue({
       fichaTipo: tipo,
       tipo: value.type,
+      options: value.options,
       label: value.label,
       grupo: this.formularioGenerado[tipo][index].id
     });
+    try {
+      this.formulario.patchValue({
+        optionsJSON: JSON.stringify(value.options, null, 2)
+      });
+    } catch (error) {
+      this.formulario.patchValue({
+        optionsJSON: ''
+      });
+    }
     this.indexEditar = indexValue;
     this.esEditable = true;
   }
@@ -209,23 +219,18 @@ export class InputsGeneratorComponent implements OnInit {
       this.formularioGenerado?.[tipo]?.[indexGrupo]?.values?.[this.indexEditar];
 
     if (values) {
-      debugger;
       values.label = this.formulario.value.label.trim();
       values.options = this.getOptions();
       values.visibility = true;
       values.required = this.formulario.value.esRequerido;
       values.type = this.getTipo();
-      console.log(
-        this.formularioGenerado?.[tipo]?.[indexGrupo]?.values?.[
-          this.indexEditar
-        ]
-      );
       this.guardarFormulario();
       this.esEditable = false;
     }
   }
 
   public eliminar(tipo: string, index: number, indexValue: number, value: any) {
+    return;
     const tipoForm: TipoForm = tipo as TipoForm;
     this.formularioGenerado[tipoForm][index].values?.splice(indexValue, 1);
 
@@ -346,7 +351,6 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public get isShowJson(): boolean {
-    console.log(this.formulario.value.tipo);
     return this.typesOptions.includes(this.formulario.value.tipo);
   }
 }

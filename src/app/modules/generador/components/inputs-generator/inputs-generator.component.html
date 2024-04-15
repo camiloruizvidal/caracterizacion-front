@@ -250,66 +250,6 @@
       style="max-height: 96.5vh; overflow: scroll"
       *ngIf="formularioGenerado !== null"
     >
-      <div class="card card-success">
-        <div class="card-header">Tarjeta Familiar</div>
-        <div class="card-body">
-          <div
-            class="card mb-4"
-            *ngFor="
-              let steper of formularioGenerado?.familyCard;
-              let indexSteper = index
-            "
-          >
-            <div class="card card-header">{{ steper.title }}</div>
-            <div class="card card-body">
-              <table>
-                <tr
-                  class="table-group-divider"
-                  *ngFor="let value of steper.values; let indexValue = index"
-                >
-                  <td>
-                    {{ value.label }}
-                    <br />
-                    <div
-                      class="btn-group"
-                      role="group"
-                      aria-label="Basic example"
-                    >
-                      <button
-                        (click)="
-                          editar('familyCard', indexSteper, indexValue, value)
-                        "
-                        type="button"
-                        class="btn btn-primary"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        (click)="
-                          eliminar('familyCard', indexSteper, indexValue, value)
-                        "
-                        type="button"
-                        class="btn btn-danger"
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </td>
-                  <td>
-                    <ul>
-                      <li *ngFor="let item of getKeys(value)">
-                        <strong>{{ item }}</strong
-                        >:
-                        {{ getValue(item, value) | json }}
-                      </li>
-                    </ul>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="mt-4 card card-success" *ngFor="let tipo of tipoCards">
         <div class="card-header">{{ tipo.tituloTexto }}</div>
         <div class="card-body">
