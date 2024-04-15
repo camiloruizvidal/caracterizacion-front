@@ -29,6 +29,7 @@ export class InputsGeneratorComponent implements OnInit {
     { nombre: 'familyCard', tituloTexto: 'Tarjeta Familiar' },
     { nombre: 'personCard', tituloTexto: 'Tarjeta Personal' }
   ];
+  public typesOptions: string[] = ['selectFilter', 'select_multiple', 'select'];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -45,6 +46,7 @@ export class InputsGeneratorComponent implements OnInit {
       description: [null],
       type: [''],
       options: [null],
+      optionsJSON: [''],
       default: [null],
       visibility: [true],
       required: [false],
@@ -61,7 +63,7 @@ export class InputsGeneratorComponent implements OnInit {
     });
   }
   //#region temporal
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.cargarFormulario(2);
     this.cargarGrupos();
     this.cargarTipos();
@@ -85,11 +87,17 @@ export class InputsGeneratorComponent implements OnInit {
       });
   }
 
+  private getTipo() {
+    return this.formulario.value.tipo === ESteperType.CheckSiNo
+      ? ESteperType.Check
+      : this.formulario.value.tipo;
+  }
+
   public agregar(): void {
     if (this.isValidForm) {
       const steperValues: ISteperValues = {
         label: this.formulario.value.label.trim(),
-        type: this.formulario.value.tipo,
+        type: this.getTipo(),
         options: this.getOptions(),
         default: null,
         visibility: true,
@@ -112,12 +120,29 @@ export class InputsGeneratorComponent implements OnInit {
     }
   }
 
-  private getOptions() {
-    return ['selectFilter', 'select_multiple', 'select'].includes(
-      this.formulario.value.tipo
-    )
-      ? []
-      : null;
+  public getOptions() {
+    let options;
+    if (this.formulario.value.tipo === ESteperType.CheckSiNo) {
+      options = { valueTrue: 'Sí', valueFalse: 'No' };
+      this.formulario.patchValue({
+        options
+      });
+      return options;
+    } else {
+      const esOptions = this.typesOptions.includes(this.formulario.value.tipo);
+      let value;
+      try {
+        value = JSON.parse(this.formulario.value.optionsJSON);
+      } catch (error) {
+        value = [];
+      }
+      options = esOptions ? value : null;
+
+      this.formulario.patchValue({
+        options
+      });
+      return options;
+    }
   }
 
   private agregarGrupoAForm(tipoGrupo: any, tipoForm: TipoForm) {
@@ -161,7 +186,6 @@ export class InputsGeneratorComponent implements OnInit {
     ];
     return values.filter(value => !valuesDelete.includes(value));
   }
-  //#endregion
 
   public editar(tipo: TipoForm, index: number, indexValue: number, value: any) {
     this.formulario.patchValue({
@@ -185,10 +209,17 @@ export class InputsGeneratorComponent implements OnInit {
       this.formularioGenerado?.[tipo]?.[indexGrupo]?.values?.[this.indexEditar];
 
     if (values) {
+      debugger;
       values.label = this.formulario.value.label.trim();
-      values.type = this.formulario.value.tipo;
+      values.options = this.getOptions();
       values.visibility = true;
       values.required = this.formulario.value.esRequerido;
+      values.type = this.getTipo();
+      console.log(
+        this.formularioGenerado?.[tipo]?.[indexGrupo]?.values?.[
+          this.indexEditar
+        ]
+      );
       this.guardarFormulario();
       this.esEditable = false;
     }
@@ -312,5 +343,10 @@ export class InputsGeneratorComponent implements OnInit {
       `${this.formulario.value.grupo}`.trim() !== '' &&
       this.formulario.value.label.trim() !== ''
     );
+  }
+
+  public get isShowJson(): boolean {
+    console.log(this.formulario.value.tipo);
+    return this.typesOptions.includes(this.formulario.value.tipo);
   }
 }

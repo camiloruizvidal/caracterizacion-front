@@ -49,6 +49,26 @@
                 </option>
               </select>
             </div>
+            <ng-container
+              *ngIf="isShowJson"
+            >
+              <span class="text-bg-primary text-center"
+                >Agregar opciones en JSON</span
+              >
+              <textarea
+                name="optionsJSON"
+                id="optionsJSON"
+                formControlName="optionsJSON"
+                class="form form-control"
+                rows="10"
+              ></textarea>
+              <hr />
+              <div
+                class="col-md-12"
+                *ngIf="isShowJson"
+              ></div>
+              <hr />
+            </ng-container>
             <div class="col-md-12">
               <label for="label">Ingrese un texto para la pregunta</label>
               <input
@@ -291,7 +311,7 @@
         </div>
       </div>
       <div class="mt-4 card card-success" *ngFor="let tipo of tipoCards">
-        <div class="card-header">{{tipo.tituloTexto}}</div>
+        <div class="card-header">{{ tipo.tituloTexto }}</div>
         <div class="card-body">
           <div
             class="card mb-4"

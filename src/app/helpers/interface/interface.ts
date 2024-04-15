@@ -237,6 +237,7 @@ export enum ESteperType {
   Calendar = 'calendar',
   Photo = 'photo',
   Check = 'check',
+  CheckSiNo = 'checkSiNo',
   Email = 'email',
   Filter = 'filter',
   GPS = 'gps',
