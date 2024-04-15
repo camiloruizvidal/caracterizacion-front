@@ -25,6 +25,10 @@ export class InputsGeneratorComponent implements OnInit {
   public formularioGenerado!: IFamilyCard;
   public esEditable: boolean = false;
   private indexEditar: number = -1;
+  public tipoCards: { nombre: TipoForm; titulo: string }[] = [
+    { nombre: 'familyCard', titulo: 'Tarjeta Familiar' },
+    { nombre: 'personCard', titulo: 'Tarjeta Personal' }
+  ];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -70,7 +74,7 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   private cargarTipos() {
-    this.tipos = Object.keys(ESteperType);
+    this.tipos = Object.keys(ESteperType).sort();
   }
 
   private cargarGrupos() {
@@ -186,6 +190,7 @@ export class InputsGeneratorComponent implements OnInit {
       values.visibility = true;
       values.required = this.formulario.value.esRequerido;
       this.guardarFormulario();
+      this.esEditable = false;
     }
   }
 
@@ -262,7 +267,10 @@ export class InputsGeneratorComponent implements OnInit {
     return this.grupos
       .filter(grupo => grupo.ficha_tipo_id === tipoid)
       .sort((fichaOld, fichaCurrenly) =>
-        fichaOld.orden < fichaCurrenly.orden ? 1 : -1
+        fichaOld.title.toLowerCase().trim() >
+        fichaCurrenly.title.toLowerCase().trim()
+          ? 1
+          : -1
       );
   }
 

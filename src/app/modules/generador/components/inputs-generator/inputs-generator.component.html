@@ -295,17 +295,57 @@
         <div class="card-body">
           <div
             class="card mb-4"
-            *ngFor="let steper of formularioGenerado?.personCard"
+            *ngFor="
+              let steper of formularioGenerado?.personCard;
+              let indexSteper = index
+            "
           >
             <div class="card card-header">{{ steper.title }}</div>
             <div class="card card-body">
-              <ul>
-                <li *ngFor="let value of steper.values">
-                  {{ value.label }}
-                  -
-                  {{ value.type }}
-                </li>
-              </ul>
+              <table>
+                <tr
+                  class="table-group-divider"
+                  *ngFor="let value of steper.values; let indexValue = index"
+                >
+                  <td>
+                    {{ value.label }}
+                    <br />
+                    <div
+                      class="btn-group"
+                      role="group"
+                      aria-label="Basic example"
+                    >
+                      <button
+                        (click)="
+                          editar('personCard', indexSteper, indexValue, value)
+                        "
+                        type="button"
+                        class="btn btn-primary"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        (click)="
+                          eliminar('personCard', indexSteper, indexValue, value)
+                        "
+                        type="button"
+                        class="btn btn-danger"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                  <td>
+                    <ul>
+                      <li *ngFor="let item of getKeys(value)">
+                        <strong>{{ item }}</strong
+                        >:
+                        {{ getValue(item, value) | json }}
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+              </table>
             </div>
           </div>
         </div>
