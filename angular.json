@@ -104,6 +104,9 @@
             ],
             "scripts": []
           }
+        },
+        "cli": {
+          "analytics": false
         }
       }
     }
