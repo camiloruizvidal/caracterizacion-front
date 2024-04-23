@@ -49,9 +49,7 @@
                 </option>
               </select>
             </div>
-            <ng-container
-              *ngIf="isShowJson"
-            >
+            <ng-container *ngIf="isShowJson">
               <span class="text-bg-primary text-center"
                 >Agregar opciones en JSON</span
               >
@@ -63,10 +61,7 @@
                 rows="10"
               ></textarea>
               <hr />
-              <div
-                class="col-md-12"
-                *ngIf="isShowJson"
-              ></div>
+              <div class="col-md-12" *ngIf="isShowJson"></div>
               <hr />
             </ng-container>
             <div class="col-md-12">
@@ -300,7 +295,46 @@
                       <li *ngFor="let item of getKeys(value)">
                         <strong>{{ item }}</strong
                         >:
-                        {{ getValue(item, value) | json }}
+                        <div
+                          *ngIf="
+                            [
+                              'selectFilter',
+                              'select_multiple',
+                              'select'
+                            ].includes(value.type) && item === 'options'
+                          "
+                        >
+                          <select class="form form-control">
+                            <option *ngFor="let item of value.options">
+                              {{ item.value }}:
+                              {{ item.option }}
+                            </option>
+                          </select>
+                        </div>
+                        <div
+                          *ngIf="value.type === 'check' && item === 'options'"
+                        >
+                          <select class="form form-control">
+                            <option>
+                              valueTrue: {{ value.options.valueTrue }}
+                            </option>
+                            <option>
+                              valueFalse: {{ value.options.valueFalse }}
+                            </option>
+                          </select>
+                        </div>
+                        <div
+                          *ngIf="
+                            ![
+                              'selectFilter',
+                              'select_multiple',
+                              'select',
+                              'check'
+                            ].includes(value.type) || item !== 'options'
+                          "
+                        >
+                          {{ getValue(item, value) | json }}
+                        </div>
                       </li>
                     </ul>
                   </td>
