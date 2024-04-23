@@ -2,7 +2,8 @@
   <div class="card-body">
     <h5 class="card-title">Tarjetas registradas</h5>
     <h6 class="card-subtitle mb-2 text-muted">
-      Las tarjetas registradas se suben a las 12:00 AM o de forma Automática.
+      Las tarjetas registradas se suben a las 12:00 AM de forma
+      Autom&aacute;tica.
     </h6>
     <div class="card-body">
       <div class="row">
@@ -59,15 +60,15 @@
             <td>{{ form.data.data.personCard.length }}</td>
             <td>
               <i class="bi bi-calendar3"></i>
-              {{ form.data.dateRegister | date : "YYYY-MM-dd" }}<br />
+              {{ form.data.dateRegister | date : 'YYYY-MM-dd' }}<br />
               <i class="bi bi-stopwatch"></i>
-              {{ form.data.dateRegister | date : "hh:mm a" }}
+              {{ form.data.dateRegister | date : 'hh:mm a' }}
             </td>
             <td>
               <i class="bi bi-calendar3"></i>
-              {{ form.createdAt | date : "YYYY-MM-dd" }}<br />
+              {{ form.createdAt | date : 'YYYY-MM-dd' }}<br />
               <i class="bi bi-stopwatch"></i>
-              {{ form.createdAt | date : "hh:mm a" }}
+              {{ form.createdAt | date : 'hh:mm a' }}
             </td>
           </tr>
         </tbody>

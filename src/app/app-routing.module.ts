@@ -35,7 +35,8 @@ const routes: Routes = [
     loadChildren: () =>
       import('../app/modules/filtro-maps/filtro-maps.module').then(
         m => m.FiltroMapsModule
-      )
+      ),
+    canActivate: [loginGuard]
   },
   {
     path: 'ficha',
@@ -46,8 +47,10 @@ const routes: Routes = [
   {
     path: 'generador',
     loadChildren: () =>
-      import('../app/modules/generador/generador.module').then(m =>m.GeneradorModule)
-    //canActivate: [loginGuard]
+      import('../app/modules/generador/generador.module').then(
+        m => m.GeneradorModule
+      ),
+    canActivate: [loginGuard]
   },
   {
     path: '',

@@ -2,10 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'enviroment/enviroment';
 import { Observable } from 'rxjs';
-import {
-  IFichaFmiliar,
-  IFichaYDescripcion
-} from 'src/app/helpers/interface/interface';
+import { IFichaYDescripcion } from 'src/app/helpers/interface/interface';
 
 @Injectable({
   providedIn: 'root'

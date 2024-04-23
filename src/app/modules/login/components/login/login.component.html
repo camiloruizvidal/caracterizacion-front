@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-md-6 text-center mb-5">
-        <h2 class="heading-section">Login #04</h2>
+        <h2 class="heading-section">Iniciar sesi&oacute;n</h2>
       </div>
     </div>
     <div class="row justify-content-center">
@@ -11,14 +11,13 @@
           <div class="col-md-6 order-md-last d-flex align-items-stretch">
             <div
               class="img"
-              style="background-image: url(images/bg-1.jpg)"
             ></div>
           </div>
           <div class="col-md-6">
-            <div class="login-wrap p-4 p-md-5">
+            <div class="login-wrap p-4 p-md-5 card">
               <div class="d-flex">
                 <div class="w-100">
-                  <h3 class="mb-4">Sign In</h3>
+                  <h3 class="mb-4">Iniciar</h3>
                 </div>
                 <div class="w-100">
                   <p class="social-media d-flex justify-content-end">
@@ -35,47 +34,54 @@
                   </p>
                 </div>
               </div>
-              <form action="#" class="signin-form">
+              <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                 <div class="form-group mb-3">
-                  <label class="label" for="name">Username</label>
+                  <label class="label" for="username">Usuario</label>
                   <input
                     type="text"
                     class="form-control"
-                    placeholder="Username"
-                    required
+                    formControlName="username"
+                    placeholder="username"
                   />
+                  <div
+                    *ngIf="
+                      loginForm.get('username')?.invalid &&
+                      loginForm.get('username')?.touched
+                    "
+                    class="text-danger"
+                  >
+                    Usuario es requerido.
+                  </div>
                 </div>
                 <div class="form-group mb-3">
-                  <label class="label" for="password">Password</label>
+                  <label class="label" for="password">Contraseña</label>
                   <input
                     type="password"
                     class="form-control"
-                    placeholder="Password"
-                    required
+                    formControlName="password"
+                    placeholder="Contraseña"
                   />
+                  <div
+                    *ngIf="
+                      loginForm.get('password')?.invalid &&
+                      loginForm.get('password')?.touched
+                    "
+                    class="text-danger"
+                  >
+                    Contraseña es requerida.
+                  </div>
                 </div>
                 <div class="form-group">
                   <button
                     type="submit"
+                    [disabled]="loginForm.invalid"
                     class="btn btn-primary rounded submit px-3"
                   >
-                    Sign In
+                    Iniciar
                   </button>
                 </div>
-                <div class="form-group d-md-flex">
-                  <div class="w-50 text-left">
-                    <label class="checkbox-wrap checkbox-primary mb-0"
-                      >Remember Me
-                      <input type="checkbox" checked />
-                      <span class="checkmark"></span>
-                    </label>
-                  </div>
-                  <div class="w-50 text-md-right">
-                    <a href="#">Forgot Password</a>
-                  </div>
-                </div>
               </form>
-              <p class="text-center">
+              <p class="text-center" style="display: none !important">
                 Not a member? <a data-bs-toggle="tab" href="#signup">Sign Up</a>
               </p>
             </div>

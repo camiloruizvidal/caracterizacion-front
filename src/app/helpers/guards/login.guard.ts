@@ -2,10 +2,8 @@ import { CanActivateFn, Router } from '@angular/router';
 
 export const loginGuard: CanActivateFn = (route, state) => {
   const router = new Router();
-  const ls = localStorage.getItem('token');
-  console.log({ ls });
-  //TODO falta
-  if (true) {
+  const user = localStorage.getItem('user');
+  if (user) {
     return true;
   } else {
     router.navigate(['/login']);
