@@ -110,9 +110,6 @@
             ],
             "scripts": []
           }
-        },
-        "cli": {
-          "analytics": false
         }
       }
     }
