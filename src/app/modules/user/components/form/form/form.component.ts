@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IDocumentType, IRols, IUserDetail } from '../../../interface/user';
 import { UsersService } from '../../../services/user/users.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-form',
@@ -40,11 +42,20 @@ export class FormComponent implements OnInit {
     return isRequired;
   }
 
+  public get siMostrarReiniciarContrasenna(): boolean {
+    return this.user !== undefined;
+  }
+
   public get isDisabledSave(): boolean {
     return this.userForm.errors !== null;
   }
 
-  constructor(private fb: FormBuilder, private usersService: UsersService) {
+  constructor(
+    private fb: FormBuilder,
+    private usersService: UsersService,
+    private toastr: ToastrService,
+    private modalService: NgbModal
+  ) {
     this.userForm = this.fb.group({
       password: ['', [Validators.required, Validators.minLength(6)]],
       passwordRepeat: ['', [Validators.required, Validators.minLength(6)]],
@@ -134,5 +145,17 @@ export class FormComponent implements OnInit {
         this.userForm.get(name)?.touched) ||
       false
     );
+  }
+
+  public abrirModal(content: any): void {
+    this.modalService.open(content, { centered: true });
+  }
+
+  public reiniciarContrasenna(): void {
+    this.usersService
+      .reinciarContrasennaAdmin(this.user.id)
+      .subscribe(response => {
+        this.toastr.success('Se cambio la contraseña exitosamente', 'Cambiada');
+      });
   }
 }

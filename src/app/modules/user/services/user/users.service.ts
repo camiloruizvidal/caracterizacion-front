@@ -40,4 +40,8 @@ export class UsersService {
   getDocumentsTypes(): Observable<IDocumentType[]> {
     return this.http.get<IDocumentType[]>(`${this.apiUrl}/documentoTipo`);
   }
+
+  reinciarContrasennaAdmin(id: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/cambiarPass`, { id });
+  }
 }
