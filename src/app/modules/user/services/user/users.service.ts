@@ -15,9 +15,16 @@ export class UsersService {
 
   getUsers(
     page: number = 1,
-    pageSize: number = 10
+    pageSize: number = 10,
+    rolId: number = 0,
+    buscar: string = ''
   ): Observable<IPagination<IUserDetail>> {
-    const params = { page: page.toString(), pageSize: pageSize.toString() };
+    const params = {
+      rolId,
+      page: page.toString(),
+      pageSize: pageSize.toString(),
+      buscar: encodeURIComponent(buscar)
+    };
     return this.http.get<IPagination<IUserDetail>>(this.apiUrl, { params });
   }
 
