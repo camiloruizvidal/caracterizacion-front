@@ -21,6 +21,7 @@ export interface IUserDetail extends Omit<IUser, 'password'> {
   username?: string;
   codigoInicial?: string;
   codigoFinal?: string;
+  roles?: IRols
 }
 
 export interface IRols {
