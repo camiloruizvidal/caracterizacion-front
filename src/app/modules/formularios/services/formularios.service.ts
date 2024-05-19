@@ -24,7 +24,7 @@ export class FormulariosService {
   }
 
   public procesarTarjetasUltimaVersion(): Observable<any> {
-    return this.http.get<any>(this.apiUrl + '/procesar');
+    return this.http.post<any>(this.apiUrl + '/procesar', {});
   }
 
   public obtenerDatosFicha(filtro: {
@@ -43,6 +43,8 @@ export class FormulariosService {
       .set('usuarioId', filtro.usuarioId ?? '')
       .set('municipio', filtro.municipio ?? '');
 
-    return this.http.get<IPagination<IFichaFmiliar>>(this.apiUrl + '/detalle', { params });
+    return this.http.get<IPagination<IFichaFmiliar>>(this.apiUrl + '/detalle', {
+      params
+    });
   }
 }

@@ -2,7 +2,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   IFamilyCard,
   IGruposFicha,
-  ISteperValues
+  ISteperValues,
+  IStepers
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
 import { Component, OnInit } from '@angular/core';
@@ -95,6 +96,12 @@ export class InputsGeneratorComponent implements OnInit {
 
   public agregar(): void {
     if (this.isValidForm) {
+      const fichaTipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
+      let index = this.agregarGrupoAForm(
+        this.formulario.value.grupo,
+        fichaTipo
+      );
+      const orden = this.formularioGenerado[fichaTipo][index].values?.length;
       const steperValues: ISteperValues = {
         label: this.formulario.value.label.trim(),
         type: this.getTipo(),
@@ -103,13 +110,9 @@ export class InputsGeneratorComponent implements OnInit {
         required: this.formulario.value.esRequerido,
         columnName: this.crearNombreColumna(),
         default: this.formulario.value.default,
-        value: null
+        value: null,
+        orden
       };
-      const fichaTipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
-      let index = this.agregarGrupoAForm(
-        this.formulario.value.grupo,
-        fichaTipo
-      );
       this.formularioGenerado[fichaTipo][index].values?.push(steperValues);
 
       this.formulario.value.label = '';
@@ -174,6 +177,34 @@ export class InputsGeneratorComponent implements OnInit {
     );
   }
 
+  public cambioItem(
+    nuevoOrden: any,
+    value: ISteperValues,
+    indexCard: number,
+    tarjeta: TipoForm
+  ) {
+    console.log({
+      nuevoOrden: Number(nuevoOrden.target.value),
+      ordenAnterior: Number(value.orden),
+      indexCard,
+      tarjeta,
+      form: JSON.parse(
+        JSON.stringify(this.formularioGenerado[tarjeta][indexCard].values)
+      )
+    });
+
+    const ordenAnterior = Number(value.orden);
+    const items = this.formularioGenerado[tarjeta][indexCard]?.values;
+
+    if (items && Array.isArray(items)) {
+      const item = items[ordenAnterior];
+      items.splice(ordenAnterior, 1);
+      items.splice(Number(nuevoOrden.target.value), 0, item);
+      console.log(this.formularioGenerado[tarjeta][indexCard].values);
+    } else {
+      console.error('items is undefined or not an array');
+    }
+  }
   public getKeys(value: any): string[] {
     const values = Object.keys(value);
     const valuesDelete = [

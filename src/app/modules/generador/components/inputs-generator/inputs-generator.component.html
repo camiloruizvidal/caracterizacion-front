@@ -255,7 +255,10 @@
               let indexSteper = index
             "
           >
-            <div class="card card-header">{{ steper.title }}</div>
+            <div class="card card-header">
+              {{ (steper?.orden ?? 0) + 1 }})
+              {{ steper.title }}
+            </div>
             <div class="card card-body">
               <table>
                 <tr
@@ -288,6 +291,22 @@
                       >
                         Eliminar
                       </button>
+                      <select
+                        name=""
+                        id=""
+                        (change)="cambioItem($event, value, indexSteper, tipo.nombre)"
+                      >
+                        <option
+                          *ngFor="
+                            let i of [].constructor(steper.values?.length || 0);
+                            let index = index
+                          "
+                          [value]="index"
+                          [selected]="index === (value?.orden ?? -1)"
+                        >
+                          {{ index + 1 }}
+                        </option>
+                      </select>
                     </div>
                   </td>
                   <td>
