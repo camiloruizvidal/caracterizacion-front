@@ -4,9 +4,10 @@ import { InputsGeneratorComponent } from './components/inputs-generator/inputs-g
 import { GeneradorRoutingModule } from './generador-routing.module';
 import { HelpersModule } from 'src/app/helpers/helpers.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { IsVisibleComponent } from './components/is-visible/is-visible.component';
 
 @NgModule({
-  declarations: [InputsGeneratorComponent],
+  declarations: [InputsGeneratorComponent, IsVisibleComponent],
   imports: [
     CommonModule,
     GeneradorRoutingModule,
