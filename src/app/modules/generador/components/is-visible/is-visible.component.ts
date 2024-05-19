@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IFamilyCard, IGruposFicha } from '../../interfaces/interface';
 
 type TipoForm = 'familyCard' | 'personCard';
@@ -10,12 +10,24 @@ type TipoForm = 'familyCard' | 'personCard';
   styleUrls: ['./is-visible.component.scss']
 })
 export class IsVisibleComponent {
-  @Input() public formulario!: FormGroup;
+  public formulario: FormGroup;
   @Input() public formularioGenerado!: IFamilyCard;
   @Input() public grupos: IGruposFicha[] = [];
 
+  constructor(private fb: FormBuilder) {
+    this.formulario = this.fb.group({
+      fichaTipoVisible: ['', Validators.required],
+      grupoVisible: ['', Validators.required],
+      campoVisible: ['', Validators.required],
+      condicion: ['', Validators.required]
+    });
+  }
+
   public get gruposVisiblesFiltrado(): any[] {
     let tipoid: number = 0;
+    if (!this.formulario) {
+      return [];
+    }
     switch (this.formulario.value.fichaTipoVisible) {
       case 'familyCard':
         tipoid = 1;
@@ -40,4 +52,11 @@ export class IsVisibleComponent {
       return [];
     }
   }
+
+  public guardarVisibilidad(): void {
+    this.formulario;
+    console.log({ formulario: this.formulario });
+  }
+
+  public filtrarCampos(target: EventTarget | null) {}
 }

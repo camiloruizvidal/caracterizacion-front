@@ -1,44 +1,52 @@
-<hr />
-<span class="text-bg-primary text-center"> Visible con condici&oacute;n </span>
-<div>
-  <label for="fichaTipoVisible">Tipo ficha</label>
-  <select
-    formControlName="fichaTipoVisible"
-    id="fichaTipoVisible"
-    class="form-control"
-  >
-    <option value="">Seleccione</option>
-    <option value="familyCard">Ficha Familiar</option>
-    <option value="personCard">Ficha Personal</option>
-  </select>
-</div>
-<div>
-  <label for="grupoVisible">Seleccione el grupo</label>
-  <select
-    name="grupoVisible"
-    formControlName="grupoVisible"
-    id="grupoVisible"
-    class="form form-control"
-  >
-    <option value="">Seleccione</option>
-    <option *ngFor="let grupo of gruposVisiblesFiltrado" [value]="grupo.id">
-      {{ grupo.title }}
-    </option>
-  </select>
-</div>
-<div>
-  <label for="">Campo</label>
-  <select name="" id="" class="form form-control">
-    <option value="">Seleccione</option>
-    <option *ngFor="let campos of camposVisibles" [value]="campos.columnName">
-      {{ campos.label }}
-    </option>
-  </select>
-</div>
-<div>
-  <label for="">Condici&oacute;n</label>
-  <input type="text" placeholder="En formato JSON" class="form form-control" />
-  <pre><code>
+<form [formGroup]="formulario" (ngSubmit)="guardarVisibilidad()">
+  <hr />
+  <span class="text-bg-primary text-center">
+    Visible con condici&oacute;n
+  </span>
+  <div>
+    <label for="fichaTipoVisible">Tipo ficha</label>
+    <select
+      formControlName="fichaTipoVisible"
+      id="fichaTipoVisible"
+      class="form-control"
+    >
+      <option value="">Seleccione</option>
+      <option value="familyCard">Ficha Familiar</option>
+      <option value="personCard">Ficha Personal</option>
+    </select>
+  </div>
+  <div>
+    <label for="grupoVisible">Seleccione el grupo</label>
+    <select
+      name="grupoVisible"
+      formControlName="grupoVisible"
+      id="grupoVisible"
+      class="form form-control"
+      (change)="filtrarCampos($event.target)"
+    >
+      <option value="">Seleccione</option>
+      <option *ngFor="let grupo of gruposVisiblesFiltrado" [value]="grupo.id">
+        {{ grupo.title }}
+      </option>
+    </select>
+  </div>
+  <div>
+    <label for="">Campo</label>
+    <select name="" id="" class="form form-control">
+      <option value="">Seleccione</option>
+      <option *ngFor="let campos of camposVisibles" [value]="campos.columnName">
+        {{ campos.label }}
+      </option>
+    </select>
+  </div>
+  <div>
+    <label for="">Condici&oacute;n</label>
+    <input
+      type="text"
+      placeholder="En formato JSON"
+      class="form form-control"
+    />
+    <pre><code>
 &lbrace;
 &quot;isDepent&quot;: true,
 &quot;rules&quot;: [
@@ -51,4 +59,5 @@
 &quot;isShow&quot;: true
 &rbrace;
 </code></pre>
-</div>
+  </div>
+</form>
