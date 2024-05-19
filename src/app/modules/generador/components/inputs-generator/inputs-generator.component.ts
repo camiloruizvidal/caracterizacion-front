@@ -200,11 +200,28 @@ export class InputsGeneratorComponent implements OnInit {
       const item = items[ordenAnterior];
       items.splice(ordenAnterior, 1);
       items.splice(Number(nuevoOrden.target.value), 0, item);
-      console.log(this.formularioGenerado[tarjeta][indexCard].values);
+      this.actualizarOrden();
     } else {
       console.error('items is undefined or not an array');
     }
   }
+
+  public actualizarOrden() {
+    const tipos: TipoForm[] = ['familyCard', 'personCard'];
+    tipos.forEach((tipo: TipoForm) => {
+      this.formularioGenerado[tipo].map((item: IStepers, index: number) => {
+        let orden = 0;
+        item.orden = index;
+        return item.values?.map(items => {
+          items.orden = orden;
+          orden = orden + 1;
+          return items;
+        });
+      });
+    });
+    this.guardarFormulario();
+  }
+
   public getKeys(value: any): string[] {
     const values = Object.keys(value);
     const valuesDelete = [
