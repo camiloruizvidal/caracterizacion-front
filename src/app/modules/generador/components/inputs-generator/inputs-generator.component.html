@@ -268,11 +268,7 @@
                   <td>
                     {{ value.label }}
                     <br />
-                    <div
-                      class="btn-group"
-                      role="group"
-                      aria-label="Basic example"
-                    >
+                    <div class="btn-group">
                       <button
                         (click)="
                           editar(tipo.nombre, indexSteper, indexValue, value)
@@ -294,7 +290,9 @@
                       <select
                         name=""
                         id=""
-                        (change)="cambioItem($event, value, indexSteper, tipo.nombre)"
+                        (change)="
+                          cambioItem($event, value, indexSteper, tipo.nombre)
+                        "
                       >
                         <option
                           *ngFor="
