@@ -24,6 +24,10 @@ export class ValidationsService {
     return isVisibility;
   }
 
+  private esRangoFechaValido(valueForm: any, rule: any): boolean {
+    return true;
+  }
+
   private isValidatedRules(
     visibility: any,
     card: any,
@@ -36,6 +40,9 @@ export class ValidationsService {
       switch (rule.rule) {
         case '=':
           isVisilty = valueForm?.value === rule.value;
+          break;
+        case 'rangoFecha':
+          isVisilty = this.esRangoFechaValido(valueForm?.value, rule.value);
           break;
       }
     });

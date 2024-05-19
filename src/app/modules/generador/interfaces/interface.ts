@@ -1,3 +1,5 @@
+export type typeRule = '=' | 'rangoFecha';
+
 export interface IGruposFicha {
   id: number;
   title: string;
@@ -89,7 +91,7 @@ export interface IOptionsVisibility {
 
 export interface IOptionsRule {
   columnDepend: string;
-  rule: string;
+  rule: typeRule;
   value: string;
 }
 export interface ICodes {

@@ -22,7 +22,7 @@
       formControlName="grupoVisible"
       id="grupoVisible"
       class="form form-control"
-      (change)="filtrarCampos($event.target)"
+      (change)="filtrarGrupos($event.target)"
     >
       <option value="">Seleccione</option>
       <option *ngFor="let grupo of gruposVisiblesFiltrado" [value]="grupo.id">
@@ -32,7 +32,12 @@
   </div>
   <div>
     <label for="">Campo</label>
-    <select name="" id="" class="form form-control">
+    <select
+      name=""
+      id=""
+      formControlName="campo"
+      class="form form-control"
+    >
       <option value="">Seleccione</option>
       <option *ngFor="let campos of camposVisibles" [value]="campos.columnName">
         {{ campos.label }}
@@ -42,11 +47,26 @@
   <div>
     <label for="">Condici&oacute;n</label>
     <input
+      *ngIf="tipoCampo !== 'calendar'"
       type="text"
       placeholder="En formato JSON"
       class="form form-control"
     />
-    <pre><code>
+    <input
+      *ngIf="tipoCampo === 'calendar'"
+      type="number"
+      formControlName="rango_inicio"
+      class="form form-control"
+    />
+    <input
+      *ngIf="tipoCampo === 'calendar'"
+      type="number"
+      formControlName="rango_fin"
+      placeholder="Rango de fin"
+      class="form form-control"
+    />
+    <pre><code>{{regla|json}}</code></pre>
+    <pre *ngIf="false"><code>
 &lbrace;
 &quot;isDepent&quot;: true,
 &quot;rules&quot;: [

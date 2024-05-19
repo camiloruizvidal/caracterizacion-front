@@ -106,7 +106,6 @@ export class InputsGeneratorComponent implements OnInit {
     this.inputsService.obtenerFormularioJson(id).subscribe(response => {
       if (!this.deepEqual(this.formularioGenerado, response.data)) {
         this.formularioGenerado = response.data;
-        console.log('Cambió')
       }
     });
   }
