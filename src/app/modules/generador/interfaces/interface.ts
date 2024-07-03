@@ -40,10 +40,26 @@ export interface ISteperValues {
   default: boolean | string | null;
   visibility: IOptionsVisibility | boolean | null;
   required: IOptionsRequired | boolean | null;
-  value?: any;
+  value?: IDynamicValue | any;
   ficha_grupo_id?: string | number | null;
   createdAt?: string | Date;
   updatedAt?: string | Date;
+}
+
+export interface IDynamicValue {
+  mensaje: string;
+  validation: EValidation;
+  inputs: IInput[];
+}
+
+export enum EValidation {
+  And = 'AND',
+  Or = 'OR'
+}
+
+export interface IInput {
+  input: string;
+  value: string;
 }
 
 export enum ESteperType {

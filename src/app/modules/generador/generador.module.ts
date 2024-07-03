@@ -5,9 +5,14 @@ import { GeneradorRoutingModule } from './generador-routing.module';
 import { HelpersModule } from 'src/app/helpers/helpers.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IsVisibleComponent } from './components/is-visible/is-visible.component';
+import { ValueDinamicComponent } from './components/value-dinamic/value-dinamic.component';
 
 @NgModule({
-  declarations: [InputsGeneratorComponent, IsVisibleComponent],
+  declarations: [
+    InputsGeneratorComponent,
+    IsVisibleComponent,
+    ValueDinamicComponent
+  ],
   imports: [
     CommonModule,
     GeneradorRoutingModule,

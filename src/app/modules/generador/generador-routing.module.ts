@@ -6,6 +6,10 @@ const routes: Routes = [
   {
     path: '',
     component: InputsGeneratorComponent
+  },
+  {
+    path: 'test',
+    component: InputsGeneratorComponent
   }
 ];
 
