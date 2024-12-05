@@ -18,19 +18,37 @@
               Cargar tarjetas
             </button>
             <br />
-            <a
-              [href]="exportarTarjetas"
+            <button
+              (click)="exportarTarjetas()"
               target="_blank"
               class="btn btn-success"
             >
-              <i class="bi bi-download"></i>
+              <i class="bi bi-lightning"></i>
               Exportar excel
-            </a>
+            </button>
           </div>
         </div>
         <div class="col-md-12">
           <span class="badge bg-warning text-dark" *ngIf="isLoading">
             Se están procesando las tarjetas
+          </span>
+          <span
+            class="badge bg-danger text-dark"
+            *ngIf="
+              resultadoExcelGenerado !== undefined &&
+              estadoExcelGenerado === 'Procesando'
+            "
+          >
+            Los archivos de excel se están procesando
+          </span>
+          <span
+            class="badge bg-danger text-dark"
+            *ngIf="
+              resultadoExcelGenerado !== undefined &&
+              estadoExcelGenerado === 'Invalido'
+            "
+          >
+            Ese archivo no lo encontró
           </span>
         </div>
       </div>
@@ -48,9 +66,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let form of forms.data">
-            <td>
-              Caracterizador
-            </td>
+            <td>Caracterizador</td>
             <td>{{ form.status }}</td>
             <td>{{ form.data.version }}</td>
             <td>{{ form.data.code }}</td>

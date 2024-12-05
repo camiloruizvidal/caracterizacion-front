@@ -258,3 +258,14 @@ export enum EFichaTipo {
   FichaFamliiar = 'familyCard',
   FichaPersonal = 'personCard'
 }
+
+export interface IResultadoGenerarArchivoExcel {
+  fileName: string;
+  url: string;
+}
+
+export enum EFileStatus {
+  NOT_STARTED = 'Invalido',
+  IN_PROGRESS = 'Procesando',
+  COMPLETED = 'Completo'
+}

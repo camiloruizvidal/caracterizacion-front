@@ -1,7 +1,10 @@
+import {
+  EFileStatus,
+  IResultadoGenerarArchivoExcel
+} from './../../../../../helpers/interface/interface';
 import { IPagination } from 'src/app/helpers/interface/interface';
 import { FormulariosService } from './../../../services/formularios.service';
 import { Component, OnInit } from '@angular/core';
-import { environment } from 'enviroment/enviroment';
 
 @Component({
   selector: 'app-listado-masivo',
@@ -11,6 +14,9 @@ import { environment } from 'enviroment/enviroment';
 export class ListadoMasivoComponent implements OnInit {
   public isLoading: boolean = false;
   public forms!: IPagination<any>;
+  public resultadoExcelGenerado!: IResultadoGenerarArchivoExcel;
+  public estadoExcelGenerado!: EFileStatus;
+  private timeoutId: any = null;
 
   constructor(private formulariosService: FormulariosService) {}
 
@@ -58,7 +64,35 @@ export class ListadoMasivoComponent implements OnInit {
     );
   }
 
-  get exportarTarjetas(): string {
-    return `${environment.apiUrl}/v1/ficha/informecompleto`;
+  public exportarTarjetas() {
+    return this.formulariosService
+      .generarExcelTarjetasProcesadas()
+      .subscribe((resultado: IResultadoGenerarArchivoExcel) => {
+        this.resultadoExcelGenerado = resultado;
+        this.descargarTarjetasExcel(this.resultadoExcelGenerado.fileName);
+        this.timeoutId = setTimeout((): void => {
+          this.descargarTarjetasExcel(this.resultadoExcelGenerado.fileName);
+        }, 3000);
+      });
+  }
+
+  private descargarTarjetasExcel(fileName: string) {
+    this.formulariosService.validarEstadoExcel(fileName).subscribe(
+      (resultado: { estado: EFileStatus }) => {
+        this.estadoExcelGenerado = resultado.estado;
+        if (this.estadoExcelGenerado === EFileStatus.COMPLETED) {
+          window.open(this.resultadoExcelGenerado.url, '_blank');
+        }
+      },
+      error => {
+        alert(
+          'No se pudo generar el archivo. Error inexperado. "' +
+            error.message +
+            '"'
+        );
+        console.log({ error });
+        clearTimeout(this.timeoutId);
+      }
+    );
   }
 }

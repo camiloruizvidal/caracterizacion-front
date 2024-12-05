@@ -3,8 +3,10 @@ import { Injectable } from '@angular/core';
 import { environment } from 'enviroment/enviroment';
 import { Observable } from 'rxjs';
 import {
+  EFileStatus,
   IFichaFmiliar,
-  IPagination
+  IPagination,
+  IResultadoGenerarArchivoExcel
 } from 'src/app/helpers/interface/interface';
 
 @Injectable({
@@ -46,5 +48,19 @@ export class FormulariosService {
     return this.http.get<IPagination<IFichaFmiliar>>(this.apiUrl + '/detalle', {
       params
     });
+  }
+
+  public generarExcelTarjetasProcesadas(): Observable<IResultadoGenerarArchivoExcel> {
+    return this.http.get<IResultadoGenerarArchivoExcel>(
+      this.apiUrl + '/informecompleto'
+    );
+  }
+
+  public validarEstadoExcel(
+    fileName: string
+  ): Observable<{ estado: EFileStatus }> {
+    return this.http.get<{ estado: EFileStatus }>(
+      this.apiUrl + '/informecompleto/' + fileName
+    );
   }
 }
