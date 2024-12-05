@@ -69,25 +69,39 @@ export class ListadoMasivoComponent implements OnInit {
       .generarExcelTarjetasProcesadas()
       .subscribe((resultado: IResultadoGenerarArchivoExcel) => {
         this.resultadoExcelGenerado = resultado;
-        this.descargarTarjetasExcel(this.resultadoExcelGenerado.fileName);
+        this.validarEstadoTarjetasExcel(this.resultadoExcelGenerado.fileName);
         this.timeoutId = setTimeout((): void => {
-          this.descargarTarjetasExcel(this.resultadoExcelGenerado.fileName);
+          this.validarEstadoTarjetasExcel(this.resultadoExcelGenerado.fileName);
         }, 3000);
       });
   }
 
-  private descargarTarjetasExcel(fileName: string) {
+  private descargarArchivoExcel(resultadoExcelGeneradoUrl: string) {
+    this.formulariosService
+      .verificarArchivo(resultadoExcelGeneradoUrl)
+      .then((existe: any) => {
+        if (existe) {
+          window.open(resultadoExcelGeneradoUrl, '_blank');
+        } else {
+          alert('El archivo no existe o ha sido eliminado del servidor.');
+        }
+      });
+  }
+
+  private validarEstadoTarjetasExcel(fileName: string) {
     this.formulariosService.validarEstadoExcel(fileName).subscribe(
       (resultado: { estado: EFileStatus }) => {
         this.estadoExcelGenerado = resultado.estado;
         if (this.estadoExcelGenerado === EFileStatus.COMPLETED) {
-          window.open(this.resultadoExcelGenerado.url, '_blank');
+          clearTimeout(this.timeoutId);
+          this.descargarArchivoExcel(this.resultadoExcelGenerado.url);
         }
       },
       error => {
+        clearTimeout(this.timeoutId);
         alert(
           'No se pudo generar el archivo. Error inexperado. "' +
-            error.message +
+            error.error.message +
             '"'
         );
         console.log({ error });

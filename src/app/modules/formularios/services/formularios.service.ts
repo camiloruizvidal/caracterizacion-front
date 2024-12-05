@@ -63,4 +63,12 @@ export class FormulariosService {
       this.apiUrl + '/informecompleto/' + fileName
     );
   }
+
+  public verificarArchivo(url: string): Promise<boolean> {
+    return this.http
+      .head(url, { observe: 'response' })
+      .toPromise()
+      .then(() => true)
+      .catch(() => false);
+  }
 }
