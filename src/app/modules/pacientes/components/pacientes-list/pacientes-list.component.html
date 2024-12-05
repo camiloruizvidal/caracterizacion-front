@@ -32,9 +32,9 @@
           <button
             class="btn btn-primary"
             (click)="onUpload()"
-            [disabled]="!selectedFile"
+            [disabled]="!selectedFile || estaSubiendoArchivo"
           >
-            Subir Archivo
+            {{ estaSubiendoArchivo ? 'Subiendo archivo' : 'Subir Archivo' }}
           </button>
         </div>
         <div class="col-md-12">
