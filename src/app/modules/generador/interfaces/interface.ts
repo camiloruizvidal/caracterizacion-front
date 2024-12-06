@@ -12,7 +12,7 @@ export interface IGruposFicha {
 export interface IFamilyCard {
   isFinish: boolean;
   version?: string;
-  dateLastVersion?: Date;
+  dateLastVersion?: Date | string; //TODO BOrrar string
   familyCard: IStepers[];
   personCard: IStepers[];
 }

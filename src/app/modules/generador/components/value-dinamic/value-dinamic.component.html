@@ -1,1 +1,71 @@
-<p>value-dinamic works!</p>
+<div class="container-fluid">
+  <form [formGroup]="dynamicForm" (ngSubmit)="onSubmit()" class="row">
+    <div class="col-md-6">
+      <label for="mensaje" class="form-label">Mensaje:</label>
+      <input id="mensaje" formControlName="mensaje" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+      <label for="validation" class="form-label">Validation:</label>
+      <select id="validation" formControlName="validation" class="form-select">
+        <option *ngFor="let option of ['AND', 'OR']" [value]="option">
+          {{ option }}
+        </option>
+      </select>
+    </div>
+
+    <div class="col-md-12">
+      <button type="button" class="btn btn-secondary mt-4" (click)="addInput()">
+        Agregar otra línea
+      </button>
+    </div>
+
+    <div formArrayName="inputs" class="col-12">
+      <div
+        *ngFor="let inputGroup of inputs.controls; let i = index"
+        [formGroupName]="i"
+        class="row g-3 align-items-end"
+      >
+        <div class="col-md-3">
+          <label for="tiposFicha" class="form-label">Tipo</label>
+          <select
+            id="validation-{{ i }}"
+            class="form-select"
+            formControlName="tipo"
+            (change)="onTipoChange($event, i)"
+          >
+            <option value="">Seleccione</option>
+            <option *ngFor="let option of tiposFicha" [value]="option">
+              {{ option }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label for="input-{{ i }}" class="form-label">Input:</label>
+          <input
+            id="input-{{ i }}"
+            formControlName="input"
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-md-4">
+          <label for="value-{{ i }}" class="form-label">Value:</label>
+          <input
+            id="value-{{ i }}"
+            formControlName="value"
+            class="form-control"
+          />
+        </div>
+
+        <div class="col-md-1">
+          <button type="button" class="btn btn-danger" (click)="removeInput(i)">
+            x
+          </button>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-4">Guardar</button>
+  </form>
+</div>
