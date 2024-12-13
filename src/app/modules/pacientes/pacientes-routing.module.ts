@@ -5,12 +5,20 @@ import { PacientesListComponent } from './components/pacientes-list/pacientes-li
 const routes: Routes = [
   {
     path: '',
-    component: PacientesListComponent,
+    component: PacientesListComponent
   },
+  {
+    path: ':id/update',
+    component: PacientesListComponent
+  },
+  {
+    path: 'create',
+    component: PacientesListComponent
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class PacientesRoutingModule {}

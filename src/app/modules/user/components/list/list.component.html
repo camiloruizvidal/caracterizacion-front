@@ -57,7 +57,7 @@
           <tr *ngFor="let user of usersPagination.data">
             <td>
               <a
-                [routerLink]="'/users/update/' + user.id"
+                [routerLink]="'/users/' + user.id + 'update/'"
                 class="btn btn-success"
               >
                 <i class="bi bi-pencil-square"></i>

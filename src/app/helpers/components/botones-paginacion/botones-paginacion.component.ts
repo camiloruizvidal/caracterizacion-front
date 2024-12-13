@@ -27,6 +27,11 @@ export class BotonesPaginacionComponent implements OnInit {
       itemsPerPage: Number(this.itemsPerPage),
       currentPage: Number(this.currentPage)
     });
+    const container = document.documentElement || document.body;
+    container.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 
   onItemsPerPageChange(event: Event): void {

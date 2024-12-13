@@ -1,4 +1,22 @@
 <div class="row">
+  <div class="col-md-6">
+    <label for="itemsPerPage">Regitros por página:</label>
+    <select
+      class="form-control"
+      id="itemsPerPage"
+      [(ngModel)]="itemsPerPage"
+      (change)="onItemsPerPageChange($event)"
+    >
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+      <option value="200">200</option>
+    </select>
+  </div>
+</div>
+<div class="row mt-4">
   <div class="col-md-12">
     <nav aria-label="Page navigation example">
       <ul class="pagination">
@@ -55,23 +73,5 @@
         </li>
       </ul>
     </nav>
-  </div>
-  <div class="col-md-1">
-      Regitros por página:
-  </div>
-  <div class="col-md-3">
-    <select
-      class="form-control"
-      id="itemsPerPage"
-      [(ngModel)]="itemsPerPage"
-      (change)="onItemsPerPageChange($event)"
-    >
-      <option value="5">5</option>
-      <option value="10">10</option>
-      <option value="20">20</option>
-      <option value="50">50</option>
-      <option value="100">100</option>
-      <option value="200">200</option>
-    </select>
   </div>
 </div>
