@@ -13,8 +13,10 @@ export interface IFamilyCard {
   isFinish: boolean;
   version?: string;
   dateLastVersion?: Date;
-  nombreGrupal: IStepers[];
-  nombreIndividual: IStepers[];
+  nombreGrupal: string;
+  nombreIndividual: string;
+  grupalData: IStepers[];
+  individualData: IStepers[];
 }
 
 export interface IStepers {

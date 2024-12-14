@@ -29,16 +29,7 @@ export class InputsGeneratorComponent implements OnInit {
   public formularioGenerado!: IFamilyCard;
   public esEditable: boolean = false;
   private indexEditar: number = -1;
-  public tipoCards: { nombre: TipoForm; tituloTexto: string }[] = [
-    {
-      nombre: 'nombreGrupal',
-      tituloTexto: ''
-    },
-    {
-      nombre: 'nombreIndividual',
-      tituloTexto: ''
-    }
-  ];
+  public tipoCards: { nombre: TipoForm; tituloTexto: string }[] = [];
   public typesOptions: string[] = ['selectFilter', 'select_multiple', 'select'];
   public versiones: IVersiones[] = [];
 
@@ -91,11 +82,20 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public cargarFormularioVersion() {
+    console.log(this.versiones);
     const version = this.versiones.find(
       version => this.formulario.value.version === version.version
     );
-    this.tipoCards[0].tituloTexto = `${version?.nombreGrupal}`;
-    this.tipoCards[1].tituloTexto = `${version?.nombreIndividual}`;
+    this.tipoCards = [
+      {
+        nombre: 'nombreGrupal',
+        tituloTexto: `${version?.nombreGrupal}`
+      },
+      {
+        nombre: 'nombreIndividual',
+        tituloTexto: `${version?.nombreIndividual}`
+      }
+    ];
     this.cargarFormulario(this.formulario.get('version')?.value);
   }
 
@@ -136,6 +136,7 @@ export class InputsGeneratorComponent implements OnInit {
 
     return true;
   }
+
   private cargarFormulario(id: number) {
     this.inputsService.obtenerFormularioJson(id).subscribe(response => {
       if (!this.deepEqual(this.formularioGenerado, response.data)) {
@@ -169,24 +170,23 @@ export class InputsGeneratorComponent implements OnInit {
         this.formulario.value.grupo,
         fichaTipo
       );
-      const orden = this.formularioGenerado[fichaTipo][index].values?.length;
-      const steperValues: ISteperValues = {
-        label: this.formulario.value.label.trim(),
-        type: this.getTipo(),
-        options: this.getOptions(),
-        visibility: true,
-        required: this.formulario.value.esRequerido,
-        columnName: this.crearNombreColumna(),
-        default: this.formulario.value.default,
-        value: null,
-        orden
-      };
-      this.formularioGenerado[fichaTipo][index].values?.push(steperValues);
-
-      this.formulario.value.label = '';
-      this.guardarFormulario();
-    } else {
-      this.formulario.markAllAsTouched();
+      //   const orden = this.formularioGenerado[fichaTipo][index].values?.length;
+      //   const steperValues: ISteperValues = {
+      //     label: this.formulario.value.label.trim(),
+      //     type: this.getTipo(),
+      //     options: this.getOptions(),
+      //     visibility: true,
+      //     required: this.formulario.value.esRequerido,
+      //     columnName: this.crearNombreColumna(),
+      //     default: this.formulario.value.default,
+      //     value: null,
+      //     orden
+      //   };
+      //   this.formularioGenerado[fichaTipo][index].values?.push(steperValues);
+      //   this.formulario.value.label = '';
+      //   this.guardarFormulario();
+      // } else {
+      //   this.formulario.markAllAsTouched();
     }
   }
 
@@ -217,22 +217,28 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   private agregarGrupoAForm(tipoGrupo: any, tipoForm: TipoForm) {
-    let index = this.formularioGenerado[tipoForm].findIndex(
-      value => value.id === Number(this.formulario.value.grupo)
-    );
-    if (index === -1) {
-      const grupo = this.grupos.find(grupo => grupo.id === Number(tipoGrupo));
-      if (grupo) {
-        this.formularioGenerado[tipoForm].push({
-          ...grupo,
-          values: []
-        });
-        index = this.formularioGenerado[tipoForm].findIndex(
-          value => value.id === Number(this.formulario.value.grupo)
-        );
-      }
-    }
-    return index;
+    let index = this.formularioGenerado[tipoForm];
+    console.log({
+      index,
+      formularioGenerado: this.formularioGenerado,
+      tipoForm
+    });
+    // .findIndex(
+    //   value => value.id === Number(this.formulario.value.grupo)
+    // )
+    // if (index === -1) {
+    //   const grupo = this.grupos.find(grupo => grupo.id === Number(tipoGrupo));
+    //   if (grupo) {
+    //     this.formularioGenerado[tipoForm].push({
+    //       ...grupo,
+    //       values: []
+    //     });
+    //     index = this.formularioGenerado[tipoForm].findIndex(
+    //       value => value.id === Number(this.formulario.value.grupo)
+    //     );
+    //   }
+    // }
+    return 1; //index;
   }
 
   private crearNombreColumna(): string {
@@ -251,43 +257,41 @@ export class InputsGeneratorComponent implements OnInit {
     indexCard: number,
     tarjeta: TipoForm
   ) {
-    console.log({
-      nuevoOrden: Number(nuevoOrden.target.value),
-      ordenAnterior: Number(value.orden),
-      indexCard,
-      tarjeta,
-      form: JSON.parse(
-        JSON.stringify(this.formularioGenerado[tarjeta][indexCard].values)
-      )
-    });
-
-    const ordenAnterior = Number(value.orden);
-    const items = this.formularioGenerado[tarjeta][indexCard]?.values;
-
-    if (items && Array.isArray(items)) {
-      const item = items[ordenAnterior];
-      items.splice(ordenAnterior, 1);
-      items.splice(Number(nuevoOrden.target.value), 0, item);
-      this.actualizarOrden();
-    } else {
-      console.error('items is undefined or not an array');
-    }
+    // console.log({
+    //   nuevoOrden: Number(nuevoOrden.target.value),
+    //   ordenAnterior: Number(value.orden),
+    //   indexCard,
+    //   tarjeta,
+    //   form: JSON.parse(
+    //     JSON.stringify(this.formularioGenerado[tarjeta][indexCard].values)
+    //   )
+    // });
+    // const ordenAnterior = Number(value.orden);
+    // const items = this.formularioGenerado[tarjeta][indexCard]?.values;
+    // if (items && Array.isArray(items)) {
+    //   const item = items[ordenAnterior];
+    //   items.splice(ordenAnterior, 1);
+    //   items.splice(Number(nuevoOrden.target.value), 0, item);
+    //   this.actualizarOrden();
+    // } else {
+    //   console.error('items is undefined or not an array');
+    // }
   }
 
   public actualizarOrden() {
     const tipos: TipoForm[] = ['nombreGrupal', 'nombreIndividual'];
-    tipos.forEach((tipo: TipoForm) => {
-      this.formularioGenerado[tipo].map((item: IStepers, index: number) => {
-        let orden = 0;
-        item.orden = index;
-        return item.values?.map(items => {
-          items.orden = orden;
-          orden = orden + 1;
-          return items;
-        });
-      });
-    });
-    this.guardarFormulario();
+    // tipos.forEach((tipo: TipoForm) => {
+    //   this.formularioGenerado[tipo].map((item: IStepers, index: number) => {
+    //     let orden = 0;
+    //     item.orden = index;
+    //     return item.values?.map(items => {
+    //       items.orden = orden;
+    //       orden = orden + 1;
+    //       return items;
+    //     });
+    //   });
+    // });
+    // this.guardarFormulario();
   }
 
   public getKeys(value: any): string[] {
@@ -304,65 +308,63 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public editar(tipo: TipoForm, index: number, indexValue: number, value: any) {
-    this.formulario.patchValue({
-      fichaTipo: tipo,
-      tipo: value.type,
-      options: value.options,
-      label: value.label,
-      grupo: this.formularioGenerado[tipo][index].id,
-      default: this.formulario.value.default
-    });
-    try {
-      this.formulario.patchValue({
-        optionsJSON: JSON.stringify(value.options, null, 2)
-      });
-    } catch (error) {
-      this.formulario.patchValue({
-        optionsJSON: ''
-      });
-    }
-    this.indexEditar = indexValue;
-    this.esEditable = true;
+    // this.formulario.patchValue({
+    //   fichaTipo: tipo,
+    //   tipo: value.type,
+    //   options: value.options,
+    //   label: value.label,
+    //   grupo: this.formularioGenerado[tipo][index].id,
+    //   default: this.formulario.value.default
+    // });
+    // try {
+    //   this.formulario.patchValue({
+    //     optionsJSON: JSON.stringify(value.options, null, 2)
+    //   });
+    // } catch (error) {
+    //   this.formulario.patchValue({
+    //     optionsJSON: ''
+    //   });
+    // }
+    // this.indexEditar = indexValue;
+    // this.esEditable = true;
   }
 
   public guardarEdicion() {
     const tipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
 
-    const indexGrupo = this.formularioGenerado[tipo].findIndex(
-      value => value.id === Number(this.formulario.value.grupo)
-    );
+    // const indexGrupo = this.formularioGenerado[tipo].findIndex(
+    //   value => value.id === Number(this.formulario.value.grupo)
+    // );
 
-    const values =
-      this.formularioGenerado?.[tipo]?.[indexGrupo]?.values?.[this.indexEditar];
+    // const values =
+    //   this.formularioGenerado?.[tipo]?.[indexGrupo]?.values?.[this.indexEditar];
 
-    if (values) {
-      values.label = this.formulario.value.label.trim();
-      values.options = this.getOptions();
-      values.type = this.getTipo();
-      values.visibility = true;
-      values.required = this.formulario.value.esRequerido;
-      values.default = this.formulario.value.default;
-      this.guardarFormulario();
-      this.esEditable = false;
-    }
+    // if (values) {
+    //   values.label = this.formulario.value.label.trim();
+    //   values.options = this.getOptions();
+    //   values.type = this.getTipo();
+    //   values.visibility = true;
+    //   values.required = this.formulario.value.esRequerido;
+    //   values.default = this.formulario.value.default;
+    //   this.guardarFormulario();
+    //   this.esEditable = false;
+    // }
   }
 
   public eliminar(tipo: string, index: number, indexValue: number, value: any) {
-    const tipoForm: TipoForm = tipo as TipoForm;
-    this.formularioGenerado[tipoForm][index].values?.splice(indexValue, 1);
-
-    if (this.formularioGenerado[tipoForm][index].values?.length === 0) {
-      this.formularioGenerado[tipoForm].splice(index, 1);
-    }
-
-    this.inputsService
-      .guardarFormulario(this.formularioGenerado)
-      .subscribe(response => {
-        this.toastr.error(
-          'Se actualizó el formulario',
-          'El nuevo item ha sido eliminado'
-        );
-      });
+    // const tipoForm: TipoForm = tipo as TipoForm;
+    // this.formularioGenerado[tipoForm][index].values?.splice(indexValue, 1);
+    // if (this.formularioGenerado[tipoForm][index].values?.length === 0) {
+    //   this.formularioGenerado[tipoForm].splice(index, 1);
+    // }
+    // this.inputsService
+    //   .guardarFormulario(this.formularioGenerado)
+    //   .subscribe(response => {
+    //     this.toastr.error(
+    //       'Se actualizó el formulario',
+    //       'El nuevo item ha sido eliminado'
+    //     );
+    //   });
   }
 
   public getValue(key: string, value: any): any {
@@ -478,18 +480,19 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public get camposVisibles(): any[] {
-    try {
-      const fichaTipo: TipoForm = this.formulario.value.fichaTipoVisible;
-
-      return (
-        this.formularioGenerado[fichaTipo].find(
-          (ficha: any) =>
-            ficha.id === Number(this.formulario.value.grupoVisible)
-        )?.values || []
-      );
-    } catch (error) {
-      return [];
-    }
+    return [];
+    //    try {
+    //      const fichaTipo: TipoForm = this.formulario.value.fichaTipoVisible;
+    //
+    //      return (
+    //        this.formularioGenerado[fichaTipo].find(
+    //          (ficha: any) =>
+    //            ficha.id === Number(this.formulario.value.grupoVisible)
+    //        )?.values || []
+    //      );
+    //    } catch (error) {
+    //      return [];
+    //    }
   }
 
   public get esVisibleSi(): boolean {

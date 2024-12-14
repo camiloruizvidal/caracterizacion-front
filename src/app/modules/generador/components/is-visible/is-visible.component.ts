@@ -74,17 +74,18 @@ export class IsVisibleComponent implements OnInit {
   }
 
   public get camposVisibles(): any[] {
-    try {
-      const fichaTipo: TipoForm = this.formulario.value.fichaTipoVisible;
-      return (
-        this.formularioGenerado[fichaTipo].find(
-          (ficha: any) =>
-            ficha.id === Number(this.formulario.value.grupoVisible)
-        )?.values || []
-      );
-    } catch (error) {
-      return [];
-    }
+    return [];
+    //    try {
+    //      const fichaTipo: TipoForm = this.formulario.value.fichaTipoVisible;
+    //      return (
+    //        this.formularioGenerado[fichaTipo].find(
+    //          (ficha: any) =>
+    //            ficha.id === Number(this.formulario.value.grupoVisible)
+    //        )?.values || []
+    //      );
+    //    } catch (error) {
+    //      return [];
+    //    }
   }
 
   public guardarVisibilidad(): void {
