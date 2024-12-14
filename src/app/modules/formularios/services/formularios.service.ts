@@ -1,3 +1,4 @@
+import { IVersiones } from './../../../helpers/interface/interface';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'enviroment/enviroment';
@@ -19,9 +20,16 @@ export class FormulariosService {
 
   public obtenerFormularios(
     page: number = 1,
-    pageSize: number = 10
+    pageSize: number = 10,
+    version: string = ''
   ): Observable<IPagination<any>> {
-    const params = { page: page.toString(), pageSize: pageSize.toString() };
+    let params = new HttpParams();
+    params = params.set('page', page.toString());
+    params = params.set('pageSize', pageSize.toString());
+
+    if (version !== '') {
+      params = params.set('version', version);
+    }
     return this.http.get<IPagination<any>>(this.apiUrl + '/backup', { params });
   }
 
@@ -70,5 +78,9 @@ export class FormulariosService {
       .toPromise()
       .then(() => true)
       .catch(() => false);
+  }
+
+  public obtenerVersiones(): Observable<IVersiones[]> {
+    return this.http.get<IVersiones[]>(`${this.apiUrl}/versiones`);
   }
 }

@@ -269,3 +269,10 @@ export enum EFileStatus {
   IN_PROGRESS = 'Procesando',
   COMPLETED = 'Completo'
 }
+
+export interface IVersiones {
+  id: number;
+  version: string;
+  nombreGrupal: string;
+  nombreIndividual: string;
+}
