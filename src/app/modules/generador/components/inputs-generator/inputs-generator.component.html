@@ -7,17 +7,21 @@
           <h1>Por favor seleccione la ficha</h1>
           <form [formGroup]="formulario" (ngSubmit)="agregar()">
             <div class="col-md-12">
-              <label for="versionFicha">Version de la ficha</label>
+              <label for="version">Version de la ficha</label>
               <select
-                formControlName="versionFicha"
+                (change)="cargarFormularioVersion()"
+                formControlName="version"
                 class="form form-control"
-                name="versionFicha"
-                id="versionFicha"
+                name="version"
+                id="version"
                 required
               >
                 <option value="">Seleccione</option>
-                <option value="" *ngFor="let version of versiones">
-                  {{ version.id }}
+                <option
+                  [value]="version.version"
+                  *ngFor="let version of versiones"
+                >
+                  {{ version.nombre }}
                 </option>
               </select>
             </div>

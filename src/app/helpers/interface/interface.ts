@@ -271,8 +271,8 @@ export enum EFileStatus {
 }
 
 export interface IVersiones {
-  id: number;
   version: string;
   nombreGrupal: string;
   nombreIndividual: string;
+  nombre: string;
 }

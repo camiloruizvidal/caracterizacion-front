@@ -57,7 +57,7 @@ export class InputsGeneratorComponent implements OnInit {
       required: [false],
       value: null,
       nombre_columna: [''],
-      versionFicha: [''],
+      version: [''],
       fichaTipoVisible: [''],
       grupoVisible: ['']
     });
@@ -69,13 +69,13 @@ export class InputsGeneratorComponent implements OnInit {
   }
   //#region temporal
   public ngOnInit(): void {
-    this.cargarFormulario(2);
+    this.cargarVersiones();
     this.cargarGrupos();
     this.cargarTipos();
-    this.cargarVersiones();
-    setInterval(() => {
-      this.cargarFormulario(2);
-    }, 2000);
+  }
+
+  public cargarFormularioVersion() {
+    this.cargarFormulario(this.formulario.get('version')?.value);
   }
 
   private cargarVersiones() {
