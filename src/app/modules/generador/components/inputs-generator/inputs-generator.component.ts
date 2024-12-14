@@ -12,8 +12,9 @@ import { ESteperType } from 'src/app/helpers/interface/interface';
 import { v4 as uuid } from 'uuid';
 import { ToastrService } from 'ngx-toastr';
 import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-type TipoForm = 'familyCard' | 'personCard';
+type TipoForm = 'nombreGrupal' | 'nombreIndividual';
 
 @Component({
   selector: 'app-inputs-generator',
@@ -29,17 +30,26 @@ export class InputsGeneratorComponent implements OnInit {
   public esEditable: boolean = false;
   private indexEditar: number = -1;
   public tipoCards: { nombre: TipoForm; tituloTexto: string }[] = [
-    { nombre: 'familyCard', tituloTexto: 'Tarjeta Familiar' },
-    { nombre: 'personCard', tituloTexto: 'Tarjeta Personal' }
+    {
+      nombre: 'nombreGrupal',
+      tituloTexto: ''
+    },
+    {
+      nombre: 'nombreIndividual',
+      tituloTexto: ''
+    }
   ];
   public typesOptions: string[] = ['selectFilter', 'select_multiple', 'select'];
   public versiones: IVersiones[] = [];
+
+  modalForm!: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
     private inputsService: InputsService,
     private toastr: ToastrService,
-    private formulariosService: FormulariosService
+    private formulariosService: FormulariosService,
+    private modalService: NgbModal
   ) {
     this.formulario = this.formBuilder.group({
       fichaTipo: ['', Validators.required],
@@ -66,6 +76,12 @@ export class InputsGeneratorComponent implements OnInit {
       nuevoFichaTipo: ['', Validators.required],
       nombreGrupo: ['', Validators.required]
     });
+
+    this.modalForm = this.formBuilder.group({
+      nombre: ['', Validators.required],
+      nombreGrupal: ['', Validators.required],
+      nombreIndividual: ['', Validators.required]
+    });
   }
   //#region temporal
   public ngOnInit(): void {
@@ -75,6 +91,11 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public cargarFormularioVersion() {
+    const version = this.versiones.find(
+      version => this.formulario.value.version === version.version
+    );
+    this.tipoCards[0].tituloTexto = `${version?.nombreGrupal}`;
+    this.tipoCards[1].tituloTexto = `${version?.nombreIndividual}`;
     this.cargarFormulario(this.formulario.get('version')?.value);
   }
 
@@ -254,7 +275,7 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public actualizarOrden() {
-    const tipos: TipoForm[] = ['familyCard', 'personCard'];
+    const tipos: TipoForm[] = ['nombreGrupal', 'nombreIndividual'];
     tipos.forEach((tipo: TipoForm) => {
       this.formularioGenerado[tipo].map((item: IStepers, index: number) => {
         let orden = 0;
@@ -386,13 +407,50 @@ export class InputsGeneratorComponent implements OnInit {
     return values[value];
   }
 
+  public agregarNuevaVersion(content: any) {
+    this.modalForm.reset(); // Limpiar el formulario al abrir
+    this.modalService
+      .open(content, { ariaLabelledBy: 'modal-title' })
+      .result.then(
+        result => {
+          console.log(`Modal cerrado con: ${result}`);
+        },
+        reason => {
+          console.log(`Modal cerrado: ${this.getDismissReason(reason)}`);
+        }
+      );
+  }
+
+  public guardarNuevaVersion(modal: any) {
+    if (this.modalForm.valid) {
+      console.log(this.modalForm.value);
+      this.formulariosService
+        .crearNuevaVersionFicha({
+          nombre: this.modalForm.value.nombre,
+          nombreGrupal: this.modalForm.value.nombreGrupal,
+          nombreIndividual: this.modalForm.value.nombreIndividual
+        })
+        .subscribe();
+      modal.close('Guardado');
+    }
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'Presionó ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'Hizo clic fuera del modal';
+    }
+    return `Motivo desconocido: ${reason}`;
+  }
+
   public get gruposFiltrado(): any[] {
     let tipoid: number = 0;
     switch (this.formulario.value.fichaTipo) {
-      case 'familyCard':
+      case 'nombreGrupal':
         tipoid = 1;
         break;
-      case 'personCard':
+      case 'nombreIndividual':
         tipoid = 2;
         break;
     }
@@ -409,10 +467,10 @@ export class InputsGeneratorComponent implements OnInit {
   public get gruposVisiblesFiltrado(): any[] {
     let tipoid: number = 0;
     switch (this.formulario.value.fichaTipoVisible) {
-      case 'familyCard':
+      case 'nombreGrupal':
         tipoid = 1;
         break;
-      case 'personCard':
+      case 'nombreIndividual':
         tipoid = 2;
         break;
     }

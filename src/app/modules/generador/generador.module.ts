@@ -5,11 +5,13 @@ import { GeneradorRoutingModule } from './generador-routing.module';
 import { HelpersModule } from 'src/app/helpers/helpers.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IsVisibleComponent } from './components/is-visible/is-visible.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [InputsGeneratorComponent, IsVisibleComponent],
   imports: [
     CommonModule,
+    NgbModule,
     GeneradorRoutingModule,
     HelpersModule,
     ReactiveFormsModule

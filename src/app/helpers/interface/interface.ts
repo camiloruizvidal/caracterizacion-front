@@ -255,8 +255,8 @@ export enum ESteperType {
 }
 
 export enum EFichaTipo {
-  FichaFamliiar = 'familyCard',
-  FichaPersonal = 'personCard'
+  FichaFamliiar = 'nombreGrupal',
+  FichaPersonal = 'nombreIndividual'
 }
 
 export interface IResultadoGenerarArchivoExcel {

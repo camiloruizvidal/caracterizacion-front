@@ -23,7 +23,7 @@ export class InputsService {
     //  isFinish: false,
     //  version: '1766',
     //  dateLastVersion: new Date('2024-02-25T00:45:25.464Z'),
-    //  familyCard: [
+    //  nombreGrupal: [
     //    {
     //      id: 7,
     //      title: 'DATOS GENERALES',
@@ -2802,7 +2802,7 @@ export class InputsService {
     //      ]
     //    }
     //  ],
-    //  personCard: [
+    //  nombreIndividual: [
     //    {
     //      id: 5,
     //      title: 'DATOS PERSONALES',
@@ -4041,7 +4041,7 @@ export class InputsService {
     return this.http.get(this.apiUrl + '/ficha/obtenerJson/' + id.toString());
   }
 
-  public crearGrupo(data: {title: string, ficha_tipo_id: number}) {
+  public crearGrupo(data: { title: string; ficha_tipo_id: number }) {
     return this.http.post(this.apiUrl + '/ficha/grupo_nuevo', data);
   }
 }

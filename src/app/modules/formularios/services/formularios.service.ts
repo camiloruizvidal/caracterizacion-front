@@ -83,4 +83,16 @@ export class FormulariosService {
   public obtenerVersiones(): Observable<IVersiones[]> {
     return this.http.get<IVersiones[]>(`${this.apiUrl}/versiones`);
   }
+
+  public crearNuevaVersionFicha(version: {
+    nombre: string;
+    nombreGrupal: string;
+    nombreIndividual: string;
+  }): Observable<IVersiones> {
+    return this.http.post<IVersiones>(`${this.apiUrl}/nueva_version`, {
+      nombre: version.nombre,
+      nombre_grupal: version.nombreGrupal,
+      nombre_individual: version.nombreIndividual
+    });
+  }
 }
