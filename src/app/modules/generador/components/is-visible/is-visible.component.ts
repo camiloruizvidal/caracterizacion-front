@@ -8,7 +8,7 @@ import {
   typeRule
 } from '../../interfaces/interface';
 
-type TipoForm = 'grupalNombre' | 'individualNombre';
+type TipoForm = 'grupalNombre' | 'nombreIndividual';
 
 @Component({
   selector: 'app-is-visible',
@@ -66,7 +66,7 @@ export class IsVisibleComponent implements OnInit {
       case 'grupalNombre':
         tipoid = 1;
         break;
-      case 'individualNombre':
+      case 'nombreIndividual':
         tipoid = 2;
         break;
     }

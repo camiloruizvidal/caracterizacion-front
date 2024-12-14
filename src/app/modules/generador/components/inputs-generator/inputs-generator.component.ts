@@ -89,11 +89,11 @@ export class InputsGeneratorComponent implements OnInit {
     this.tipoCards = [
       {
         nombre: 'grupalNombre',
-        tituloTexto: `${version?.grupalNombre}`
+        tituloTexto: version?.grupalNombre ?? ''
       },
       {
         nombre: 'individualNombre',
-        tituloTexto: `${version?.individualNombre}`
+        tituloTexto: version?.individualNombre ?? ''
       }
     ];
     this.cargarFormulario(this.formulario.get('version')?.value);
@@ -485,19 +485,19 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public get camposVisibles(): any[] {
-    return [];
-    //    try {
-    //      const fichaTipo: TipoForm = this.formulario.value.fichaTipoVisible;
-    //
-    //      return (
-    //        this.formularioGenerado[fichaTipo].find(
-    //          (ficha: any) =>
-    //            ficha.id === Number(this.formulario.value.grupoVisible)
-    //        )?.values || []
-    //      );
-    //    } catch (error) {
-    //      return [];
-    //    }
+    try {
+      const fichaTipo: TipoForm = this.formulario.value.fichaTipoVisible;
+      const campo: TipoDataForm = this.tipoData[fichaTipo] as TipoDataForm;
+
+      return (
+        this.formularioGenerado[campo].find(
+          (ficha: any) =>
+            ficha.id === Number(this.formulario.value.grupoVisible)
+        )?.values || []
+      );
+    } catch (error) {
+      return [];
+    }
   }
 
   public get esVisibleSi(): boolean {
