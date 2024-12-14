@@ -1,3 +1,4 @@
+import { IVersiones } from './../../../../helpers/interface/interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   IFamilyCard,
@@ -10,6 +11,7 @@ import { Component, OnInit } from '@angular/core';
 import { ESteperType } from 'src/app/helpers/interface/interface';
 import { v4 as uuid } from 'uuid';
 import { ToastrService } from 'ngx-toastr';
+import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
 
 type TipoForm = 'familyCard' | 'personCard';
 
@@ -31,11 +33,13 @@ export class InputsGeneratorComponent implements OnInit {
     { nombre: 'personCard', tituloTexto: 'Tarjeta Personal' }
   ];
   public typesOptions: string[] = ['selectFilter', 'select_multiple', 'select'];
+  public versiones: IVersiones[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private inputsService: InputsService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private formulariosService: FormulariosService
   ) {
     this.formulario = this.formBuilder.group({
       fichaTipo: ['', Validators.required],
@@ -53,7 +57,7 @@ export class InputsGeneratorComponent implements OnInit {
       required: [false],
       value: null,
       nombre_columna: [''],
-
+      versionFicha: [''],
       fichaTipoVisible: [''],
       grupoVisible: ['']
     });
@@ -68,9 +72,18 @@ export class InputsGeneratorComponent implements OnInit {
     this.cargarFormulario(2);
     this.cargarGrupos();
     this.cargarTipos();
+    this.cargarVersiones();
     setInterval(() => {
       this.cargarFormulario(2);
     }, 2000);
+  }
+
+  private cargarVersiones() {
+    this.formulariosService
+      .obtenerVersiones()
+      .subscribe((resultado: IVersiones[]) => {
+        this.versiones = resultado;
+      });
   }
 
   private deepEqual(obj1: any, obj2: any): boolean {
