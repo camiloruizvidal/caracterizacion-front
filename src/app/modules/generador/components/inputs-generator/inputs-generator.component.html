@@ -220,17 +220,16 @@
                   [id]="'panel-' + tipo.nombre + '-' + indexSteper"
                   class="mb-4"
                   *ngFor="
-                let steper of formularioGenerado?.[tipo.nombre];
+                let steper of formularioGenerado?.[tipoData[tipo.nombre]] ;
                 let indexSteper = index"
                   style="max-height: 96.5vh; overflow: scroll"
                 >
                   <ng-template ngbPanelTitle>
-                    <!--
-                    <span> {{ steper?.orden ?? 0 }}) {{ steper.title }} </span>
-                    -->
+                    <span>
+                      {{ (steper?.orden ?? 0) + 1 }}) {{ steper.title }}
+                    </span>
                   </ng-template>
                   <ng-template ngbPanelContent>
-                    <!--
                     <table>
                       <tr
                         class="table-group-divider"
@@ -358,7 +357,6 @@
                         </td>
                       </tr>
                     </table>
-                    -->
                   </ng-template>
                 </ngb-panel>
               </ngb-accordion>

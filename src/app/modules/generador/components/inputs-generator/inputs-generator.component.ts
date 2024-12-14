@@ -517,8 +517,8 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public get tipoData(): {
-    grupalNombre: string;
-    individualNombre: string;
+    grupalNombre: TipoDataForm;
+    individualNombre: TipoDataForm;
   } {
     return {
       grupalNombre: 'grupalData',
