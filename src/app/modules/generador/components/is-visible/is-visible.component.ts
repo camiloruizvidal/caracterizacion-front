@@ -8,7 +8,7 @@ import {
   typeRule
 } from '../../interfaces/interface';
 
-type TipoForm = 'nombreGrupal' | 'nombreIndividual';
+type TipoForm = 'grupalNombre' | 'individualNombre';
 
 @Component({
   selector: 'app-is-visible',
@@ -63,10 +63,10 @@ export class IsVisibleComponent implements OnInit {
       return [];
     }
     switch (this.formulario.value.fichaTipoVisible) {
-      case 'nombreGrupal':
+      case 'grupalNombre':
         tipoid = 1;
         break;
-      case 'nombreIndividual':
+      case 'individualNombre':
         tipoid = 2;
         break;
     }

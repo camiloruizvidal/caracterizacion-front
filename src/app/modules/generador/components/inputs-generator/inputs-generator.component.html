@@ -9,7 +9,6 @@
             <div class="col-md-12">
               <label for="version">Versión de la ficha</label>
               <div class="input-group">
-                <!-- Botón al lado izquierdo -->
                 <button
                   type="button"
                   class="btn btn-primary"
@@ -43,8 +42,8 @@
                 class="form-control"
               >
                 <option value="">Seleccione</option>
-                <option value="nombreGrupal">Ficha Familiar</option>
-                <option value="nombreIndividual">Ficha Personal</option>
+                <option value="grupalNombre">Ficha Familiar</option>
+                <option value="individualNombre">Ficha Personal</option>
               </select>
             </div>
             <div class="col-md-12">
@@ -226,9 +225,12 @@
                   style="max-height: 96.5vh; overflow: scroll"
                 >
                   <ng-template ngbPanelTitle>
+                    <!--
                     <span> {{ steper?.orden ?? 0 }}) {{ steper.title }} </span>
+                    -->
                   </ng-template>
                   <ng-template ngbPanelContent>
+                    <!--
                     <table>
                       <tr
                         class="table-group-divider"
@@ -356,6 +358,7 @@
                         </td>
                       </tr>
                     </table>
+                    -->
                   </ng-template>
                 </ngb-panel>
               </ngb-accordion>
@@ -379,7 +382,6 @@
     ></button>
   </div>
   <div class="modal-body">
-    <!-- Formulario Reactivo -->
     <form [formGroup]="modalForm">
       <div class="mb-3">
         <label for="nombre" class="form-label">Nombre</label>
@@ -391,25 +393,25 @@
         />
       </div>
       <div class="mb-3">
-        <label for="nombreGrupal" class="form-label"
+        <label for="grupalNombre" class="form-label"
           >Nombre de la ficha Grupal</label
         >
         <input
           type="text"
-          id="nombreGrupal"
+          id="grupalNombre"
           class="form-control"
-          formControlName="nombreGrupal"
+          formControlName="grupalNombre"
         />
       </div>
       <div class="mb-3">
-        <label for="nombreIndividual" class="form-label">
+        <label for="individualNombre" class="form-label">
           Nombre de la ficha individual
         </label>
         <input
           type="text"
-          id="nombreIndividual"
+          id="individualNombre"
           class="form-control"
-          formControlName="nombreIndividual"
+          formControlName="individualNombre"
         />
       </div>
     </form>

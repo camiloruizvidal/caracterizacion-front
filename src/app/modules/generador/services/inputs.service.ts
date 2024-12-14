@@ -23,7 +23,7 @@ export class InputsService {
     //  isFinish: false,
     //  version: '1766',
     //  dateLastVersion: new Date('2024-02-25T00:45:25.464Z'),
-    //  nombreGrupal: [
+    //  grupalNombre: [
     //    {
     //      id: 7,
     //      title: 'DATOS GENERALES',
@@ -2802,7 +2802,7 @@ export class InputsService {
     //      ]
     //    }
     //  ],
-    //  nombreIndividual: [
+    //  individualNombre: [
     //    {
     //      id: 5,
     //      title: 'DATOS PERSONALES',

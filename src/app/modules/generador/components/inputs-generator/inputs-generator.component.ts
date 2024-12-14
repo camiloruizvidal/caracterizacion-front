@@ -14,7 +14,8 @@ import { ToastrService } from 'ngx-toastr';
 import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-type TipoForm = 'nombreGrupal' | 'nombreIndividual';
+type TipoForm = 'grupalNombre' | 'individualNombre';
+type TipoDataForm = 'grupalData' | 'individualData';
 
 @Component({
   selector: 'app-inputs-generator',
@@ -70,8 +71,8 @@ export class InputsGeneratorComponent implements OnInit {
 
     this.modalForm = this.formBuilder.group({
       nombre: ['', Validators.required],
-      nombreGrupal: ['', Validators.required],
-      nombreIndividual: ['', Validators.required]
+      grupalNombre: ['', Validators.required],
+      individualNombre: ['', Validators.required]
     });
   }
   //#region temporal
@@ -82,18 +83,17 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public cargarFormularioVersion() {
-    console.log(this.versiones);
     const version = this.versiones.find(
       version => this.formulario.value.version === version.version
     );
     this.tipoCards = [
       {
-        nombre: 'nombreGrupal',
-        tituloTexto: `${version?.nombreGrupal}`
+        nombre: 'grupalNombre',
+        tituloTexto: `${version?.grupalNombre}`
       },
       {
-        nombre: 'nombreIndividual',
-        tituloTexto: `${version?.nombreIndividual}`
+        nombre: 'individualNombre',
+        tituloTexto: `${version?.individualNombre}`
       }
     ];
     this.cargarFormulario(this.formulario.get('version')?.value);
@@ -166,27 +166,34 @@ export class InputsGeneratorComponent implements OnInit {
   public agregar(): void {
     if (this.isValidForm) {
       const fichaTipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
-      let index = this.agregarGrupoAForm(
+      let valueIndex = this.agregarGrupoAForm(
         this.formulario.value.grupo,
         fichaTipo
       );
-      //   const orden = this.formularioGenerado[fichaTipo][index].values?.length;
-      //   const steperValues: ISteperValues = {
-      //     label: this.formulario.value.label.trim(),
-      //     type: this.getTipo(),
-      //     options: this.getOptions(),
-      //     visibility: true,
-      //     required: this.formulario.value.esRequerido,
-      //     columnName: this.crearNombreColumna(),
-      //     default: this.formulario.value.default,
-      //     value: null,
-      //     orden
-      //   };
-      //   this.formularioGenerado[fichaTipo][index].values?.push(steperValues);
-      //   this.formulario.value.label = '';
-      //   this.guardarFormulario();
-      // } else {
-      //   this.formulario.markAllAsTouched();
+      const campo: TipoDataForm = this.tipoData[fichaTipo] as TipoDataForm;
+      const valor: any = this.formularioGenerado[campo][valueIndex];
+      const orden = valor?.values.length;
+      const steperValues: ISteperValues = {
+        label: this.formulario.value.label.trim(),
+        type: this.getTipo(),
+        options: this.getOptions(),
+        visibility: true,
+        required: this.formulario.value.esRequerido,
+        columnName: this.crearNombreColumna(),
+        default: this.formulario.value.default,
+        value: null,
+        orden
+      };
+      console.log({
+        valor,
+        steperValues,
+        data: this.formularioGenerado
+      });
+      this.formularioGenerado[campo][valueIndex]?.values?.push(steperValues);
+      this.formulario.value.label = '';
+      this.guardarFormulario();
+    } else {
+      this.formulario.markAllAsTouched();
     }
   }
 
@@ -217,28 +224,27 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   private agregarGrupoAForm(tipoGrupo: any, tipoForm: TipoForm) {
-    let index = this.formularioGenerado[tipoForm];
-    console.log({
-      index,
-      formularioGenerado: this.formularioGenerado,
-      tipoForm
-    });
-    // .findIndex(
-    //   value => value.id === Number(this.formulario.value.grupo)
-    // )
-    // if (index === -1) {
-    //   const grupo = this.grupos.find(grupo => grupo.id === Number(tipoGrupo));
-    //   if (grupo) {
-    //     this.formularioGenerado[tipoForm].push({
-    //       ...grupo,
-    //       values: []
-    //     });
-    //     index = this.formularioGenerado[tipoForm].findIndex(
-    //       value => value.id === Number(this.formulario.value.grupo)
-    //     );
-    //   }
-    // }
-    return 1; //index;
+    const campo = this.tipoData[tipoForm];
+    let valores: any[] = this.formularioGenerado[
+      campo as keyof typeof this.formularioGenerado
+    ] as [];
+
+    let index = valores?.findIndex(
+      (value: any) => value.id === Number(this.formulario.value.grupo)
+    );
+    if (index === -1) {
+      const grupo = this.grupos.find(grupo => grupo.id === Number(tipoGrupo));
+      if (grupo) {
+        valores.push({
+          ...grupo,
+          values: []
+        });
+        index = valores.findIndex(
+          value => value.id === Number(this.formulario.value.grupo)
+        );
+      }
+    }
+    return index;
   }
 
   private crearNombreColumna(): string {
@@ -279,7 +285,7 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public actualizarOrden() {
-    const tipos: TipoForm[] = ['nombreGrupal', 'nombreIndividual'];
+    const tipos: TipoForm[] = ['grupalNombre', 'individualNombre'];
     // tipos.forEach((tipo: TipoForm) => {
     //   this.formularioGenerado[tipo].map((item: IStepers, index: number) => {
     //     let orden = 0;
@@ -425,12 +431,11 @@ export class InputsGeneratorComponent implements OnInit {
 
   public guardarNuevaVersion(modal: any) {
     if (this.modalForm.valid) {
-      console.log(this.modalForm.value);
       this.formulariosService
         .crearNuevaVersionFicha({
           nombre: this.modalForm.value.nombre,
-          nombreGrupal: this.modalForm.value.nombreGrupal,
-          nombreIndividual: this.modalForm.value.nombreIndividual
+          grupalNombre: this.modalForm.value.grupalNombre,
+          individualNombre: this.modalForm.value.individualNombre
         })
         .subscribe();
       modal.close('Guardado');
@@ -449,10 +454,10 @@ export class InputsGeneratorComponent implements OnInit {
   public get gruposFiltrado(): any[] {
     let tipoid: number = 0;
     switch (this.formulario.value.fichaTipo) {
-      case 'nombreGrupal':
+      case 'grupalNombre':
         tipoid = 1;
         break;
-      case 'nombreIndividual':
+      case 'individualNombre':
         tipoid = 2;
         break;
     }
@@ -469,10 +474,10 @@ export class InputsGeneratorComponent implements OnInit {
   public get gruposVisiblesFiltrado(): any[] {
     let tipoid: number = 0;
     switch (this.formulario.value.fichaTipoVisible) {
-      case 'nombreGrupal':
+      case 'grupalNombre':
         tipoid = 1;
         break;
-      case 'nombreIndividual':
+      case 'individualNombre':
         tipoid = 2;
         break;
     }
@@ -509,5 +514,15 @@ export class InputsGeneratorComponent implements OnInit {
 
   public get isShowJson(): boolean {
     return this.typesOptions.includes(this.formulario.value.tipo);
+  }
+
+  public get tipoData(): {
+    grupalNombre: string;
+    individualNombre: string;
+  } {
+    return {
+      grupalNombre: 'grupalData',
+      individualNombre: 'individualData'
+    };
   }
 }

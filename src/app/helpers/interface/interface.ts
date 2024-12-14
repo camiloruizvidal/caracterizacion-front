@@ -255,8 +255,8 @@ export enum ESteperType {
 }
 
 export enum EFichaTipo {
-  FichaFamliiar = 'nombreGrupal',
-  FichaPersonal = 'nombreIndividual'
+  FichaFamliiar = 'grupalNombre',
+  FichaPersonal = 'individualNombre'
 }
 
 export interface IResultadoGenerarArchivoExcel {
@@ -272,7 +272,7 @@ export enum EFileStatus {
 
 export interface IVersiones {
   version: string;
-  nombreGrupal: string;
-  nombreIndividual: string;
+  grupalNombre: string;
+  individualNombre: string;
   nombre: string;
 }
