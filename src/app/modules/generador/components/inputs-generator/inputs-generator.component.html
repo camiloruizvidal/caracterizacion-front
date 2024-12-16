@@ -207,7 +207,6 @@
     </div>
     <div class="col-md-8" *ngIf="formularioGenerado !== null">
       <div class="container mt-4">
-        {{ tipoCards | json }}
         <ul ngbNav #nav="ngbNav" class="nav nav-tabs">
           <li *ngFor="let tipo of tipoCards; let i = index" [ngbNavItem]="i">
             <a ngbNavLink>{{ tipo.tituloTexto }}</a>
