@@ -86,6 +86,8 @@ export class InputsGeneratorComponent implements OnInit {
     const version = this.versiones.find(
       version => this.formulario.value.version === version.version
     );
+
+    console.log({ version });
     this.tipoCards = [
       {
         nombre: 'grupalNombre',
@@ -388,12 +390,14 @@ export class InputsGeneratorComponent implements OnInit {
       });
   }
 
-  public agregarGrupo() {
+  public agregarGrupo(): void {
     if (this.agregarGrupoForm.valid) {
       this.inputsService
         .crearGrupo({
           title: this.agregarGrupoForm.value.nombreGrupo,
-          ficha_tipo_id: Number(this.agregarGrupoForm.value.nuevoFichaTipo)
+          ficha_tipo_id: this.obtenerIdFichaTipo(
+            this.agregarGrupoForm.value.nuevoFichaTipo
+          )
         })
         .subscribe(response => {
           this.cargarGrupos();
@@ -451,9 +455,9 @@ export class InputsGeneratorComponent implements OnInit {
     return `Motivo desconocido: ${reason}`;
   }
 
-  public get gruposFiltrado(): any[] {
-    let tipoid: number = 0;
-    switch (this.formulario.value.fichaTipo) {
+  private obtenerIdFichaTipo(nombre: TipoForm): number {
+    let tipoid = 0;
+    switch (nombre) {
       case 'grupalNombre':
         tipoid = 1;
         break;
@@ -461,6 +465,13 @@ export class InputsGeneratorComponent implements OnInit {
         tipoid = 2;
         break;
     }
+    return tipoid;
+  }
+  public get gruposFiltrado(): any[] {
+    let tipoid: number = this.obtenerIdFichaTipo(
+      this.formulario.value.fichaTipo
+    );
+
     return this.grupos
       .filter(grupo => grupo.ficha_tipo_id === tipoid)
       .sort((fichaOld, fichaCurrenly) =>
@@ -491,8 +502,7 @@ export class InputsGeneratorComponent implements OnInit {
 
       return (
         this.formularioGenerado[campo].find(
-          (ficha: any) =>
-            ficha.id === Number(this.formulario.value.grupoVisible)
+          (ficha: any) => ficha.id === Number()
         )?.values || []
       );
     } catch (error) {

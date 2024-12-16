@@ -42,8 +42,9 @@
                 class="form-control"
               >
                 <option value="">Seleccione</option>
-                <option value="grupalNombre">Ficha Familiar</option>
-                <option value="individualNombre">Ficha Personal</option>
+                <option *ngFor="let tipo of tipoCards" [value]="tipo.nombre">
+                  {{ tipo.tituloTexto }}
+                </option>
               </select>
             </div>
             <div class="col-md-12">
@@ -178,8 +179,9 @@
                   class="form-control"
                 >
                   <option value="">Seleccione</option>
-                  <option value="1">Ficha Grupal</option>
-                  <option value="2">Ficha individual</option>
+                  <option *ngFor="let tipo of tipoCards" [value]="tipo.nombre">
+                    {{ tipo.tituloTexto }}
+                  </option>
                 </select>
               </div>
               <div class="col-md-12 mt-3">
