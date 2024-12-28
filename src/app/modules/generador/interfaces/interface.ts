@@ -5,7 +5,7 @@ export interface IGruposFicha {
   title: string;
   subtitle?: string | null;
   orden: number;
-  ficha_tipo_id: number;
+  ficha_tipo_id?: number;
 }
 
 //Formulario
