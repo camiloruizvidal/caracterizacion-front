@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-4">
       <div class="card">
         <div class="card-header">Generador de formulario din&aacute;mico</div>
         <div class="card-body">
@@ -168,52 +168,12 @@
                 </button>
                 <button
                   type="button"
-                  style="display: none"
-                  class="btn btn-primary"
+                  class="btn btn-danger"
                   (click)="guardarFormulario()"
                 >
-                  Guardar Formulario
+                  Cerrar Formulario
                 </button>
               </div>
-            </div>
-          </form>
-        </div>
-
-        <div class="card mt-4">
-          <div class="card-header">Agregar grupos</div>
-          <form [formGroup]="agregarGrupoForm" (ngSubmit)="agregarGrupo()">
-            <div class="card-body">
-              <div class="col-md-12">
-                <label for="nuevoFichaTipo">Tipo de ficha</label>
-                <select
-                  formControlName="nuevoFichaTipo"
-                  id="nuevoFichaTipo"
-                  class="form-control"
-                >
-                  <option value="">Seleccione</option>
-                  <option *ngFor="let tipo of tipoCards" [value]="tipo.nombre">
-                    {{ tipo.tituloTexto }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-md-12 mt-3">
-                <label for="nombreGrupo">Ingrese el nombre del grupo</label>
-                <input
-                  type="text"
-                  formControlName="nombreGrupo"
-                  id="nombreGrupo"
-                  class="form-control"
-                />
-              </div>
-            </div>
-            <div class="card-footer">
-              <button
-                type="submit"
-                [disabled]="agregarGrupoForm.invalid"
-                class="btn btn-success"
-              >
-                Agregar grupo
-              </button>
             </div>
           </form>
         </div>
@@ -223,7 +183,7 @@
       <div class="container mt-4">
         <ul ngbNav #nav="ngbNav" class="nav nav-tabs">
           <li *ngFor="let tipo of tipoCards; let i = index" [ngbNavItem]="i">
-            <a ngbNavLink>{{ tipo.tituloTexto }}</a>
+            <a ngbNavLink class="navbar-items">{{ tipo.tituloTexto }}</a>
             <ng-template ngbNavContent>
               <ngb-accordion
                 #acc="ngbAccordion"
@@ -240,7 +200,9 @@
                 >
                   <ng-template ngbPanelTitle>
                     <span>
-                      {{ (steper?.orden ?? 0) + 1 }}) {{ steper.title }}
+                      {{ (steper?.orden ?? 0) + 1 }}) {{ steper.title }} [{{
+                        steper.values?.length
+                      }}]
                     </span>
                   </ng-template>
                   <ng-template ngbPanelContent>

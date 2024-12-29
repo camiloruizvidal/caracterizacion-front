@@ -6,7 +6,15 @@ import {
   ISteperValues
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import { ESteperType } from 'src/app/helpers/interface/interface';
 import { v4 as uuid } from 'uuid';
 import { ToastrService } from 'ngx-toastr';
@@ -21,7 +29,8 @@ type TipoDataForm = 'grupalData' | 'individualData';
   templateUrl: './inputs-generator.component.html',
   styleUrls: ['./inputs-generator.component.scss']
 })
-export class InputsGeneratorComponent implements OnInit {
+export class InputsGeneratorComponent implements OnInit, AfterViewInit {
+  @ViewChildren('tabLink') tabLinks!: QueryList<any>;
   public grupos: IGruposFicha[] = [];
   public formulario: FormGroup;
   public agregarGrupoForm: FormGroup;
@@ -88,6 +97,17 @@ export class InputsGeneratorComponent implements OnInit {
   public ngOnInit(): void {
     this.cargarVersiones();
     this.cargarTipoPreguntas();
+  }
+
+  public ngAfterViewInit() {
+    this.clickFirstTab();
+  }
+
+  private clickFirstTab() {
+    console.log('1111111');
+    if (this.tabLinks && this.tabLinks.first) {
+      this.tabLinks.first.nativeElement.click();
+    }
   }
 
   private cargarTipoPreguntas() {
@@ -159,6 +179,11 @@ export class InputsGeneratorComponent implements OnInit {
       if (!this.deepEqual(this.formularioGenerado, response.data)) {
         this.formularioGenerado = response.data;
       }
+      const navbarItems = document.querySelectorAll(
+        '.navbar-items'
+      ) as NodeListOf<HTMLElement>;
+      console.log({ navbarItems });
+      navbarItems[0].click();
     });
   }
 
@@ -391,25 +416,6 @@ export class InputsGeneratorComponent implements OnInit {
           'El nuevo item ha sido agregado'
         );
       });
-  }
-
-  public agregarGrupo(): void {
-    if (this.agregarGrupoForm.valid) {
-      this.inputsService
-        .crearGrupo({
-          title: this.agregarGrupoForm.value.nombreGrupo,
-          ficha_tipo_id: this.obtenerIdFichaTipo(
-            this.agregarGrupoForm.value.nuevoFichaTipo
-          )
-        })
-        .subscribe(response => {
-          this.cargarGrupos();
-          this.toastr.success(
-            'Se actualizó el grupo',
-            'El grupo ha sido agregado'
-          );
-        });
-    }
   }
 
   public selectAllText(event: MouseEvent) {
