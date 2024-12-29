@@ -87,6 +87,11 @@ export class InputsGeneratorComponent implements OnInit {
   //#region temporal
   public ngOnInit(): void {
     this.cargarVersiones();
+    this.cargarTipoPreguntas();
+  }
+
+  private cargarTipoPreguntas() {
+    this.tipos = Object.keys(ESteperType).sort();
   }
 
   public cargarTipoFichas() {
