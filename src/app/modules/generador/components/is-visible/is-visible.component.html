@@ -11,8 +11,9 @@
       class="form-control"
     >
       <option value="">Seleccione</option>
-      <option value="grupalNombre">Ficha Familiar</option>
-      <option value="individualNombre">Ficha Personal</option>
+      <option *ngFor="let tipo of tipoCards" [value]="tipo.nombre">
+        {{ tipo.text }} - {{ tipo.tituloTexto }}
+      </option>
     </select>
   </div>
   <div>

@@ -3,16 +3,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   IFamilyCard,
   IGruposFicha,
-  ISteperValues
+  ISteperValues,
+  TipoDataForm,
+  TipoForm
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
 import {
   AfterViewInit,
   Component,
-  ElementRef,
   OnInit,
   QueryList,
-  ViewChild,
   ViewChildren
 } from '@angular/core';
 import { ESteperType } from 'src/app/helpers/interface/interface';
@@ -20,9 +20,6 @@ import { v4 as uuid } from 'uuid';
 import { ToastrService } from 'ngx-toastr';
 import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
-type TipoForm = 'grupalNombre' | 'individualNombre';
-type TipoDataForm = 'grupalData' | 'individualData';
 
 @Component({
   selector: 'app-inputs-generator',

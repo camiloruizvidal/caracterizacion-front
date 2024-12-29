@@ -5,10 +5,10 @@ import {
   IFamilyCard,
   IGruposFicha,
   IOptionsVisibility,
+  TipoDataForm,
+  TipoForm,
   typeRule
 } from '../../interfaces/interface';
-
-type TipoForm = 'grupalNombre' | 'nombreIndividual';
 
 @Component({
   selector: 'app-is-visible',
@@ -21,6 +21,13 @@ export class IsVisibleComponent implements OnInit {
   public regla!: IOptionsVisibility;
   @Input() public formularioGenerado!: IFamilyCard;
   @Input() public grupos: IGruposFicha[] = [];
+
+  @Input() tipoCards: {
+    tipo: TipoDataForm;
+    nombre: TipoForm;
+    tituloTexto: string;
+    text: string;
+  }[] = [];
 
   constructor(private fb: FormBuilder) {
     this.formulario = this.fb.group({
@@ -36,7 +43,6 @@ export class IsVisibleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log({ formularioGenerado: this.formularioGenerado });
     const rangoInicioControl = this.formulario.get('rango_inicio');
     if (rangoInicioControl) {
       rangoInicioControl.valueChanges.subscribe(value => {
@@ -57,6 +63,7 @@ export class IsVisibleComponent implements OnInit {
       });
     }
   }
+
   public get gruposVisiblesFiltrado(): any[] {
     let tipoid: number = 0;
     if (!this.formulario) {

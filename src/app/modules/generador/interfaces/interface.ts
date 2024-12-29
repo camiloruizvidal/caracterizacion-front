@@ -117,3 +117,6 @@ export interface IOptionsSelectFilterRelaciones {
   origen: string;
   destino: string;
 }
+
+export type TipoForm = 'grupalNombre' | 'individualNombre';
+export type TipoDataForm = 'grupalData' | 'individualData';
