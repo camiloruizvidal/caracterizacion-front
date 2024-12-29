@@ -49,22 +49,22 @@
       </li>
       <li>
         <a
+          routerLink="/generador"
+          [class]="getActiveClass('generador')"
+          class="nav-link text-white"
+        >
+          <i class="bi bi-window-stack"></i>
+          Generador de formularios
+        </a>
+      </li>
+      <li>
+        <a
           routerLink="/ficha"
           [class]="getActiveClass('ficha')"
           class="nav-link text-white"
         >
           <i class="bi bi-list-columns-reverse"></i>
           Informes
-        </a>
-      </li>
-      <li>
-        <a
-          routerLink="/generador"
-          [class]="getActiveClass('generador')"
-          class="nav-link text-white"
-        >
-          <i class="bi bi-list-columns-reverse"></i>
-          Generador de informe
         </a>
       </li>
     </ul>

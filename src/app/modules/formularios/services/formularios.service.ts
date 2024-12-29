@@ -95,4 +95,17 @@ export class FormulariosService {
       nombre_individual: version.individualNombre
     });
   }
+
+  public crearNuevoGrupo(
+    nombre: string,
+    tipo: number,
+    version: number
+  ): Observable<any> {
+    console.log({ nombre, tipo });
+    return this.http.post(`${this.apiUrl}/tipo`, {
+      titulo: nombre,
+      tipo,
+      version_ficha: Number(version)
+    });
+  }
 }

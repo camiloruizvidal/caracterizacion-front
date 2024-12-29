@@ -38,7 +38,8 @@ export class InputsGeneratorComponent implements OnInit {
   public typesOptions: string[] = ['selectFilter', 'select_multiple', 'select'];
   public versiones: IVersiones[] = [];
 
-  modalForm!: FormGroup;
+  public modalForm!: FormGroup;
+  public modalFormTipoFicha!: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -78,14 +79,18 @@ export class InputsGeneratorComponent implements OnInit {
       grupalNombre: ['', Validators.required],
       individualNombre: ['', Validators.required]
     });
+
+    this.modalFormTipoFicha = this.formBuilder.group({
+      nombre: ['', Validators.required],
+      tipoFicha: ['']
+    });
   }
   //#region temporal
   public ngOnInit(): void {
     this.cargarVersiones();
-    this.cargarTipos();
   }
 
-  public cargarFormularioVersion() {
+  public cargarTipoFichas() {
     const version = this.versiones.find(
       version => this.formulario.value.version === version.version
     );
@@ -151,10 +156,6 @@ export class InputsGeneratorComponent implements OnInit {
     });
   }
 
-  private cargarTipos() {
-    this.tipos = Object.keys(ESteperType).sort();
-  }
-
   public cargarGrupos(): void {
     const tipo = this.tipoCards.find(
       tipo => tipo.nombre === this.formulario.value.fichaTipo
@@ -162,7 +163,6 @@ export class InputsGeneratorComponent implements OnInit {
     this.inputsService
       .obtenerGruposFichas(Number(this.formulario.value.version), tipo?.tipo)
       .subscribe((result: IGruposFicha[]) => {
-        console.log({ result });
         this.grupos = result;
       });
   }
@@ -200,7 +200,6 @@ export class InputsGeneratorComponent implements OnInit {
       this.formularioGenerado.version = this.formulario.value.version;
       this.formularioGenerado.grupalNombre = this.tipoCards[0].tituloTexto;
       this.formularioGenerado.individualNombre = this.tipoCards[1].tituloTexto;
-      console.log({ version: this.formulario.value.version });
       this.guardarFormulario();
     } else {
       this.formulario.markAllAsTouched();
@@ -273,15 +272,6 @@ export class InputsGeneratorComponent implements OnInit {
     indexCard: number,
     tarjeta: TipoForm
   ) {
-    // console.log({
-    //   nuevoOrden: Number(nuevoOrden.target.value),
-    //   ordenAnterior: Number(value.orden),
-    //   indexCard,
-    //   tarjeta,
-    //   form: JSON.parse(
-    //     JSON.stringify(this.formularioGenerado[tarjeta][indexCard].values)
-    //   )
-    // });
     // const ordenAnterior = Number(value.orden);
     // const items = this.formularioGenerado[tarjeta][indexCard]?.values;
     // if (items && Array.isArray(items)) {
@@ -290,7 +280,6 @@ export class InputsGeneratorComponent implements OnInit {
     //   items.splice(Number(nuevoOrden.target.value), 0, item);
     //   this.actualizarOrden();
     // } else {
-    //   console.error('items is undefined or not an array');
     // }
   }
 
@@ -441,6 +430,21 @@ export class InputsGeneratorComponent implements OnInit {
       );
   }
 
+  public agregarNuevoGrupo(content: any): void {
+    this.modalFormTipoFicha.reset();
+    this.modalFormTipoFicha.value.tipoFicha = this.formulario.value.fichaTipo;
+    this.modalService
+      .open(content, { ariaLabelledBy: 'modal-title' })
+      .result.then(
+        result => {
+          console.log(`Modal cerrado con: ${result}`);
+        },
+        reason => {
+          console.log(`Modal cerrado: ${this.getDismissReason(reason)}`);
+        }
+      );
+  }
+
   public guardarNuevaVersion(modal: any) {
     if (this.modalForm.valid) {
       this.formulariosService
@@ -451,6 +455,27 @@ export class InputsGeneratorComponent implements OnInit {
         })
         .subscribe();
       modal.close('Guardado');
+    }
+  }
+
+  public guardarNuevoGrupo(modalTipoFicha: any) {
+    const tipo = this.tipoCards.find(
+      tipo => tipo.nombre === this.formulario.value.fichaTipo
+    );
+    this.modalFormTipoFicha.value.tipoFicha = tipo?.tipo;
+
+    console.log(this.modalFormTipoFicha);
+    if (this.modalFormTipoFicha.valid) {
+      this.formulariosService
+        .crearNuevoGrupo(
+          this.modalFormTipoFicha.value.nombre,
+          this.modalFormTipoFicha.value.tipoFicha,
+          this.formulario.value.version
+        )
+        .subscribe(() => {
+          this.cargarGrupos();
+        });
+      modalTipoFicha.close('Guardado');
     }
   }
 

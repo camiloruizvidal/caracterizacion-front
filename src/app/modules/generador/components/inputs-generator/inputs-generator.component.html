@@ -17,7 +17,7 @@
                   +
                 </button>
                 <select
-                  (change)="cargarFormularioVersion()"
+                  (change)="cargarTipoFichas()"
                   formControlName="version"
                   class="form-select"
                   id="version"
@@ -36,6 +36,7 @@
 
             <div class="col-md-12">
               <label for="fichaTipo">Tipo de ficha</label>
+
               <select
                 formControlName="fichaTipo"
                 id="fichaTipo"
@@ -50,17 +51,27 @@
             </div>
             <div class="col-md-12">
               <label for="grupo">Seleccione el grupo</label>
-              <select
-                formControlName="grupo"
-                id="grupo"
-                class="form-control"
-                required
-              >
-                <option value="">Seleccione</option>
-                <option *ngFor="let grupo of grupos" [value]="grupo.id">
-                  {{ grupo.title }}
-                </option>
-              </select>
+              <div class="input-group">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="agregarNuevoGrupo(contentTipoFicha)"
+                  [disabled]="formulario.get('fichaTipo')?.value === ''"
+                >
+                  +
+                </button>
+                <select
+                  formControlName="grupo"
+                  id="grupo"
+                  class="form-control"
+                  required
+                >
+                  <option value="">Seleccione</option>
+                  <option *ngFor="let grupo of grupos" [value]="grupo.id">
+                    {{ grupo.title }}
+                  </option>
+                </select>
+              </div>
             </div>
             <div class="col-md-12">
               <label for="tipo">Seleccione el tipo de pregunta</label>
@@ -429,6 +440,47 @@
       type="button"
       class="btn btn-primary"
       (click)="guardarNuevaVersion(modal)"
+    >
+      Guardar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #contentTipoFicha let-modalGrupo>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Agregar un nuevo tipo de ficha</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modalGrupo.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="modalFormTipoFicha">
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input
+          type="text"
+          id="nombre"
+          class="form-control"
+          formControlName="nombre"
+        />
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="modalGrupo.dismiss('Cancelado')"
+    >
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="guardarNuevoGrupo(modalGrupo)"
     >
       Guardar
     </button>
