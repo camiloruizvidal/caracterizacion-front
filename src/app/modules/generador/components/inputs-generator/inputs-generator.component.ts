@@ -3,8 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   IFamilyCard,
   IGruposFicha,
-  ISteperValues,
-  IStepers
+  ISteperValues
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
 import { Component, OnInit } from '@angular/core';
@@ -29,11 +28,11 @@ export class InputsGeneratorComponent implements OnInit {
   public tipos: string[] = [];
   public formularioGenerado!: IFamilyCard;
   public esEditable: boolean = false;
-  private indexEditar: number = -1;
   public tipoCards: {
     tipo: TipoDataForm;
     nombre: TipoForm;
     tituloTexto: string;
+    text: string;
   }[] = [];
   public typesOptions: string[] = ['selectFilter', 'select_multiple', 'select'];
   public versiones: IVersiones[] = [];
@@ -99,12 +98,14 @@ export class InputsGeneratorComponent implements OnInit {
       {
         nombre: 'grupalNombre',
         tituloTexto: version?.grupalNombre ?? '',
-        tipo: 'grupalData'
+        tipo: 'grupalData',
+        text: 'Global'
       },
       {
         nombre: 'individualNombre',
         tituloTexto: version?.individualNombre ?? '',
-        tipo: 'individualData'
+        tipo: 'individualData',
+        text: 'Individual'
       }
     ];
     this.cargarFormulario(this.formulario.get('version')?.value);

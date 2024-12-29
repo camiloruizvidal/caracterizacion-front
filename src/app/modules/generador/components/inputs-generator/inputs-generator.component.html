@@ -45,7 +45,7 @@
               >
                 <option value="">Seleccione</option>
                 <option *ngFor="let tipo of tipoCards" [value]="tipo.nombre">
-                  {{ tipo.tituloTexto }}
+                  {{ tipo.text }} - {{ tipo.tituloTexto }}
                 </option>
               </select>
             </div>
