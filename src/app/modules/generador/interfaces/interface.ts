@@ -120,3 +120,27 @@ export interface IOptionsSelectFilterRelaciones {
 
 export type TipoForm = 'grupalNombre' | 'individualNombre';
 export type TipoDataForm = 'grupalData' | 'individualData';
+
+export enum EConditions {
+  MAYOR_QUE = '>',
+  MAYOR_O_IGUAL_QUE = '>=',
+  MENOR_QUE = '<',
+  MENOR_O_IGUAL_QUE = '<=',
+  IGUAL_QUE = '===',
+  DIFERENTE_QUE = '!==',
+  VACIO = 'null'
+}
+export interface ICondiciones {
+  text: string;
+  condition: string;
+}
+
+export const condiciones: ICondiciones[] = [
+  { condition: EConditions.MAYOR_QUE, text: 'Mayor que' },
+  { condition: EConditions.MAYOR_O_IGUAL_QUE, text: 'Mayor O igual que' },
+  { condition: EConditions.MENOR_QUE, text: 'Menor que' },
+  { condition: EConditions.MENOR_O_IGUAL_QUE, text: 'Menor O Igual que' },
+  { condition: EConditions.IGUAL_QUE, text: 'Igual que' },
+  { condition: EConditions.DIFERENTE_QUE, text: 'Diferente que' },
+  { condition: EConditions.VACIO, text: 'Vacio' }
+];

@@ -1,11 +1,9 @@
-import {
-  condiciones,
-  ICondiciones
-} from './../../../../../../../caracterizacion-back/src/utils/global.interface';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
+  condiciones,
   ESteperType,
+  ICondiciones,
   IFamilyCard,
   IGruposFicha,
   IOptionsVisibility,
