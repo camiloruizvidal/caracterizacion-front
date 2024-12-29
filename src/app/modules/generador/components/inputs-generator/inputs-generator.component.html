@@ -143,9 +143,9 @@
             </div>
             <app-is-visible
               *ngIf="esVisibleSi"
-              [tipoCards]="tipoCards"
               [formularioGenerado]="formularioGenerado"
-              [grupos]="grupos"
+              [tipoCards]="tipoCards"
+              [version]="formularioGenerado.version"
             ></app-is-visible>
 
             <div class="card-footer">

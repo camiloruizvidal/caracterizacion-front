@@ -8,13 +8,7 @@ import {
   TipoForm
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
-import {
-  AfterViewInit,
-  Component,
-  OnInit,
-  QueryList,
-  ViewChildren
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ESteperType } from 'src/app/helpers/interface/interface';
 import { v4 as uuid } from 'uuid';
 import { ToastrService } from 'ngx-toastr';
@@ -26,8 +20,7 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './inputs-generator.component.html',
   styleUrls: ['./inputs-generator.component.scss']
 })
-export class InputsGeneratorComponent implements OnInit, AfterViewInit {
-  @ViewChildren('tabLink') tabLinks!: QueryList<any>;
+export class InputsGeneratorComponent implements OnInit {
   public grupos: IGruposFicha[] = [];
   public formulario: FormGroup;
   public agregarGrupoForm: FormGroup;
@@ -94,17 +87,6 @@ export class InputsGeneratorComponent implements OnInit, AfterViewInit {
   public ngOnInit(): void {
     this.cargarVersiones();
     this.cargarTipoPreguntas();
-  }
-
-  public ngAfterViewInit() {
-    this.clickFirstTab();
-  }
-
-  private clickFirstTab() {
-    console.log('1111111');
-    if (this.tabLinks && this.tabLinks.first) {
-      this.tabLinks.first.nativeElement.click();
-    }
   }
 
   private cargarTipoPreguntas() {
@@ -179,7 +161,6 @@ export class InputsGeneratorComponent implements OnInit, AfterViewInit {
       const navbarItems = document.querySelectorAll(
         '.navbar-items'
       ) as NodeListOf<HTMLElement>;
-      console.log({ navbarItems });
       navbarItems[0].click();
     });
   }
@@ -473,7 +454,6 @@ export class InputsGeneratorComponent implements OnInit, AfterViewInit {
     );
     this.modalFormTipoFicha.value.tipoFicha = tipo?.tipo;
 
-    console.log(this.modalFormTipoFicha);
     if (this.modalFormTipoFicha.valid) {
       this.formulariosService
         .crearNuevoGrupo(

@@ -9,6 +9,7 @@ import {
   TipoForm,
   typeRule
 } from '../../interfaces/interface';
+import { InputsService } from '../../services/inputs.service';
 
 @Component({
   selector: 'app-is-visible',
@@ -19,17 +20,18 @@ export class IsVisibleComponent implements OnInit {
   public formulario: FormGroup;
   public tipoCampo: ESteperType = ESteperType.Text;
   public regla!: IOptionsVisibility;
+
   @Input() public formularioGenerado!: IFamilyCard;
   @Input() public grupos: IGruposFicha[] = [];
-
-  @Input() tipoCards: {
+  @Input() public version?: string;
+  @Input() public tipoCards!: {
     tipo: TipoDataForm;
     nombre: TipoForm;
     tituloTexto: string;
     text: string;
-  }[] = [];
+  }[];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private inputsService: InputsService, private fb: FormBuilder) {
     this.formulario = this.fb.group({
       fichaTipoVisible: ['', Validators.required],
       grupoVisible: ['', Validators.required],
@@ -65,46 +67,61 @@ export class IsVisibleComponent implements OnInit {
   }
 
   public get gruposVisiblesFiltrado(): any[] {
-    let tipoid: number = 0;
-    if (!this.formulario) {
-      return [];
-    }
     switch (this.formulario.value.fichaTipoVisible) {
+      case 'individualNombre':
+        return this.formularioGenerado.individualData;
       case 'grupalNombre':
-        tipoid = 1;
-        break;
-      case 'nombreIndividual':
-        tipoid = 2;
-        break;
+        return this.formularioGenerado.grupalData;
+      default:
+        return [];
     }
-    return this.grupos.filter(grupo => grupo.ficha_tipo_id === tipoid);
   }
 
   public get camposVisibles(): any[] {
-    return [];
-    //    try {
-    //      const fichaTipo: TipoForm = this.formulario.value.fichaTipoVisible;
-    //      return (
-    //        this.formularioGenerado[fichaTipo].find(
-    //          (ficha: any) =>
-    //            ficha.id === Number(this.formulario.value.grupoVisible)
-    //        )?.values || []
-    //      );
-    //    } catch (error) {
-    //      return [];
-    //    }
+    try {
+      if (this.formulario.value.fichaTipoVisible === '') {
+        return [];
+      }
+
+      let fichaTipo!: 'grupalData' | 'individualData';
+      switch (this.formulario.value.fichaTipoVisible) {
+        case 'individualNombre':
+          fichaTipo = 'individualData';
+          break;
+        case 'grupalNombre':
+          fichaTipo = 'grupalData';
+          break;
+      }
+
+      return (
+        this.formularioGenerado[fichaTipo].find(
+          (form: any) => form.id === Number(this.formulario.value.grupoVisible)
+        )?.values || []
+      );
+    } catch (error) {
+      return [];
+    }
   }
 
   public guardarVisibilidad(): void {
     this.formulario;
-    console.log({ formulario: this.formulario });
   }
 
   private validarTipoDato(columna: string): ESteperType {
+    debugger;
     const fichaTipoVisible: any = this.formulario.value.fichaTipoVisible;
     const formularioGenerado: any = this.formularioGenerado;
+    let fichaTipo!: 'grupalData' | 'individualData';
+    switch (fichaTipoVisible) {
+      case 'individualNombre':
+        fichaTipo = 'individualData';
+        break;
+      case 'grupalNombre':
+        fichaTipo = 'grupalData';
+        break;
+    }
 
-    const values = formularioGenerado[fichaTipoVisible].find(
+    const values = formularioGenerado[fichaTipo].find(
       (form: any) => form.id === Number(this.formulario.value.grupoVisible)
     ).values;
 
@@ -130,8 +147,6 @@ export class IsVisibleComponent implements OnInit {
       value = '';
       rule = '=';
     }
-
-    console.log({ tipo: this.tipoCampo });
     this.regla = {
       isDepent: true,
       rules: [
@@ -143,6 +158,16 @@ export class IsVisibleComponent implements OnInit {
       ],
       isShow: true
     };
-    console.log({ target: this.regla });
+  }
+
+  public cargarGrupos(): void {
+    const tipo = this.tipoCards.find(
+      tipo => tipo.nombre === this.formulario.value.fichaTipo
+    );
+    this.inputsService
+      .obtenerGruposFichas(Number(this.version), tipo?.tipo)
+      .subscribe((result: IGruposFicha[]) => {
+        this.grupos = result;
+      });
   }
 }

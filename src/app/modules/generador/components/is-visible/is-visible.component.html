@@ -9,6 +9,7 @@
       formControlName="fichaTipoVisible"
       id="fichaTipoVisible"
       class="form-control"
+      (change)="cargarGrupos()"
     >
       <option value="">Seleccione</option>
       <option *ngFor="let tipo of tipoCards" [value]="tipo.nombre">
