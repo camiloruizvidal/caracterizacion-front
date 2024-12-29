@@ -62,8 +62,31 @@
       placeholder="Rango de fin"
       class="form form-control"
     />
-    <pre><code>{{regla|json}}</code></pre>
-    <pre *ngIf="false"><code>
+    <label for="condicion">Condicion incial</label>
+    <select
+      class="form form-control"
+      name="condicion"
+      id="condicion"
+      formControlName="condicion"
+    >
+      <option value="">Seleccione</option>
+      <option
+        *ngFor="let condicion of condiciones"
+        [value]="condicion.condition"
+      >
+        {{ condicion.text }}
+      </option>
+    </select>
+    <label for="valorCondicion">Valor de la condicion</label>
+    <input
+      type="text"
+      name="valorCondicion"
+      id="valorCondicion"
+      class="form form-control"
+      formControlName="valorCondicion"
+      required
+    />
+    <pre><code>{{regla|json}}</code><code>
 &lbrace;
 &quot;isDepent&quot;: true,
 &quot;rules&quot;: [
@@ -78,3 +101,4 @@
 </code></pre>
   </div>
 </form>
+<table></table>

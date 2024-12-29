@@ -1,3 +1,7 @@
+import {
+  condiciones,
+  ICondiciones
+} from './../../../../../../../caracterizacion-back/src/utils/global.interface';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
@@ -77,6 +81,10 @@ export class IsVisibleComponent implements OnInit {
     }
   }
 
+  public get condiciones(): ICondiciones[] {
+    return condiciones;
+  }
+
   public get camposVisibles(): any[] {
     try {
       if (this.formulario.value.fichaTipoVisible === '') {
@@ -108,7 +116,6 @@ export class IsVisibleComponent implements OnInit {
   }
 
   private validarTipoDato(columna: string): ESteperType {
-    debugger;
     const fichaTipoVisible: any = this.formulario.value.fichaTipoVisible;
     const formularioGenerado: any = this.formularioGenerado;
     let fichaTipo!: 'grupalData' | 'individualData';

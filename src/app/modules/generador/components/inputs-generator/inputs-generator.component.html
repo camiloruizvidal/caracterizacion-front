@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-4">
+    <div class="col-lg-4">
       <div class="card">
         <div class="card-header">Generador de formulario din&aacute;mico</div>
         <div class="card-body">
@@ -131,6 +131,7 @@
             <div class="col-md-12">
               <div class="form-check">
                 <input
+                  *ngIf="formulario.value.tipo !== ''"
                   formControlName="esVisibleSi"
                   id="esVisibleSi"
                   class="form-check-input"
@@ -180,7 +181,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-8" *ngIf="formularioGenerado !== null">
+    <div class="col-lg-8" *ngIf="formularioGenerado !== null">
       <div class="container mt-4">
         <ul ngbNav #nav="ngbNav" class="nav nav-tabs">
           <li *ngFor="let tipo of tipoCards; let i = index" [ngbNavItem]="i">
