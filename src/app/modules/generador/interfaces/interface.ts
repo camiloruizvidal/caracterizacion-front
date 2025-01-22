@@ -1,5 +1,3 @@
-export type typeRule = '=' | 'rangoFecha';
-
 export interface IGruposFicha {
   id: number;
   title: string;
@@ -93,7 +91,7 @@ export interface IOptionsVisibility {
 
 export interface IOptionsRule {
   columnDepend: string;
-  rule: typeRule;
+  rule: EConditions;
   value: string;
 }
 export interface ICodes {
@@ -128,7 +126,8 @@ export enum EConditions {
   MENOR_O_IGUAL_QUE = '<=',
   IGUAL_QUE = '===',
   DIFERENTE_QUE = '!==',
-  VACIO = 'null'
+  VACIO = 'null',
+  RANGO_FECHA = 'rangoFecha'
 }
 export interface ICondiciones {
   text: string;
@@ -142,5 +141,6 @@ export const condiciones: ICondiciones[] = [
   { condition: EConditions.MENOR_O_IGUAL_QUE, text: 'Menor O Igual que' },
   { condition: EConditions.IGUAL_QUE, text: 'Igual que' },
   { condition: EConditions.DIFERENTE_QUE, text: 'Diferente que' },
-  { condition: EConditions.VACIO, text: 'Vacio' }
+  { condition: EConditions.VACIO, text: 'Vacio' },
+  { condition: EConditions.RANGO_FECHA, text: 'Rango de fechas' }
 ];

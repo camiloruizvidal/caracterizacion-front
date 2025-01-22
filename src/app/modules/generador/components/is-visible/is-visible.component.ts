@@ -2,14 +2,14 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   condiciones,
+  EConditions,
   ESteperType,
   ICondiciones,
   IFamilyCard,
   IGruposFicha,
   IOptionsVisibility,
   TipoDataForm,
-  TipoForm,
-  typeRule
+  TipoForm
 } from '../../interfaces/interface';
 import { InputsService } from '../../services/inputs.service';
 
@@ -39,6 +39,7 @@ export class IsVisibleComponent implements OnInit {
       grupoVisible: ['', Validators.required],
       campoVisible: ['', Validators.required],
       condicion: ['', Validators.required],
+      valorCondicion: ['', Validators.required],
       campo: ['', Validators.required],
 
       rango_inicio: [''],
@@ -66,6 +67,21 @@ export class IsVisibleComponent implements OnInit {
         this.tipoCampo = this.validarTipoDato(value);
       });
     }
+
+    this.formulario.valueChanges.subscribe(formulario => {
+      this.regla = {
+        isDepent: true,
+        isShow: true,
+        rules: [
+          {
+            columnDepend: formulario.campo.toString(),
+            rule: formulario.condicion as EConditions,
+            value: formulario.valorCondicion
+          }
+        ]
+      };
+      console.log({ formulario, regla: this.regla?.rules });
+    });
   }
 
   public get gruposVisiblesFiltrado(): any[] {
@@ -140,17 +156,17 @@ export class IsVisibleComponent implements OnInit {
   public filtrarCampos() {
     const columna = this.formulario.value.campo;
     this.tipoCampo = this.validarTipoDato(columna);
-    let rule: typeRule;
+    let rule: EConditions;
     let value;
     if (this.tipoCampo === ESteperType.Calendar) {
       value = {
         minAnnos: Number(this.formulario.value.rango_inicio),
         maximoAnos: Number(this.formulario.value.rango_fin)
       };
-      rule = 'rangoFecha';
+      rule = EConditions.RANGO_FECHA;
     } else {
       value = '';
-      rule = '=';
+      rule = EConditions.IGUAL_QUE;
     }
     this.regla = {
       isDepent: true,

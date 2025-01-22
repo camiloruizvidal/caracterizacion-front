@@ -42,9 +42,8 @@
     </select>
   </div>
   <div>
-    <label for="">Condici&oacute;n</label>
     <input
-      *ngIf="tipoCampo !== 'calendar'"
+      *ngIf="tipoCampo === 'calendar'"
       type="text"
       placeholder="En formato JSON"
       class="form form-control"
@@ -86,19 +85,8 @@
       formControlName="valorCondicion"
       required
     />
-    <pre><code>{{regla|json}}</code><code>
-&lbrace;
-&quot;isDepent&quot;: true,
-&quot;rules&quot;: [
-&lbrace;
-&quot;columnDepend&quot;: &quot;tipo_vivienda&quot;,
-&quot;rule&quot;: &quot;=&quot;,
-&quot;value&quot;: &quot;En arriendo&quot;
-&rbrace;
-],
-&quot;isShow&quot;: true
-&rbrace;
-</code></pre>
+    regla
+    <pre><code>{{regla|json}}</code></pre>
   </div>
 </form>
 <table></table>
