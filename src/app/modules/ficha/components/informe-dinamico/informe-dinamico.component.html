@@ -20,5 +20,6 @@
   <app-dynamic-filters
     *ngIf="fichaJson"
     [tarjetaJson]="fichaJson"
+    (filtrosEmitidos)="filtrar($event)"
   ></app-dynamic-filters>
 </div>

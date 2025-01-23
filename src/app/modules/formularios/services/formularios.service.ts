@@ -9,6 +9,7 @@ import {
   IPagination,
   IResultadoGenerarArchivoExcel
 } from 'src/app/helpers/interface/interface';
+import { IFiltrosBusqueda } from '../../generador/interfaces/interface';
 
 @Injectable({
   providedIn: 'root'
@@ -80,8 +81,9 @@ export class FormulariosService {
       .catch(() => false);
   }
 
-  public obtenerVersiones(): Observable<IVersiones[]> {
-    return this.http.get<IVersiones[]>(`${this.apiUrl}/versiones`);
+  public obtenerVersiones(isFinish: boolean = false): Observable<IVersiones[]> {
+    const params = new HttpParams().set('isFinish', isFinish.toString());
+    return this.http.get<IVersiones[]>(`${this.apiUrl}/versiones`, { params });
   }
 
   public crearNuevaVersionFicha(version: {
@@ -106,5 +108,20 @@ export class FormulariosService {
       tipo,
       version_ficha: Number(version)
     });
+  }
+
+  public obtenerInformes(filtros: IFiltrosBusqueda[]): Observable<any[]> {
+    let params = new HttpParams();
+
+    filtros.forEach((filtro, index) => {
+      params = params
+        .set(`filtros[${index}][tipoTarjeta]`, filtro.tipoTarjeta)
+        .set(`filtros[${index}][grupo]`, filtro.grupo)
+        .set(`filtros[${index}][pregunta]`, filtro.pregunta)
+        .set(`filtros[${index}][condicion]`, filtro.condicion)
+        .set(`filtros[${index}][valor]`, filtro.valor);
+    });
+
+    return this.http.get<any[]>(this.apiUrl + '/busqueda_dinamica', { params });
   }
 }

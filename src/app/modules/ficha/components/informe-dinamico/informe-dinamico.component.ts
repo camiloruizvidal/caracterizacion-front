@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { IVersiones } from 'src/app/helpers/interface/interface';
 import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
-import { IFamilyCard } from 'src/app/modules/generador/interfaces/interface';
+import {
+  IFamilyCard,
+  IFiltrosBusqueda
+} from 'src/app/modules/generador/interfaces/interface';
 import { InputsService } from 'src/app/modules/generador/services/inputs.service';
 
 @Component({
@@ -25,7 +28,7 @@ export class InformeDinamicoComponent implements OnInit {
 
   private cargarFichasVersiones(): void {
     this.formulariosService
-      .obtenerVersiones()
+      .obtenerVersiones(true)
       .subscribe((resultado: IVersiones[]) => {
         this.versiones = resultado;
       });
@@ -36,6 +39,14 @@ export class InformeDinamicoComponent implements OnInit {
       .obtenerFormularioJson(Number(this.versionSeleccionada))
       .subscribe(response => {
         this.fichaJson = response.data;
+      });
+  }
+
+  public filtrar(filtros: IFiltrosBusqueda[]): void {
+    this.formulariosService
+      .obtenerInformes(filtros)
+      .subscribe((resultado: any[]) => {
+        console.log({ resultado });
       });
   }
 }
