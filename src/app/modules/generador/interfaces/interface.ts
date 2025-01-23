@@ -146,7 +146,7 @@ export const condiciones: ICondiciones[] = [
 ];
 
 export interface IFiltrosBusqueda {
-  tipoTarjeta: string;
+  tipoTarjeta: TipoDataForm;
   grupo: string;
   pregunta: string;
   condicion: EConditions;

@@ -3,7 +3,7 @@ import {
   IStepers,
   TipoDataForm
 } from './../../../generador/interfaces/interface';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   EConditions,
@@ -19,6 +19,7 @@ import {
 })
 export class DynamicFiltersComponent implements OnInit {
   @Input() tarjetaJson!: IFamilyCard;
+  @Output() filtrosEmitidos = new EventEmitter<IFiltrosBusqueda[]>();
   public condiciones: ICondiciones[] = condiciones;
   public filtrosForm: FormGroup;
   public filtros: IFiltrosBusqueda[] = [];
@@ -31,6 +32,10 @@ export class DynamicFiltersComponent implements OnInit {
       condicion: ['', Validators.required],
       valor: ['', Validators.required]
     });
+  }
+
+  get grupos() {
+    return this.obtenerGrupos(this.filtrosForm.get('tipoTarjeta')?.value);
   }
 
   public ngOnInit(): void {
@@ -47,6 +52,9 @@ export class DynamicFiltersComponent implements OnInit {
   }
 
   public agregarFiltro(): void {
+    if (!this.filtrosForm.valid) {
+      return;
+    }
     this.filtros.push(this.filtrosForm.value);
     this.filtrosForm.reset();
     this.filtrosForm = this.formBuilder.group({
@@ -63,14 +71,7 @@ export class DynamicFiltersComponent implements OnInit {
   }
 
   public obtenerGrupos(tipoTarjeta: TipoDataForm): IStepers[] {
-    let valores: IStepers[] = [];
-
-    if (tipoTarjeta === 'grupalData') {
-      valores = this.tarjetaJson.grupalData;
-    } else if (tipoTarjeta === 'individualData') {
-      valores = this.tarjetaJson.individualData;
-    }
-    return valores;
+    return this.tarjetaJson[tipoTarjeta];
   }
 
   public verCondicion(condicionSeleccionada: EConditions): string {
@@ -78,6 +79,16 @@ export class DynamicFiltersComponent implements OnInit {
       condicion => condicion.condition === condicionSeleccionada
     );
     return `${condicion?.text}`;
+  }
+
+  public verTipoDeTarjeta(tipoTarjeta: TipoDataForm): string {
+    let texto = '';
+    if (tipoTarjeta === 'grupalData') {
+      texto = this.tarjetaJson.grupalNombre;
+    } else if (tipoTarjeta === 'individualData') {
+      texto = this.tarjetaJson.individualNombre;
+    }
+    return texto;
   }
 
   public obtenerPreguntas(seccion: string) {
@@ -89,7 +100,7 @@ export class DynamicFiltersComponent implements OnInit {
     return grupo?.values || [];
   }
 
-  get grupos() {
-    return this.obtenerGrupos(this.filtrosForm.get('tipoTarjeta')?.value);
+  public buscar() {
+    this.filtrosEmitidos.emit(this.filtros);
   }
 }
