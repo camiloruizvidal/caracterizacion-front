@@ -144,3 +144,11 @@ export const condiciones: ICondiciones[] = [
   { condition: EConditions.VACIO, text: 'Vacio' },
   { condition: EConditions.RANGO_FECHA, text: 'Rango de fechas' }
 ];
+
+export interface IFiltrosBusqueda {
+  tipoTarjeta: string;
+  grupo: string;
+  pregunta: string;
+  condicion: EConditions;
+  valor: string;
+}
