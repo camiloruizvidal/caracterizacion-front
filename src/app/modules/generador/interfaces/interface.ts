@@ -124,7 +124,7 @@ export enum EConditions {
   MAYOR_O_IGUAL_QUE = '>=',
   MENOR_QUE = '<',
   MENOR_O_IGUAL_QUE = '<=',
-  IGUAL_QUE = '===',
+  IGUAL_QUE = '=',
   DIFERENTE_QUE = '!==',
   VACIO = 'null',
   RANGO_FECHA = 'rangoFecha'
