@@ -86,7 +86,27 @@
       required
     />
     regla
-    <pre><code>{{regla|json}}</code></pre>
+    <pre><code>{{reglaUnitaria|json}}</code></pre>
+  </div>
+  <div class="col-md-12">
+    <button class="btn btn-success" (click)="agregarCondicion()">
+      Agregar condicion
+    </button>
   </div>
 </form>
-<table></table>
+<table>
+  <thead>
+    <tr>
+      <th>Regla</th>
+      <th>Condici&oacute;n</th>
+      <th>Valor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let regla of reglas">
+      <td>{{ regla.columnDepend }}</td>
+      <td>{{ regla.rule }}</td>
+      <td>{{ regla.value }}</td>
+    </tr>
+  </tbody>
+</table>

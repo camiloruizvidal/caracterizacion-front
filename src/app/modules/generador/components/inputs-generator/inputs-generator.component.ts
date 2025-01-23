@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   IFamilyCard,
   IGruposFicha,
+  IOptionsVisibility,
   ISteperValues,
   TipoDataForm,
   TipoForm
@@ -64,7 +65,8 @@ export class InputsGeneratorComponent implements OnInit {
       nombre_columna: [''],
       version: [''],
       fichaTipoVisible: [''],
-      grupoVisible: ['']
+      grupoVisible: [''],
+      reglas: ['']
     });
 
     this.agregarGrupoForm = this.formBuilder.group({
@@ -192,15 +194,19 @@ export class InputsGeneratorComponent implements OnInit {
       const campo: TipoDataForm = this.tipoData[fichaTipo] as TipoDataForm;
       const valor: any = this.formularioGenerado[campo][valueIndex];
       const orden = valor?.values?.length;
+      const visibility =
+        this.formulario.value.reglas === ''
+          ? true
+          : this.formulario.value.reglas;
       const steperValues: ISteperValues = {
         label: this.formulario.value.label.trim(),
         type: this.getTipo(),
         options: this.getOptions(),
-        visibility: true,
         required: this.formulario.value.esRequerido,
         columnName: this.crearNombreColumna(),
         default: this.formulario.value.default,
         value: null,
+        visibility,
         orden
       };
 
@@ -341,6 +347,10 @@ export class InputsGeneratorComponent implements OnInit {
     // }
     // this.indexEditar = indexValue;
     // this.esEditable = true;
+  }
+
+  public guardarRegla(reglas: IOptionsVisibility) {
+    this.formulario.patchValue({ reglas });
   }
 
   public guardarEdicion() {

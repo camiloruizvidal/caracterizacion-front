@@ -147,6 +147,7 @@
               [formularioGenerado]="formularioGenerado"
               [tipoCards]="tipoCards"
               [version]="formularioGenerado.version"
+              (reglaEmitter)="guardarRegla($event)"
             ></app-is-visible>
 
             <div class="card-footer">
@@ -173,7 +174,7 @@
                   class="btn btn-danger"
                   (click)="guardarFormulario()"
                 >
-                  Cerrar Formulario
+                  ºFormulario
                 </button>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   condiciones,
@@ -7,6 +7,7 @@ import {
   ICondiciones,
   IFamilyCard,
   IGruposFicha,
+  IOptionsRule,
   IOptionsVisibility,
   TipoDataForm,
   TipoForm
@@ -22,7 +23,13 @@ export class IsVisibleComponent implements OnInit {
   public formulario: FormGroup;
   public tipoCampo: ESteperType = ESteperType.Text;
   public regla!: IOptionsVisibility;
+  public reglaUnitaria: IOptionsRule = {
+    columnDepend: '',
+    rule: EConditions.IGUAL_QUE,
+    value: ''
+  };
 
+  @Output() reglaEmitter: EventEmitter<IOptionsVisibility> = new EventEmitter();
   @Input() public formularioGenerado!: IFamilyCard;
   @Input() public grupos: IGruposFicha[] = [];
   @Input() public version?: string;
@@ -69,19 +76,28 @@ export class IsVisibleComponent implements OnInit {
     }
 
     this.formulario.valueChanges.subscribe(formulario => {
+      this.reglaUnitaria = {
+        columnDepend: formulario.campo.toString(),
+        rule: formulario.condicion as EConditions,
+        value: formulario.valorCondicion
+      };
+    });
+  }
+
+  public agregarCondicion(): void {
+    if (!this.regla) {
       this.regla = {
         isDepent: true,
-        isShow: true,
-        rules: [
-          {
-            columnDepend: formulario.campo.toString(),
-            rule: formulario.condicion as EConditions,
-            value: formulario.valorCondicion
-          }
-        ]
+        rules: [],
+        isShow: true
       };
-      console.log({ formulario, regla: this.regla?.rules });
-    });
+    }
+    this.regla?.rules?.push(this.reglaUnitaria);
+    this.reglaEmitter.emit(this.regla);
+  }
+
+  public get reglas(): IOptionsRule[] {
+    return this.regla?.rules || [];
   }
 
   public get gruposVisiblesFiltrado(): any[] {

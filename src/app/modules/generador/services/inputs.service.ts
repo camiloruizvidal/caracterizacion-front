@@ -17,7 +17,6 @@ export class InputsService {
     let params = new HttpParams();
 
     const tipoData = tipo === 'grupalData' ? 'grupal_data' : 'individual_data';
-    console.log('tipo', tipo);
     params = params.set('tipo', tipoData);
     params = params.set('ficha_id', fichaId);
     return this.http.get<any>(this.apiUrl + '/obtener/grupos', { params });

@@ -104,7 +104,7 @@ export class ListadoMasivoComponent implements OnInit {
             error.error.message +
             '"'
         );
-        console.log({ error });
+        console.error({ error });
         clearTimeout(this.timeoutId);
       }
     );

@@ -101,7 +101,6 @@ export class FormulariosService {
     tipo: number,
     version: number
   ): Observable<any> {
-    console.log({ nombre, tipo });
     return this.http.post(`${this.apiUrl}/tipo`, {
       titulo: nombre,
       tipo,
