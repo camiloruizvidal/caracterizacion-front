@@ -1,0 +1,24 @@
+<h1>Informes dinamicos</h1>
+<div class="card card-body">
+  <div class="col-md-4">
+    <label for="version">Versi&oacute;n de la ficha</label>
+    <div class="input-group">
+      <select
+        (change)="cargarTipoFichas()"
+        [(ngModel)]="versionSeleccionada"
+        class="form-select"
+        id="versionSeleccionada"
+        required
+      >
+        <option value="">Seleccione</option>
+        <option [value]="version.version" *ngFor="let version of versiones">
+          {{ version.nombre }}
+        </option>
+      </select>
+    </div>
+  </div>
+  <app-dynamic-filters
+    *ngIf="fichaJson"
+    [tarjetaJson]="fichaJson"
+  ></app-dynamic-filters>
+</div>

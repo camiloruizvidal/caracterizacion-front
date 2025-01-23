@@ -1,0 +1,109 @@
+<div class="dynamic-filters">
+  <h1>Filtros Dinámicos</h1>
+
+  <!-- Formulario -->
+  <form [formGroup]="filtrosForm">
+    <div formArrayName="filtros">
+      <div
+        *ngFor="let filtro of filtros.controls; let i = index"
+        [formGroupName]="i"
+        class="filtro-item row"
+      >
+        <div class="col-md-2">
+          <label for="nombreTarjeta-{{ i }}">Tipo de tarjeta</label>
+          <select
+            id="nombreTarjeta-{{ i }}"
+            class="form form-control"
+            formControlName="nombreTarjeta"
+            (change)="
+              filtro.get('seccion')?.reset(); filtro.get('pregunta')?.reset()
+            "
+          >
+            <option value=""></option>
+            <option [value]="tarjetaJson.grupalNombre">
+              {{ tarjetaJson.grupalNombre }}
+            </option>
+            <option [value]="tarjetaJson.individualNombre">
+              {{ tarjetaJson.individualNombre }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label for="seccion-{{ i }}">Sección</label>
+          <select
+            class="form form-control"
+            id="seccion-{{ i }}"
+            formControlName="seccion"
+            (change)="filtro.get('pregunta')?.reset()"
+          >
+            <option
+              *ngFor="
+                let grupo of obtenerGrupos(filtro.get('nombreTarjeta')?.value)
+              "
+              [value]="grupo.title"
+            >
+              {{ grupo.title }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label for="pregunta-{{ i }}">Pregunta</label>
+          <select
+            id="pregunta-{{ i }}"
+            formControlName="pregunta"
+            class="form form-control"
+          >
+            <option
+              *ngFor="
+                let value of obtenerPreguntas(filtro.get('seccion')?.value)
+              "
+              [value]="value.label"
+            >
+              {{ value.label }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label for="condicion-{{ i }}">Condición</label>
+          <select
+            id="condicion-{{ i }}"
+            formControlName="condicion"
+            class="form form-control"
+          >
+            <option
+              *ngFor="let condicion of condiciones"
+              [value]="condicion.condition"
+            >
+              {{ condicion.text }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label for="valor-{{ i }}">Valor</label>
+          <input
+            class="form-control form"
+            id="valor-{{ i }}"
+            type="text"
+            formControlName="valor"
+          />
+        </div>
+
+        <button
+          type="button"
+          (click)="eliminarFiltro(i)"
+          class="btn btn-danger"
+        >
+          Eliminar Filtro
+        </button>
+      </div>
+    </div>
+
+    <button type="button" (click)="agregarFiltro()" class="btn btn-primary">
+      Agregar Filtro
+    </button>
+  </form>
+</div>
