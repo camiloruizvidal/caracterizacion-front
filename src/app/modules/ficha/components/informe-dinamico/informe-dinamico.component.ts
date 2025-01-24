@@ -3,7 +3,8 @@ import { IVersiones } from 'src/app/helpers/interface/interface';
 import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
 import {
   IFamilyCard,
-  IFiltrosBusqueda
+  IFiltrosBusqueda,
+  ITarjetaRespondidas
 } from 'src/app/modules/generador/interfaces/interface';
 import { InputsService } from 'src/app/modules/generador/services/inputs.service';
 
@@ -16,6 +17,7 @@ export class InformeDinamicoComponent implements OnInit {
   public fichaJson!: IFamilyCard;
   public versiones: IVersiones[] = [];
   public versionSeleccionada: string = '';
+  public tarjetasRespondidas: ITarjetaRespondidas[] = [];
 
   constructor(
     private formulariosService: FormulariosService,
@@ -43,10 +45,8 @@ export class InformeDinamicoComponent implements OnInit {
   }
 
   public filtrar(filtros: IFiltrosBusqueda[]): void {
-    this.formulariosService
-      .obtenerInformes(filtros)
-      .subscribe((resultado: any[]) => {
-        console.log({ resultado });
-      });
+    this.formulariosService.obtenerInformes(filtros).subscribe(resultado => {
+      this.tarjetasRespondidas = resultado;
+    });
   }
 }

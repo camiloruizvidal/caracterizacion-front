@@ -17,6 +17,19 @@ export interface IFamilyCard {
   individualData: IStepers[];
 }
 
+export interface ITarjetaRespondidas {
+  id: number;
+  codigo: number;
+  date_register: string;
+  nombre_primero: string;
+  nombre_segundo: string | null;
+  apellido_primero: string;
+  apellido_segundo: string | null;
+  documento: string;
+  grupaldata: IStepers[];
+  individualdata: IStepers[];
+}
+
 export interface IStepers {
   id?: number | string;
   orden?: number;

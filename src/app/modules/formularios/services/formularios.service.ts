@@ -9,7 +9,10 @@ import {
   IPagination,
   IResultadoGenerarArchivoExcel
 } from 'src/app/helpers/interface/interface';
-import { IFiltrosBusqueda } from '../../generador/interfaces/interface';
+import {
+  IFiltrosBusqueda,
+  ITarjetaRespondidas
+} from '../../generador/interfaces/interface';
 
 @Injectable({
   providedIn: 'root'
@@ -122,6 +125,9 @@ export class FormulariosService {
         .set(`filtros[${index}][valor]`, filtro.valor);
     });
 
-    return this.http.get<any[]>(this.apiUrl + '/busqueda_dinamica', { params });
+    return this.http.get<ITarjetaRespondidas[]>(
+      this.apiUrl + '/busqueda_dinamica',
+      { params }
+    );
   }
 }

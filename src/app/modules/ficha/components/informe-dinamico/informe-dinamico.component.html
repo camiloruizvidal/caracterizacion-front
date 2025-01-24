@@ -22,4 +22,34 @@
     [tarjetaJson]="fichaJson"
     (filtrosEmitidos)="filtrar($event)"
   ></app-dynamic-filters>
+  <hr />
+  <table class="table" *ngIf="fichaJson">
+    <thead>
+      <tr>
+        <th>Opciones</th>
+        <th>Codigo</th>
+        <th>Fecha de registro</th>
+        <th>Caracterizador</th>
+        <th>Documento</th>
+        <th>Total registros {{ fichaJson.individualNombre }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tarjeta of tarjetasRespondidas">
+        <td>{{ tarjeta.id }}</td>
+        <td>{{ tarjeta.codigo }}</td>
+        <td>{{ tarjeta.date_register }}</td>
+        <td>
+          {{ tarjeta.nombre_primero }}
+          {{ tarjeta.nombre_segundo }}
+          {{ tarjeta.apellido_primero }}
+          {{ tarjeta.apellido_segundo }}
+        </td>
+        <td>{{ tarjeta.documento }}</td>
+        <td>
+          <pre>{{ tarjeta.individualdata.length | json }}</pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
