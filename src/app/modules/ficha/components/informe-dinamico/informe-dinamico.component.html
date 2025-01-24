@@ -38,7 +38,7 @@
       <tr *ngFor="let tarjeta of tarjetasRespondidas">
         <td>{{ tarjeta.id }}</td>
         <td>{{ tarjeta.codigo }}</td>
-        <td>{{ tarjeta.date_register }}</td>
+        <td>{{ tarjeta.date_register | moment }}</td>
         <td>
           {{ tarjeta.nombre_primero }}
           {{ tarjeta.nombre_segundo }}

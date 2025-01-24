@@ -24,10 +24,7 @@ import { ToastrModule, provideToastr } from 'ngx-toastr';
     UserModule,
     NgbModule
   ],
-  providers: [
-    provideAnimations(), // required animations providers
-    provideToastr() // Toastr providers
-  ],
+  providers: [provideAnimations(), provideToastr()],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
