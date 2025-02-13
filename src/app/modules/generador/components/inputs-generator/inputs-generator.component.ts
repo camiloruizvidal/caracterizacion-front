@@ -562,4 +562,8 @@ export class InputsGeneratorComponent implements OnInit {
       individualNombre: 'individualData'
     };
   }
+
+  public get nombresSelectPadres(): string[] {
+    return [];
+  }
 }

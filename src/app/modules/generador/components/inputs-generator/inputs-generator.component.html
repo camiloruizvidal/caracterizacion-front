@@ -90,17 +90,23 @@
                 </option>
               </select>
             </div>
-            <div class="col-md-12" *ngIf="formulario.value.tipo === ''">
-              <label for="nombrePadreDependiente"
-                >Seleccione el select padre dependiente</label
-              >
+            <div
+              class="col-md-12"
+              *ngIf="formulario.value.tipo === 'selectDependiente'"
+            >
+              <label for="nombrePadreDependiente">
+                Seleccione el select padre dependiente
+              </label>
               <select
                 formControlName="nombrePadreDependiente"
                 name="nombrePadreDependiente"
                 class="form form-control"
                 id="nombrePadreDependiente"
               >
-                <option value=""></option>
+                <option value="">Seleccione</option>
+                <option *ngFor="let grupo of grupos" [value]="grupo.id">
+                  {{ grupo.title }}
+                </option>
               </select>
             </div>
             <ng-container *ngIf="isShowJson">
@@ -116,12 +122,52 @@
               ></textarea>
               <pre>
                 &#91;
-                  &lbrace; "value": "CC", "option": "Cédula de Ciudadanía" &rbrace;
-                  &lbrace; "value": "TI", "option": "Tarjeta de Identidad" &rbrace;
-                  &lbrace; "value": "CE", "option": "Cédula de Extranjería" &rbrace;
-                  &lbrace; "value": "PAS", "option": "Pasaporte" &rbrace;
-                  &lbrace; "value": "RC", "option": "Registro Civil" &rbrace;
-                &#93;</pre
+                  &lbrace;
+                  {{
+                  formulario.value.tipo === 'selectDependiente'
+                    ? '"valueDependiente": "19",'
+                    : ''
+                }}
+                  "value": "CC",
+                  "option": "Cédula de Ciudadanía"
+                &rbrace;,
+                &lbrace;
+                  {{
+                  formulario.value.tipo === 'selectDependiente'
+                    ? '"valueDependiente": "19",'
+                    : ''
+                }}
+                  "value": "TI",
+                  "option": "Tarjeta de Identidad"
+                &rbrace;,
+                &lbrace;
+                  {{
+                  formulario.value.tipo === 'selectDependiente'
+                    ? '"valueDependiente": "19",'
+                    : ''
+                }}
+                  "value": "CE",
+                  "option": "Cédula de Extranjería"
+                &rbrace;,
+                &lbrace;
+                  {{
+                  formulario.value.tipo === 'selectDependiente'
+                    ? '"valueDependiente": "19",'
+                    : ''
+                }}
+                  "value": "PAS",
+                  "option": "Pasaporte" &rbrace;,
+                &lbrace;
+                  {{
+                  formulario.value.tipo === 'selectDependiente'
+                    ? '"valueDependiente": "19",'
+                    : ''
+                }}
+                  "value": "RC",
+                  "option": "Registro Civil"
+                &rbrace;
+              &#93;
+            </pre
               >
               <hr />
               <div class="col-md-12" *ngIf="isShowJson"></div>
