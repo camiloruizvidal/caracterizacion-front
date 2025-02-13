@@ -246,6 +246,7 @@ export enum ESteperType {
   Relationship = 'relationship',
   Select = 'select',
   SelectFilter = 'selectFilter',
+  SelectDependiente = 'selectDependiente',
   Text = 'text',
   TextArea = 'textarea',
   Title = 'title',

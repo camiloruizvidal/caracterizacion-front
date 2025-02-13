@@ -34,7 +34,12 @@ export class InputsGeneratorComponent implements OnInit {
     tituloTexto: string;
     text: string;
   }[] = [];
-  public typesOptions: string[] = ['selectFilter', 'select_multiple', 'select'];
+  public typesOptions: string[] = [
+    'selectFilter',
+    'select_multiple',
+    'select',
+    'SelectDependiente'
+  ];
   public versiones: IVersiones[] = [];
 
   public modalForm!: FormGroup;
