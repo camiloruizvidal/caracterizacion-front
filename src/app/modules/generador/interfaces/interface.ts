@@ -49,7 +49,13 @@ export interface ISteperValues {
   label: string;
   description?: string | null;
   type: ESteperType | string;
-  options: IOptionsCheck | IOptionsSelect[] | IOptionsSelectFilter | null | any;
+  options?:
+    | IOptionsCheck
+    | IOptionsSelect[]
+    | IOptionsSelectFilter
+    | IOptionsSelectDependient //Para selectDependiente
+    | null
+    | any;
   default: boolean | string | null;
   visibility: IOptionsVisibility | boolean | null;
   required: IOptionsRequired | boolean | null;
@@ -57,7 +63,7 @@ export interface ISteperValues {
   ficha_grupo_id?: string | number | null;
   createdAt?: string | Date;
   updatedAt?: string | Date;
-  nombrePadre?: string; //Para selectDependiente
+  nombrePadreDependiente?: string; //Para selectDependiente
 }
 
 export enum ESteperType {
@@ -80,12 +86,18 @@ export enum ESteperType {
   Title = 'title',
   SubTitle = 'subtitle',
   Ruta = 'ruta_atencion',
-  selectMultiple = 'select_multiple'
+  SelectMultiple = 'select_multiple'
 }
 
 export interface IOptionsCheck {
   valueTrue: string;
   valueFalse: string;
+}
+
+export interface IOptionsSelectDependient {
+  show: { table: string; dependiente: string };
+  value: string;
+  option: string;
 }
 
 export interface IOptionsSelect {

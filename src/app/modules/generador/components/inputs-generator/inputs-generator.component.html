@@ -90,6 +90,19 @@
                 </option>
               </select>
             </div>
+            <div class="col-md-12" *ngIf="formulario.value.tipo === ''">
+              <label for="nombrePadreDependiente"
+                >Seleccione el select padre dependiente</label
+              >
+              <select
+                formControlName="nombrePadreDependiente"
+                name="nombrePadreDependiente"
+                class="form form-control"
+                id="nombrePadreDependiente"
+              >
+                <option value=""></option>
+              </select>
+            </div>
             <ng-container *ngIf="isShowJson">
               <span class="text-bg-primary text-center"
                 >Agregar opciones en JSON</span

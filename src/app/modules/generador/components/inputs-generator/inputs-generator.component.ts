@@ -35,10 +35,10 @@ export class InputsGeneratorComponent implements OnInit {
     text: string;
   }[] = [];
   public typesOptions: string[] = [
-    'selectFilter',
-    'select_multiple',
-    'select',
-    'SelectDependiente'
+    ESteperType.SelectFilter,
+    ESteperType.SelectMultiple,
+    ESteperType.Select,
+    ESteperType.SelectDependiente
   ];
   public versiones: IVersiones[] = [];
 
@@ -67,9 +67,10 @@ export class InputsGeneratorComponent implements OnInit {
       visibility: [true],
       required: [false],
       value: null,
-      nombre_columna: [''],
+      nombreColumna: [''],
       version: [''],
       fichaTipoVisible: [''],
+      nombrePadreDependiente: [''],
       grupoVisible: [''],
       reglas: ['']
     });
@@ -214,7 +215,10 @@ export class InputsGeneratorComponent implements OnInit {
         visibility,
         orden
       };
-
+      if (this.formulario.value.nombrePadreDependiente.trim() !== '') {
+        steperValues['nombrePadreDependiente'] =
+          this.formulario.value.nombrePadreDependiente.trim();
+      }
       this.formularioGenerado[campo][valueIndex]?.values?.push(steperValues);
       this.formulario.value.label = '';
       this.formularioGenerado.version = this.formulario.value.version;

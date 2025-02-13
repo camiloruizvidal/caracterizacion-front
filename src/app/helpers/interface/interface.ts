@@ -252,7 +252,7 @@ export enum ESteperType {
   Title = 'title',
   SubTitle = 'subtitle',
   Ruta = 'ruta_atencion',
-  selectMultiple = 'select_multiple'
+  SelectMultiple = 'select_multiple'
 }
 
 export enum EFichaTipo {
