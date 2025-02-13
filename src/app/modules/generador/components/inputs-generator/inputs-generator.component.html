@@ -285,131 +285,133 @@
                     </span>
                   </ng-template>
                   <ng-template ngbPanelContent>
-                    <table>
-                      <tr
-                        class="table-group-divider"
-                        *ngFor="
-                          let value of steper.values;
-                          let indexValue = index
-                        "
-                      >
-                        <td>
-                          {{ value.label }}
-                          <br />
-                          <div class="btn-group">
-                            <button
-                              (click)="
-                                editar(
-                                  tipo.nombre,
-                                  indexSteper,
-                                  indexValue,
-                                  value
-                                )
-                              "
-                              type="button"
-                              class="btn btn-primary"
-                            >
-                              Editar
-                            </button>
-                            <button
-                              (click)="
-                                eliminar(
-                                  tipo.nombre,
-                                  indexSteper,
-                                  indexValue,
-                                  value
-                                )
-                              "
-                              type="button"
-                              class="btn btn-danger"
-                            >
-                              Eliminar
-                            </button>
-                            <select
-                              [name]="'eliminar-' + indexValue.toString()"
-                              [id]="'eliminar-' + indexValue.toString()"
-                              (change)="
-                                cambioItem(
-                                  $event,
-                                  value,
-                                  indexSteper,
-                                  tipo.nombre
-                                )
-                              "
-                            >
-                              <option
-                                *ngFor="
-                                  let i of [].constructor(
-                                    steper.values?.length || 0
-                                  );
-                                  let index = index
+                    <div class="scrollable">
+                      <table class="table">
+                        <tr
+                          class="table-group-divider"
+                          *ngFor="
+                            let value of steper.values;
+                            let indexValue = index
+                          "
+                        >
+                          <td>
+                            {{ value.label }}
+                            <br />
+                            <div class="btn-group">
+                              <button
+                                (click)="
+                                  editar(
+                                    tipo.nombre,
+                                    indexSteper,
+                                    indexValue,
+                                    value
+                                  )
                                 "
-                                [value]="index"
-                                [selected]="index === (value?.orden ?? -1)"
+                                type="button"
+                                class="btn btn-primary"
                               >
-                                {{ index + 1 }}
-                              </option>
-                            </select>
-                          </div>
-                        </td>
-                        <td>
-                          <ul>
-                            <li *ngFor="let item of getKeys(value)">
-                              <strong>{{ item }}</strong
-                              >:
-                              <div
-                                *ngIf="
-                                  typesOptions.includes(value.type) &&
-                                  item === 'options'
+                                Editar
+                              </button>
+                              <button
+                                (click)="
+                                  eliminar(
+                                    tipo.nombre,
+                                    indexSteper,
+                                    indexValue,
+                                    value
+                                  )
+                                "
+                                type="button"
+                                class="btn btn-danger"
+                              >
+                                Eliminar
+                              </button>
+                              <select
+                                [name]="'eliminar-' + indexValue.toString()"
+                                [id]="'eliminar-' + indexValue.toString()"
+                                (change)="
+                                  cambioItem(
+                                    $event,
+                                    value,
+                                    indexSteper,
+                                    tipo.nombre
+                                  )
                                 "
                               >
-                                <select
-                                  class="form form-control"
-                                  [id]="'options-' + indexValue.toString()"
-                                  [name]="'options-' + indexValue.toString()"
+                                <option
+                                  *ngFor="
+                                    let i of [].constructor(
+                                      steper.values?.length || 0
+                                    );
+                                    let index = index
+                                  "
+                                  [value]="index"
+                                  [selected]="index === (value?.orden ?? -1)"
                                 >
-                                  <option *ngFor="let item of value.options">
-                                    {{ item.value }}:
-                                    {{ item.option }}
-                                  </option>
-                                </select>
-                              </div>
-                              <div
-                                *ngIf="
-                                  value.type === 'check' && item === 'options'
-                                "
-                              >
-                                <select
-                                  class="form form-control"
-                                  [id]="'valueTrue' + indexValue"
-                                  [name]="'valueTrue' + indexValue"
+                                  {{ index + 1 }}
+                                </option>
+                              </select>
+                            </div>
+                          </td>
+                          <td>
+                            <ul>
+                              <li *ngFor="let item of getKeys(value)">
+                                <strong>{{ item }}</strong
+                                >:
+                                <div
+                                  *ngIf="
+                                    typesOptions.includes(value.type) &&
+                                    item === 'options'
+                                  "
                                 >
-                                  <option>
-                                    valueTrue: {{ value.options.valueTrue }}
-                                  </option>
-                                  <option>
-                                    valueFalse: {{ value.options.valueFalse }}
-                                  </option>
-                                </select>
-                              </div>
-                              <div
-                                *ngIf="
-                                  ![
-                                    'selectFilter',
-                                    'select_multiple',
-                                    'selectDependiente',
-                                    'select',
-                                    'check'
-                                  ].includes(value.type) || item !== 'options'
-                                "
-                              >
-                                {{ getValue(item, value) | json }}
-                              </div>
-                            </li>
-                          </ul>
-                        </td>
-                      </tr>
-                    </table>
+                                  <select
+                                    class="form form-control"
+                                    [id]="'options-' + indexValue.toString()"
+                                    [name]="'options-' + indexValue.toString()"
+                                  >
+                                    <option *ngFor="let item of value.options">
+                                      {{ item.value }}:
+                                      {{ item.option }}
+                                    </option>
+                                  </select>
+                                </div>
+                                <div
+                                  *ngIf="
+                                    value.type === 'check' && item === 'options'
+                                  "
+                                >
+                                  <select
+                                    class="form form-control"
+                                    [id]="'valueTrue' + indexValue"
+                                    [name]="'valueTrue' + indexValue"
+                                  >
+                                    <option>
+                                      valueTrue: {{ value.options.valueTrue }}
+                                    </option>
+                                    <option>
+                                      valueFalse: {{ value.options.valueFalse }}
+                                    </option>
+                                  </select>
+                                </div>
+                                <div
+                                  *ngIf="
+                                    ![
+                                      'selectFilter',
+                                      'select_multiple',
+                                      'selectDependiente',
+                                      'select',
+                                      'check'
+                                    ].includes(value.type) || item !== 'options'
+                                  "
+                                >
+                                  {{ getValue(item, value) | json }}
+                                </div>
+                              </li>
+                            </ul>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
                   </ng-template>
                 </ngb-panel>
               </ngb-accordion>
