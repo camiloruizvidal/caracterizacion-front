@@ -565,9 +565,6 @@ export class InputsGeneratorComponent implements OnInit {
       (value: any) => value.id === Number(this.formulario.value.grupo)
     );
     const values: any[] = value?.values as [];
-    const x =
-      values.filter(value => this.typesOptions.includes(value.type)) || [];
-    console.log(x);
-    return x;
+    return values.filter(value => this.typesOptions.includes(value.type)) || [];
   }
 }

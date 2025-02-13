@@ -8,6 +8,7 @@ import {
   IFamilyCard,
   IGruposFicha,
   IOptionsRule,
+  IOptionsSelect,
   IOptionsVisibility,
   TipoDataForm,
   TipoForm
@@ -28,6 +29,15 @@ export class IsVisibleComponent implements OnInit {
     rule: EConditions.IGUAL_QUE,
     value: ''
   };
+
+  public typesOptions: string[] = [
+    ESteperType.SelectFilter,
+    ESteperType.SelectMultiple,
+    ESteperType.Select,
+    ESteperType.SelectDependiente,
+    ESteperType.Check,
+    ESteperType.CheckSiNo
+  ];
 
   @Output() reglaEmitter: EventEmitter<IOptionsVisibility> = new EventEmitter();
   @Input() public formularioGenerado!: IFamilyCard;
@@ -69,6 +79,7 @@ export class IsVisibleComponent implements OnInit {
       });
     }
     const campo = this.formulario.get('campo');
+    console.log({ campo });
     if (campo) {
       campo.valueChanges.subscribe(value => {
         this.tipoCampo = this.validarTipoDato(value);
@@ -206,5 +217,23 @@ export class IsVisibleComponent implements OnInit {
       .subscribe((result: IGruposFicha[]) => {
         this.grupos = result;
       });
+  }
+
+  public get tipoData(): {
+    grupalNombre: TipoDataForm;
+    individualNombre: TipoDataForm;
+  } {
+    return {
+      grupalNombre: 'grupalData',
+      individualNombre: 'individualData'
+    };
+  }
+
+  public get opciones(): IOptionsSelect[] {
+    return (
+      this.camposVisibles.find(
+        campo => campo.columnName === this.formulario.value.campo
+      )?.options || []
+    );
   }
 }

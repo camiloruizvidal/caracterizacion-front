@@ -76,8 +76,21 @@
         {{ condicion.text }}
       </option>
     </select>
-    <label for="valorCondicion">Valor de la condicion</label>
+    <label for="valorCondicion">Valor de la condici&oacute;n</label>
+    <select
+      *ngIf="typesOptions.includes(tipoCampo)"
+      formControlName="valorCondicion"
+      placeholder="Condici&oacute;n"
+      class="form form-control"
+    >
+      <option value="">Seleccione</option>
+      <option *ngFor="let opcion of opciones" [value]="opcion.value">
+        {{ opcion.option }}
+      </option>
+    </select>
+
     <input
+      *ngIf="!typesOptions.includes(tipoCampo)"
       type="text"
       name="valorCondicion"
       id="valorCondicion"
@@ -105,6 +118,7 @@
   <tbody>
     <tr *ngFor="let regla of reglas">
       <td>{{ regla.columnDepend }}</td>
+      <td>{{ regla | json }}</td>
       <td>{{ regla.rule }}</td>
       <td>{{ regla.value }}</td>
     </tr>
