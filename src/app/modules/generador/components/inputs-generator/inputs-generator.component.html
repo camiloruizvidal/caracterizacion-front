@@ -74,6 +74,16 @@
               </div>
             </div>
             <div class="col-md-12">
+              <label for="label">Ingrese un texto para la pregunta</label>
+              <input
+                (click)="selectAllText($event)"
+                formControlName="label"
+                id="label"
+                class="form-control"
+                type="text"
+              />
+            </div>
+            <div class="col-md-12">
               <label for="tipo">Seleccione el tipo de pregunta</label>
               <select
                 formControlName="tipo"
@@ -124,69 +134,47 @@
                 rows="10"
                 (click)="selectAllText($event)"
               ></textarea>
-              <pre class="m-1" style="background-color: #f1f1f1">
-&#91;
-  &lbrace;
-    {{
+              <div class="m-1" style="background-color: #f1f1f1">
+                &#91; &lbrace;
+                {{
                   formulario.value.tipo === 'selectDependiente'
                     ? '"valueDependiente": "19",'
                     : ''
                 }}
-    "value": "CC",
-    "option": "Cédula de Ciudadanía"
-  &rbrace;,
-  &lbrace;
-    {{
+                "value": "CC", "option": "Cédula de Ciudadanía" &rbrace;,
+                &lbrace;
+                {{
                   formulario.value.tipo === 'selectDependiente'
                     ? '"valueDependiente": "19",'
                     : ''
                 }}
-    "value": "TI",
-    "option": "Tarjeta de Identidad"
-  &rbrace;,
-  &lbrace;
-    {{
+                "value": "TI", "option": "Tarjeta de Identidad" &rbrace;,
+                &lbrace;
+                {{
                   formulario.value.tipo === 'selectDependiente'
                     ? '"valueDependiente": "19",'
                     : ''
                 }}
-    "value": "CE",
-    "option": "Cédula de Extranjería"
-  &rbrace;,
-  &lbrace;
-    {{
+                "value": "CE", "option": "Cédula de Extranjería" &rbrace;,
+                &lbrace;
+                {{
                   formulario.value.tipo === 'selectDependiente'
                     ? '"valueDependiente": "19",'
                     : ''
                 }}
-    "value": "PAS",
-    "option": "Pasaporte" &rbrace;,
-  &lbrace;
-    {{
+                "value": "PAS", "option": "Pasaporte" &rbrace;, &lbrace;
+                {{
                   formulario.value.tipo === 'selectDependiente'
                     ? '"valueDependiente": "19",'
                     : ''
                 }}
-    "value": "RC",
-    "option": "Registro Civil"
-  &rbrace;
-&#93;
-            </pre
-              >
+                "value": "RC", "option": "Registro Civil" &rbrace; &#93;
+              </div>
               <hr />
               <div class="col-md-12" *ngIf="isShowJson"></div>
               <hr />
             </ng-container>
-            <div class="col-md-12">
-              <label for="label">Ingrese un texto para la pregunta</label>
-              <input
-                (click)="selectAllText($event)"
-                formControlName="label"
-                id="label"
-                class="form-control"
-                type="text"
-              />
-            </div>
+
             <div class="col-md-12">
               <div class="form-check">
                 <input
