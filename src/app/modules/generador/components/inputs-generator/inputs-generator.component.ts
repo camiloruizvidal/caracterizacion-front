@@ -359,13 +359,14 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public guardarRegla(reglas: IOptionsVisibility) {
+    console.log({ reglas });
     this.formulario.patchValue({ reglas });
   }
 
   public desmarcarSiEsVisible(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     if (!checkbox.checked) {
-      this.formulario.get('visibility')?.setValue(true);
+      this.formulario.get('reglas')?.setValue('');
     }
   }
 
@@ -394,8 +395,7 @@ export class InputsGeneratorComponent implements OnInit {
   public eliminar(
     tipo: 'grupalNombre' | 'individualNombre',
     index: number,
-    indexValue: number,
-    value: any
+    indexValue: number
   ) {
     const tipoKey = this.tipoData[tipo] as keyof typeof this.formularioGenerado;
 

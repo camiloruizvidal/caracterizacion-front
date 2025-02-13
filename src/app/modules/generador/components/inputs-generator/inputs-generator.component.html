@@ -91,7 +91,6 @@
                 class="form-control"
                 required
               >
-                <option value="">Seleccione</option>
                 <option
                   *ngFor="let tipo of tipos"
                   [value]="obtenerTipoInput(tipo)"
@@ -302,12 +301,7 @@
                               </button>
                               <button
                                 (click)="
-                                  eliminar(
-                                    tipo.nombre,
-                                    indexSteper,
-                                    indexValue,
-                                    value
-                                  )
+                                  eliminar(tipo.nombre, indexSteper, indexValue)
                                 "
                                 type="button"
                                 class="btn btn-danger"
