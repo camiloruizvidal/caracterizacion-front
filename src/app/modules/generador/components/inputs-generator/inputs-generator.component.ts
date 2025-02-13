@@ -384,20 +384,18 @@ export class InputsGeneratorComponent implements OnInit {
     // }
   }
 
-  public eliminar(tipo: string, index: number, indexValue: number, value: any) {
-    // const tipoForm: TipoForm = tipo as TipoForm;
-    // this.formularioGenerado[tipoForm][index].values?.splice(indexValue, 1);
-    // if (this.formularioGenerado[tipoForm][index].values?.length === 0) {
-    //   this.formularioGenerado[tipoForm].splice(index, 1);
-    // }
-    // this.inputsService
-    //   .guardarFormulario(this.formularioGenerado)
-    //   .subscribe(response => {
-    //     this.toastr.error(
-    //       'Se actualizó el formulario',
-    //       'El nuevo item ha sido eliminado'
-    //     );
-    //   });
+  public eliminar(
+    tipo: 'grupalNombre' | 'individualNombre',
+    index: number,
+    indexValue: number,
+    value: any
+  ) {
+    const tipoKey = this.tipoData[tipo] as keyof typeof this.formularioGenerado;
+
+    (this.formularioGenerado[tipoKey] as any[])[index].values?.splice(
+      indexValue,
+      1
+    );
   }
 
   public getValue(key: any, value: any): any {
