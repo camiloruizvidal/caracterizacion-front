@@ -362,6 +362,13 @@ export class InputsGeneratorComponent implements OnInit {
     this.formulario.patchValue({ reglas });
   }
 
+  public desmarcarSiEsVisible(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    if (!checkbox.checked) {
+      this.formulario.get('visibility')?.setValue(true);
+    }
+  }
+
   public guardarEdicion() {
     const tipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
 

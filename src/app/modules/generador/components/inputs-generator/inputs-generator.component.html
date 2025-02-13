@@ -122,54 +122,55 @@
                 formControlName="optionsJSON"
                 class="form form-control"
                 rows="10"
+                (click)="selectAllText($event)"
               ></textarea>
-              <pre>
-                &#91;
-                  &lbrace;
-                  {{
+              <pre class="m-1" style="background-color: #f1f1f1">
+&#91;
+  &lbrace;
+    {{
                   formulario.value.tipo === 'selectDependiente'
                     ? '"valueDependiente": "19",'
                     : ''
                 }}
-                  "value": "CC",
-                  "option": "Cédula de Ciudadanía"
-                &rbrace;,
-                &lbrace;
-                  {{
+    "value": "CC",
+    "option": "Cédula de Ciudadanía"
+  &rbrace;,
+  &lbrace;
+    {{
                   formulario.value.tipo === 'selectDependiente'
                     ? '"valueDependiente": "19",'
                     : ''
                 }}
-                  "value": "TI",
-                  "option": "Tarjeta de Identidad"
-                &rbrace;,
-                &lbrace;
-                  {{
+    "value": "TI",
+    "option": "Tarjeta de Identidad"
+  &rbrace;,
+  &lbrace;
+    {{
                   formulario.value.tipo === 'selectDependiente'
                     ? '"valueDependiente": "19",'
                     : ''
                 }}
-                  "value": "CE",
-                  "option": "Cédula de Extranjería"
-                &rbrace;,
-                &lbrace;
-                  {{
+    "value": "CE",
+    "option": "Cédula de Extranjería"
+  &rbrace;,
+  &lbrace;
+    {{
                   formulario.value.tipo === 'selectDependiente'
                     ? '"valueDependiente": "19",'
                     : ''
                 }}
-                  "value": "PAS",
-                  "option": "Pasaporte" &rbrace;,
-                &lbrace;
-                  {{
+    "value": "PAS",
+    "option": "Pasaporte" &rbrace;,
+  &lbrace;
+    {{
                   formulario.value.tipo === 'selectDependiente'
                     ? '"valueDependiente": "19",'
                     : ''
                 }}
-                  "value": "RC",
-                  "option": "Registro Civil"
-                &rbrace;
-              &#93;
+    "value": "RC",
+    "option": "Registro Civil"
+  &rbrace;
+&#93;
             </pre
               >
               <hr />
@@ -205,6 +206,7 @@
                   *ngIf="formulario.value.tipo !== ''"
                   formControlName="esVisibleSi"
                   id="esVisibleSi"
+                  (change)="desmarcarSiEsVisible($event)"
                   class="form-check-input"
                   type="checkbox"
                 />
@@ -229,6 +231,7 @@
                   class="btn btn-success"
                   [disabled]="!isValidForm"
                 >
+                  <i class="bi bi-file-earmark-plus"></i>
                   Agregar
                 </button>
                 <button
@@ -238,6 +241,7 @@
                   class="btn btn-primary"
                   [disabled]="!isValidForm"
                 >
+                  <i class="bi bi-pencil-square"></i>
                   Editar
                 </button>
                 <button
@@ -245,7 +249,8 @@
                   class="btn btn-danger"
                   (click)="guardarFormulario()"
                 >
-                  ºFormulario
+                  <i class="bi bi-floppy2"></i>
+                  Formulario
                 </button>
               </div>
             </div>
