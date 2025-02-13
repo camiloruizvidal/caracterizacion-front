@@ -522,21 +522,6 @@ export class InputsGeneratorComponent implements OnInit {
     return this.grupos.filter(grupo => grupo.ficha_tipo_id === tipoid);
   }
 
-  public get camposVisibles(): any[] {
-    try {
-      const fichaTipo: TipoForm = this.formulario.value.fichaTipoVisible;
-      const campo: TipoDataForm = this.tipoData[fichaTipo] as TipoDataForm;
-
-      return (
-        this.formularioGenerado[campo].find(
-          (ficha: any) => ficha.id === Number()
-        )?.values || []
-      );
-    } catch (error) {
-      return [];
-    }
-  }
-
   public get esVisibleSi(): boolean {
     return this.formulario.value.esVisibleSi;
   }
@@ -563,7 +548,17 @@ export class InputsGeneratorComponent implements OnInit {
     };
   }
 
-  public get nombresSelectPadres(): string[] {
-    return [];
+  public get preguntasFiltradasPorForm(): ISteperValues[] {
+    const fichaTipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
+    const campo: TipoDataForm = this.tipoData[fichaTipo] as TipoDataForm;
+    let valores: any[] = this.formularioGenerado[campo];
+    const value = valores.find(
+      (value: any) => value.id === Number(this.formulario.value.grupo)
+    );
+    const values: any[] = value?.values as [];
+    const x =
+      values.filter(value => this.typesOptions.includes(value.type)) || [];
+    console.log(x);
+    return x;
   }
 }

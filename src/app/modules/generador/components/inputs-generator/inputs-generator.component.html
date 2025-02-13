@@ -104,8 +104,11 @@
                 id="nombrePadreDependiente"
               >
                 <option value="">Seleccione</option>
-                <option *ngFor="let grupo of grupos" [value]="grupo.id">
-                  {{ grupo.title }}
+                <option
+                  *ngFor="let tipos of preguntasFiltradasPorForm"
+                  [value]="tipos.columnName"
+                >
+                  {{ tipos.label }}
                 </option>
               </select>
             </div>
