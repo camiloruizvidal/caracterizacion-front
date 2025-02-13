@@ -354,11 +354,8 @@
                               >:
                               <div
                                 *ngIf="
-                                  [
-                                    'selectFilter',
-                                    'select_multiple',
-                                    'select'
-                                  ].includes(value.type) && item === 'options'
+                                  typesOptions.includes(value.type) &&
+                                  item === 'options'
                                 "
                               >
                                 <select
@@ -395,6 +392,7 @@
                                   ![
                                     'selectFilter',
                                     'select_multiple',
+                                    'selectDependiente',
                                     'select',
                                     'check'
                                   ].includes(value.type) || item !== 'options'

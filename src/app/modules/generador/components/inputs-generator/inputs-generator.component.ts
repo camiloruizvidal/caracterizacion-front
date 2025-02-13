@@ -400,8 +400,12 @@ export class InputsGeneratorComponent implements OnInit {
     //   });
   }
 
-  public getValue(key: string, value: any): any {
-    return value[key] as any;
+  public getValue(key: any, value: any): any {
+    if (value.type === ESteperType.SelectDependiente) {
+      return value.label;
+    } else {
+      return value[key];
+    }
   }
 
   public guardarFormulario() {
