@@ -57,6 +57,7 @@ export interface ISteperValues {
   ficha_grupo_id?: string | number | null;
   createdAt?: string | Date;
   updatedAt?: string | Date;
+  nombrePadre?: string; //Para selectDependiente
 }
 
 export enum ESteperType {
