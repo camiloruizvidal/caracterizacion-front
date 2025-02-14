@@ -402,13 +402,19 @@
           <li ngbNavItem="alertasIndividuales">
             <a ngbNavLink class="navbar-items">Alertas individuales</a>
             <ng-template ngbNavContent>
-              <app-alertas tipoAlerta="individual" />
+              <app-alertas
+                tipoAlerta="individual"
+                [formularioGenerado]="formularioGenerado"
+              />
             </ng-template>
           </li>
           <li ngbNavItem="alertasGrupales">
             <a ngbNavLink class="navbar-items">Alertas Grupales</a>
             <ng-template ngbNavContent>
-              <app-alertas tipoAlerta="grupal" />
+              <app-alertas
+                tipoAlerta="grupal"
+                [formularioGenerado]="formularioGenerado"
+              />
             </ng-template>
           </li>
         </ul>

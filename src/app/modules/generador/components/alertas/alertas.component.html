@@ -1,3 +1,7 @@
-<p>
-  alertas works!
-</p>
+<h1>{{ tipoAlerta }}</h1>
+
+<table class="table table-hover">
+  <tr *ngFor="let alerta of alertas">
+    <td>{{ alerta | json }}</td>
+  </tr>
+</table>

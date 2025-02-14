@@ -15,6 +15,8 @@ export interface IFamilyCard {
   individualNombre: string;
   grupalData: IStepers[];
   individualData: IStepers[];
+  alertaGrupal: IAlert[];
+  alertaIndividual: IAlert[];
 }
 
 export interface ITarjetaRespondidas {
