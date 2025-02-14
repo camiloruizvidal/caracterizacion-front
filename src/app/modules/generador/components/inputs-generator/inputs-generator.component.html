@@ -246,7 +246,7 @@
       </div>
     </div>
     <div class="col-lg-8" *ngIf="formularioGenerado !== null">
-      <div class="container mt-4">
+      <div class="container mt-4" *ngIf="tipoCards.length > 0">
         <ul ngbNav #nav="ngbNav" class="nav nav-tabs">
           <li *ngFor="let tipo of tipoCards; let i = index" [ngbNavItem]="i">
             <a ngbNavLink class="navbar-items">{{ tipo.tituloTexto }}</a>
@@ -397,6 +397,18 @@
                   </ng-template>
                 </ngb-panel>
               </ngb-accordion>
+            </ng-template>
+          </li>
+          <li ngbNavItem="alertasIndividuales">
+            <a ngbNavLink class="navbar-items">Alertas individuales</a>
+            <ng-template ngbNavContent>
+              <app-alertas tipoAlerta="individual" />
+            </ng-template>
+          </li>
+          <li ngbNavItem="alertasGrupales">
+            <a ngbNavLink class="navbar-items">Alertas Grupales</a>
+            <ng-template ngbNavContent>
+              <app-alertas tipoAlerta="grupal" />
             </ng-template>
           </li>
         </ul>

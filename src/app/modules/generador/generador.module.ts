@@ -6,9 +6,14 @@ import { HelpersModule } from 'src/app/helpers/helpers.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IsVisibleComponent } from './components/is-visible/is-visible.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AlertasComponent } from './components/alertas/alertas.component';
 
 @NgModule({
-  declarations: [InputsGeneratorComponent, IsVisibleComponent],
+  declarations: [
+    InputsGeneratorComponent,
+    IsVisibleComponent,
+    AlertasComponent
+  ],
   imports: [
     CommonModule,
     NgbModule,
