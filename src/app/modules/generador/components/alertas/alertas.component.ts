@@ -119,6 +119,11 @@ export class AlertasComponent implements OnInit {
 
   constructor(private inputsService: InputsService, private fb: FormBuilder) {
     this.formulario = this.fb.group({
+      alertaNombre: ['', Validators.required],
+      alertaDescripcion: ['', Validators.required],
+      alertaTipo: ['1', Validators.required],
+      alertaMensaje: ['', Validators.required],
+
       fichaTipoVisible: ['', Validators.required],
       grupoVisible: ['', Validators.required],
       campoVisible: ['', Validators.required],
@@ -160,6 +165,10 @@ export class AlertasComponent implements OnInit {
         value: formulario.valorCondicion
       };
     });
+
+    setTimeout(() => {
+      this.cargarGrupos();
+    }, 300);
   }
 
   public agregarCondicion(): void {
@@ -231,13 +240,9 @@ export class AlertasComponent implements OnInit {
   }
 
   public cargarGrupos(): void {
-    const tipo = this.tipoCards.find(
-      tipo => tipo.nombre === this.formulario.value.fichaTipo
-    );
-    this.inputsService
-      .obtenerGruposFichas(Number(this.version), tipo?.tipo)
-      .subscribe((result: IGruposFicha[]) => {
-        this.grupos = result;
-      });
+    this.formulario.patchValue({
+      fichaTipoVisible:
+        this.tipoAlerta === 'grupal' ? 'grupalNombre' : 'individualNombre'
+    });
   }
 }

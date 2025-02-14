@@ -1,23 +1,69 @@
-<form [formGroup]="formulario" (ngSubmit)="guardarVisibilidad()">
+<form class="row" [formGroup]="formulario" (ngSubmit)="guardarVisibilidad()">
   <hr />
-  <span class="text-bg-primary text-center">
-    Visible con condici&oacute;n
-  </span>
-  <div>
-    <label for="fichaTipoVisible">Tipo ficha</label>
+  <h1 class="text-center">Generador de alertas</h1>
+  <h2>Ingrese los datos de la nueva alerta</h2>
+  <div class="col-md-4">
+    <label>Nombre de la alerta</label>
+    <input
+      type="text"
+      class="form form-control"
+      id="alertaNombre"
+      name="alertaNombre"
+      formArrayName="alertaNombre"
+    />
+  </div>
+  <div class="col-md-8">
+    <label>Descripci&oacute;n de la alerta</label>
+    <input
+      type="text"
+      class="form form-control"
+      id="alertaDescripcion"
+      name="alertaDescripcion"
+      formArrayName="alertaDescripcion"
+    />
+  </div>
+  <div class="col-md-3">
+    <label for="">Tipo de alerta</label>
     <select
-      formControlName="fichaTipoVisible"
-      id="fichaTipoVisible"
-      class="form-control"
-      (change)="cargarGrupos()"
+      class="form form-control"
+      name="alertaTipo"
+      id="alertaTipo"
+      name="alertaTipo"
+      formControlName="alertaTipo"
     >
-      <option value="">Seleccione</option>
-      <option *ngFor="let tipo of tipoCards" [value]="tipo.nombre">
-        {{ tipo.text }} - {{ tipo.tituloTexto }}
-      </option>
+      <option value="1">Críticas</option>
+      <option value="2">Importantes</option>
+      <option value="3">Informativas</option>
+      <option value="4">Recomendación</option>
+      <option value="5">Confirmación</option>
     </select>
   </div>
-  <div>
+  <div class="col-md-12">
+    <label for="">Mensaje para la alerta</label>
+    <textarea
+      class="form form-control"
+      name="alertaMensaje"
+      id="alertaMensaje"
+      name="alertaMensaje"
+      formControlName="alertaMensaje"
+      placeholder="Por favor, ingrese un mensaje de que alerta deberia aparecer aqui"
+      rows="10"
+    ></textarea>
+  </div>
+  <div class="col-md-12 mt-4">
+    <button class="btn btn-success">Agregar alerta</button>
+  </div>
+
+  <div class="col-md-12">
+    <h2>Ingrese las condiciones para ver esta alertas</h2>
+  </div>
+  <div class="col-md-4">
+    <label>Ingrese la alerta</label>
+    <select name="" id="" class="form form-control">
+      <option value="">Seleccione</option>
+    </select>
+  </div>
+  <div class="col-md-4">
     <label for="grupoVisible">Seleccione el grupo</label>
     <select
       name="grupoVisible"
@@ -32,7 +78,7 @@
       </option>
     </select>
   </div>
-  <div>
+  <div class="col-md-4">
     <label for="">Campo</label>
     <select name="" id="" formControlName="campo" class="form form-control">
       <option value="">Seleccione</option>
@@ -41,7 +87,7 @@
       </option>
     </select>
   </div>
-  <div>
+  <div class="col-md-6">
     <input
       *ngIf="tipoCampo === 'calendar'"
       type="text"
@@ -63,6 +109,7 @@
     />
     <label for="condicion">Condicion incial</label>
     <select
+      placeholder="Inicial"
       class="form form-control"
       name="condicion"
       id="condicion"
@@ -76,6 +123,8 @@
         {{ condicion.text }}
       </option>
     </select>
+  </div>
+  <div class="col-md-6">
     <label for="valorCondicion">Valor de la condici&oacute;n</label>
     <select
       *ngIf="typesOptions.includes(tipoCampo)"
@@ -98,10 +147,8 @@
       formControlName="valorCondicion"
       required
     />
-    regla
-    <pre><code>{{reglaUnitaria|json}}</code></pre>
   </div>
-  <div class="col-md-12">
+  <div class="col-md-12 mt-4">
     <button class="btn btn-success" (click)="agregarCondicion()">
       Agregar condicion
     </button>
