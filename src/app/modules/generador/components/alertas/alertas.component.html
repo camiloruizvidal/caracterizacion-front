@@ -1,7 +1,126 @@
-<h1>{{ tipoAlerta }}</h1>
+<form [formGroup]="formulario" (ngSubmit)="guardarVisibilidad()">
+  <hr />
+  <span class="text-bg-primary text-center">
+    Visible con condici&oacute;n
+  </span>
+  <div>
+    <label for="fichaTipoVisible">Tipo ficha</label>
+    <select
+      formControlName="fichaTipoVisible"
+      id="fichaTipoVisible"
+      class="form-control"
+      (change)="cargarGrupos()"
+    >
+      <option value="">Seleccione</option>
+      <option *ngFor="let tipo of tipoCards" [value]="tipo.nombre">
+        {{ tipo.text }} - {{ tipo.tituloTexto }}
+      </option>
+    </select>
+  </div>
+  <div>
+    <label for="grupoVisible">Seleccione el grupo</label>
+    <select
+      name="grupoVisible"
+      formControlName="grupoVisible"
+      id="grupoVisible"
+      class="form form-control"
+      (change)="filtrarGrupos($event.target)"
+    >
+      <option value="">Seleccione</option>
+      <option *ngFor="let grupo of gruposVisiblesFiltrado" [value]="grupo.id">
+        {{ grupo.title }}
+      </option>
+    </select>
+  </div>
+  <div>
+    <label for="">Campo</label>
+    <select name="" id="" formControlName="campo" class="form form-control">
+      <option value="">Seleccione</option>
+      <option *ngFor="let campos of camposVisibles" [value]="campos.columnName">
+        {{ campos.label }}
+      </option>
+    </select>
+  </div>
+  <div>
+    <input
+      *ngIf="tipoCampo === 'calendar'"
+      type="text"
+      placeholder="En formato JSON"
+      class="form form-control"
+    />
+    <input
+      *ngIf="tipoCampo === 'calendar'"
+      type="number"
+      formControlName="rango_inicio"
+      class="form form-control"
+    />
+    <input
+      *ngIf="tipoCampo === 'calendar'"
+      type="number"
+      formControlName="rango_fin"
+      placeholder="Rango de fin"
+      class="form form-control"
+    />
+    <label for="condicion">Condicion incial</label>
+    <select
+      class="form form-control"
+      name="condicion"
+      id="condicion"
+      formControlName="condicion"
+    >
+      <option value="">Seleccione</option>
+      <option
+        *ngFor="let condicion of condiciones"
+        [value]="condicion.condition"
+      >
+        {{ condicion.text }}
+      </option>
+    </select>
+    <label for="valorCondicion">Valor de la condici&oacute;n</label>
+    <select
+      *ngIf="typesOptions.includes(tipoCampo)"
+      formControlName="valorCondicion"
+      placeholder="Condici&oacute;n"
+      class="form form-control"
+    >
+      <option value="">Seleccione</option>
+      <option *ngFor="let opcion of opciones" [value]="opcion.value">
+        {{ opcion.option }}
+      </option>
+    </select>
 
-<table class="table table-hover">
-  <tr *ngFor="let alerta of alertas">
-    <td>{{ alerta | json }}</td>
-  </tr>
+    <input
+      *ngIf="!typesOptions.includes(tipoCampo)"
+      type="text"
+      name="valorCondicion"
+      id="valorCondicion"
+      class="form form-control"
+      formControlName="valorCondicion"
+      required
+    />
+    regla
+    <pre><code>{{reglaUnitaria|json}}</code></pre>
+  </div>
+  <div class="col-md-12">
+    <button class="btn btn-success" (click)="agregarCondicion()">
+      Agregar condicion
+    </button>
+  </div>
+</form>
+<table>
+  <thead>
+    <tr>
+      <th>Regla</th>
+      <th>Condici&oacute;n</th>
+      <th>Valor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let regla of reglas">
+      <td>{{ regla.columnDepend }}</td>
+      <td>{{ regla | json }}</td>
+      <td>{{ regla.rule }}</td>
+      <td>{{ regla.value }}</td>
+    </tr>
+  </tbody>
 </table>
