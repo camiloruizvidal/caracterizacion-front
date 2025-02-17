@@ -28,6 +28,8 @@ export class InputsGeneratorComponent implements OnInit {
   public tipos: string[] = [];
   public formularioGenerado!: IFamilyCard;
   public esEditable: boolean = false;
+  public gruposAlertasIndividual: number[] = [];
+  public gruposAlertasGrupal: number[] = [];
   public tipoCards: {
     tipo: TipoDataForm;
     nombre: TipoForm;
@@ -566,5 +568,13 @@ export class InputsGeneratorComponent implements OnInit {
     );
     const values: any[] = value?.values as [];
     return values.filter(value => this.typesOptions.includes(value.type)) || [];
+  }
+
+  public agregarAlertasIndividuales(): void {
+    this.gruposAlertasIndividual.push(this.gruposAlertasIndividual.length + 1);
+  }
+
+  public agregarAlertasGrupales(): void {
+    this.gruposAlertasGrupal.push(this.gruposAlertasGrupal.length + 1);
   }
 }

@@ -402,23 +402,54 @@
           <li ngbNavItem="alertasIndividuales">
             <a ngbNavLink class="navbar-items">Alertas individuales</a>
             <ng-template ngbNavContent>
-              <app-alertas
-                tipoAlerta="individual"
-                [formularioGenerado]="formularioGenerado"
-                [tipoCards]="tipoCards"
-                [version]="formularioGenerado.version"
-              />
+              <div class="container mt-4">
+                <button
+                  class="btn btn-primary mb-3"
+                  (click)="agregarAlertasIndividuales()"
+                >
+                  Agregar grupo de Alerta
+                </button>
+
+                <div
+                  *ngFor="
+                    let grupoAlerta of gruposAlertasIndividual;
+                    let i = index
+                  "
+                  class="alert alert-info row"
+                >
+                  <app-alertas
+                    tipoAlerta="individual"
+                    [formularioGenerado]="formularioGenerado"
+                    [tipoCards]="tipoCards"
+                    [version]="formularioGenerado.version"
+                  />
+                </div>
+              </div>
             </ng-template>
           </li>
           <li ngbNavItem="alertasGrupales">
             <a ngbNavLink class="navbar-items">Alertas Grupales</a>
             <ng-template ngbNavContent>
-              <app-alertas
-                tipoAlerta="grupal"
-                [formularioGenerado]="formularioGenerado"
-                [tipoCards]="tipoCards"
-                [version]="formularioGenerado.version"
-              />
+              <div class="container mt-4">
+                <button
+                  class="btn btn-primary mb-3"
+                  (click)="agregarAlertasGrupales()"
+                >
+                  Agregar grupo de Alerta
+                </button>
+
+                <div
+                  *ngFor="let grupoAlerta of gruposAlertasGrupal; let i = index"
+                  class="alert alert-info row"
+                >
+                  <app-alertas
+                    tipoAlerta="grupal"
+                    [formularioGenerado]="formularioGenerado"
+                    [tipoCards]="tipoCards"
+                    [version]="formularioGenerado.version"
+                  />
+                </div>
+              </div>
             </ng-template>
           </li>
         </ul>
