@@ -29,12 +29,12 @@ export class AlertasComponent implements OnInit {
   public alertas: IAlertas[] = [];
   public tipoCampo: ESteperType = ESteperType.Text;
   public regla!: IOptionsVisibility;
+  public gruposAlertas: number[] = [];
   public reglaUnitaria: IOptionsRule = {
     columnDepend: '',
     rule: EConditions.IGUAL_QUE,
     value: ''
   };
-
   public typesOptions: string[] = [
     ESteperType.SelectFilter,
     ESteperType.SelectMultiple,
@@ -259,5 +259,9 @@ export class AlertasComponent implements OnInit {
       fichaTipoVisible:
         this.tipoAlerta === 'grupal' ? 'grupalNombre' : 'individualNombre'
     });
+  }
+
+  public agregarGrupos(): void {
+    this.gruposAlertas.push(this.gruposAlertas.length + 1);
   }
 }
