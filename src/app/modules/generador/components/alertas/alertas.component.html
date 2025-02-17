@@ -1,57 +1,69 @@
 <form class="row" [formGroup]="formulario" (ngSubmit)="guardarVisibilidad()">
   <hr />
-  <h1 class="text-center">Generador de alertas</h1>
-  <h2>Ingrese los datos de la nueva alerta</h2>
-  <div class="col-md-4">
-    <label>Nombre de la alerta</label>
-    <input
-      type="text"
-      class="form form-control"
-      id="alertaNombre"
-      name="alertaNombre"
-      formArrayName="alertaNombre"
-    />
-  </div>
-  <div class="col-md-8">
-    <label>Descripci&oacute;n de la alerta</label>
-    <input
-      type="text"
-      class="form form-control"
-      id="alertaDescripcion"
-      name="alertaDescripcion"
-      formArrayName="alertaDescripcion"
-    />
-  </div>
-  <div class="col-md-3">
-    <label for="">Tipo de alerta</label>
-    <select
-      class="form form-control"
-      name="alertaTipo"
-      id="alertaTipo"
-      name="alertaTipo"
-      formControlName="alertaTipo"
-    >
-      <option value="1">Críticas</option>
-      <option value="2">Importantes</option>
-      <option value="3">Informativas</option>
-      <option value="4">Recomendación</option>
-      <option value="5">Confirmación</option>
-    </select>
-  </div>
-  <div class="col-md-12">
-    <label for="">Mensaje para la alerta</label>
-    <textarea
-      class="form form-control"
-      name="alertaMensaje"
-      id="alertaMensaje"
-      name="alertaMensaje"
-      formControlName="alertaMensaje"
-      placeholder="Por favor, ingrese un mensaje de que alerta deberia aparecer aqui"
-      rows="10"
-    ></textarea>
-  </div>
-  <div class="col-md-12 mt-4">
-    <button class="btn btn-success">Agregar alerta</button>
+  <div style="display: none">
+    <h1 class="text-center">Generador de alertas</h1>
+    <h2>Ingrese los datos de la nueva alerta</h2>
+    <div class="col-md-6">
+      <label>Nombre</label>
+      <input
+        type="text"
+        class="form form-control"
+        id="alertaNombre"
+        name="alertaNombre"
+        formArrayName="alertaNombre"
+      />
+    </div>
+    <div class="col-md-4">
+      <label>C&oacute;digo</label>
+      <input
+        type="text"
+        class="form form-control"
+        id="alertaNombre"
+        name="alertaNombre"
+        formArrayName="alertaNombre"
+      />
+    </div>
+    <div class="col-md-2">
+      <label for="">Tipo de alerta</label>
+      <select
+        class="form form-control"
+        name="alertaTipo"
+        id="alertaTipo"
+        name="alertaTipo"
+        formControlName="alertaTipo"
+      >
+        <option value="1">Críticas</option>
+        <option value="2">Importantes</option>
+        <option value="3">Informativas</option>
+        <option value="4">Recomendación</option>
+        <option value="5">Confirmación</option>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label>Descripci&oacute;n</label>
+      <input
+        type="text"
+        class="form form-control"
+        id="alertaDescripcion"
+        name="alertaDescripcion"
+        formArrayName="alertaDescripcion"
+      />
+    </div>
+    <div class="col-md-12">
+      <label for="">Mensaje para la alerta</label>
+      <textarea
+        class="form form-control"
+        name="alertaMensaje"
+        id="alertaMensaje"
+        name="alertaMensaje"
+        formControlName="alertaMensaje"
+        placeholder="Por favor, ingrese un mensaje de que alerta deberia aparecer aqui"
+        rows="10"
+      ></textarea>
+    </div>
+    <div class="col-md-12 mt-4">
+      <button class="btn btn-success">Agregar alerta</button>
+    </div>
   </div>
 
   <div class="col-md-12">
@@ -61,6 +73,9 @@
     <label>Ingrese la alerta</label>
     <select name="" id="" class="form form-control">
       <option value="">Seleccione</option>
+      <option *ngFor="let alerta of alertas" [value]="alerta.id">
+        {{ alerta.nombre }}
+      </option>
     </select>
   </div>
   <div class="col-md-4">

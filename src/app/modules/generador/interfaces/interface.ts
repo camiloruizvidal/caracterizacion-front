@@ -201,3 +201,11 @@ export interface IAlert {
   condiciones: ICondition[];
   acciones: IAction[];
 }
+
+export interface IAlertas {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  codigo: string;
+  alerta_tipo_id: number;
+}

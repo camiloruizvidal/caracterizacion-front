@@ -4,6 +4,7 @@ import {
   EConditions,
   ESteperType,
   IAlert,
+  IAlertas,
   ICondiciones,
   IFamilyCard,
   IGruposFicha,
@@ -15,6 +16,7 @@ import {
 } from '../../interfaces/interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputsService } from '../../services/inputs.service';
+import { AlertasService } from '../../services/alertas.service';
 
 type tipoAlertas = 'individual' | 'grupal';
 @Component({
@@ -24,6 +26,7 @@ type tipoAlertas = 'individual' | 'grupal';
 })
 export class AlertasComponent implements OnInit {
   public formulario: FormGroup;
+  public alertas: IAlertas[] = [];
   public tipoCampo: ESteperType = ESteperType.Text;
   public regla!: IOptionsVisibility;
   public reglaUnitaria: IOptionsRule = {
@@ -117,7 +120,11 @@ export class AlertasComponent implements OnInit {
     }
   }
 
-  constructor(private inputsService: InputsService, private fb: FormBuilder) {
+  constructor(
+    private inputsService: InputsService,
+    private alertasService: AlertasService,
+    private fb: FormBuilder
+  ) {
     this.formulario = this.fb.group({
       alertaNombre: ['', Validators.required],
       alertaDescripcion: ['', Validators.required],
@@ -166,9 +173,17 @@ export class AlertasComponent implements OnInit {
       };
     });
 
+    this.cargarAlertas();
+
     setTimeout(() => {
       this.cargarGrupos();
     }, 300);
+  }
+
+  private cargarAlertas(): void {
+    this.alertasService.obtenerAlertas().subscribe(respuesta => {
+      this.alertas = respuesta;
+    });
   }
 
   public agregarCondicion(): void {
