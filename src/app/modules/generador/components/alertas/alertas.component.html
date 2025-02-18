@@ -139,21 +139,32 @@
       }"
       required
     />
-    <div *ngIf="typesChecks.includes(tipoCampo)">
-      {{
-        verCamposVisibles.default === verCamposVisibles.options.valueTrue | json
-      }}
-      <input
-        type="checkbox"
-        name="valorCondicion"
-        id="valorCondicion"
-        class="form-check-input"
-        formControlName="valorCondicion"
-        [checked]="
+
+    <select
+      *ngIf="typesChecks.includes(tipoCampo)"
+      class="form form-control"
+      name="valorCondicion"
+      id="valorCondicion"
+      formControlName="valorCondicion"
+    >
+      <option value="">Seleccione</option>
+      <option
+        [value]="verCamposVisibles.options.valueFalse"
+        [selected]="
+          verCamposVisibles.default === verCamposVisibles.options.valueFalse
+        "
+      >
+        {{ verCamposVisibles.options.valueFalse }}
+      </option>
+      <option
+        [value]="verCamposVisibles.options.valueTrue"
+        [selected]="
           verCamposVisibles.default === verCamposVisibles.options.valueTrue
         "
-      />
-    </div>
+      >
+        {{ verCamposVisibles.options.valueTrue }}
+      </option>
+    </select>
   </div>
   <div class="col-md-12 mt-4">
     <button class="btn btn-success" (click)="agregarCondicion()">
