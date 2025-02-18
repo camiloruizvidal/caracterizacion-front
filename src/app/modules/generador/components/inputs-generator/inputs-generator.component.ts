@@ -362,7 +362,6 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public guardarRegla(reglas: IOptionsVisibility) {
-    console.log({ reglas });
     this.formulario.patchValue({ reglas });
   }
 
@@ -582,6 +581,15 @@ export class InputsGeneratorComponent implements OnInit {
   public guardarAlertas(
     reglasCondicionales: IOptionsVisibilityExtended[]
   ): void {
+    const grupal = reglasCondicionales.filter(
+      reglas => reglas.tipoAlerta === 'grupal'
+    );
+    const individual = reglasCondicionales.filter(
+      reglas => reglas.tipoAlerta === 'individual'
+    );
+
+    this.formularioGenerado.alertaGrupal = grupal;
+    this.formularioGenerado.alertaIndividual = grupal;
     console.log({ reglasCondicionales });
   }
 }
