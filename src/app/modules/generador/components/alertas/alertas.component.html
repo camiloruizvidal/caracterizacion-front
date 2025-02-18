@@ -9,6 +9,11 @@
       id="alertaId"
       formControlName="alertaId"
       class="form form-control"
+      [ngClass]="{
+        'is-invalid':
+          formulario.get('alertaId')?.invalid &&
+          formulario.get('alertaId')?.touched
+      }"
     >
       <option value="">Seleccione</option>
       <option *ngFor="let alerta of alertas" [value]="alerta.id">
@@ -24,6 +29,11 @@
       id="grupoVisible"
       class="form form-control"
       (change)="filtrarGrupos($event.target)"
+      [ngClass]="{
+        'is-invalid':
+          formulario.get('grupoVisible')?.invalid &&
+          formulario.get('grupoVisible')?.touched
+      }"
     >
       <option value="">Seleccione</option>
       <option *ngFor="let grupo of gruposVisiblesFiltrado" [value]="grupo.id">
@@ -38,6 +48,10 @@
       id="campo"
       formControlName="campo"
       class="form form-control"
+      [ngClass]="{
+        'is-invalid':
+          formulario.get('campo')?.invalid && formulario.get('campo')?.touched
+      }"
     >
       <option value="">Seleccione</option>
       <option *ngFor="let campos of camposVisibles" [value]="campos.columnName">
@@ -72,6 +86,11 @@
       name="condicion"
       id="condicion"
       formControlName="condicion"
+      [ngClass]="{
+        'is-invalid':
+          formulario.get('condicion')?.invalid &&
+          formulario.get('condicion')?.touched
+      }"
     >
       <option value="">Seleccione</option>
       <option
@@ -92,6 +111,11 @@
       name="valorCondicion"
       placeholder="Condici&oacute;n"
       class="form form-control"
+      [ngClass]="{
+        'is-invalid':
+          formulario.get('valorCondicion')?.invalid &&
+          formulario.get('valorCondicion')?.touched
+      }"
     >
       <option value="">Seleccione</option>
       <option *ngFor="let opcion of opciones" [value]="opcion.value">
@@ -106,6 +130,11 @@
       id="valorCondicion"
       class="form form-control"
       formControlName="valorCondicion"
+      [ngClass]="{
+        'is-invalid':
+          formulario.get('valorCondicion')?.invalid &&
+          formulario.get('valorCondicion')?.touched
+      }"
       required
     />
   </div>
@@ -118,16 +147,22 @@
 <table>
   <thead>
     <tr>
+      <th>Eliminar</th>
       <th>Regla</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let regla of reglasCondicionales">
+    <tr *ngFor="let regla of reglasCondicionales; let i = index">
+      <td>
+        <button class="btn btn-danger btn-delete" (click)="eliminarRegla(i)">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
       <td>
         Si el campo <strong>"{{ regla.labelField }}"</strong> es
-        {{ regla.labelCondition }} a
-        <strong
-          >"{{
+        {{ regla.labelCondition }}
+        <strong>
+          "{{
             regla.labelValue === '' ? regla.value : regla.labelValue
           }}"</strong
         >

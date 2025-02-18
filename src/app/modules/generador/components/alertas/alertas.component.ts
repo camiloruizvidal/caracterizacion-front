@@ -140,11 +140,11 @@ export class AlertasComponent implements OnInit {
       alertaId: ['', Validators.required],
       fichaTipoVisible: ['', Validators.required],
       grupoVisible: ['', Validators.required],
-      campoVisible: ['', Validators.required],
       condicion: ['', Validators.required],
       valorCondicion: ['', Validators.required],
       campo: ['', Validators.required],
 
+      campoVisible: [''],
       rango_inicio: [''],
       rango_fin: ['']
     });
@@ -198,11 +198,19 @@ export class AlertasComponent implements OnInit {
   }
 
   public agregarCondicion(): void {
+    if (this.formulario.invalid) {
+      this.formulario.markAllAsTouched();
+      return;
+    }
+
     this.reglaUnitaria.labelField = this.obtenerTextoPorId('campo');
     this.reglaUnitaria.labelCondition = this.obtenerTextoPorId('condicion');
     this.reglaUnitaria.labelValue = this.obtenerTextoPorId('valorCondicion');
     this.reglaUnitaria.indice = this.indice;
     this.reglaUnitaria.tipoAlerta = this.tipoAlerta;
+    this.reglaUnitaria.alertaId = Number(
+      this.formulario.get('alertaId')?.value
+    );
     this.reglasCondicionales.push(this.reglaUnitaria);
     this.reglaEmitter.emit(this.reglasCondicionales);
   }
@@ -278,5 +286,10 @@ export class AlertasComponent implements OnInit {
       fichaTipoVisible:
         this.tipoAlerta === 'grupal' ? 'grupalNombre' : 'individualNombre'
     });
+  }
+
+  public eliminarRegla(indice: number): void {
+    this.reglasCondicionales.splice(indice, 1);
+    this.reglaEmitter.emit(this.reglasCondicionales);
   }
 }

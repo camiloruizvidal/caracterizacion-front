@@ -581,5 +581,7 @@ export class InputsGeneratorComponent implements OnInit {
 
   public guardarAlertas(
     reglasCondicionales: IOptionsVisibilityExtended[]
-  ): void {}
+  ): void {
+    console.log({ reglasCondicionales });
+  }
 }
