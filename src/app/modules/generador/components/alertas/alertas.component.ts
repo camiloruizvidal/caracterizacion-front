@@ -11,6 +11,7 @@ import {
   IOptionsSelect,
   IOptionsVisibility,
   IOptionsVisibilityExtended,
+  ISteperValues,
   tipoAlertas,
   TipoDataForm,
   TipoForm
@@ -60,10 +61,10 @@ export class AlertasComponent implements OnInit {
     ESteperType.SelectFilter,
     ESteperType.SelectMultiple,
     ESteperType.Select,
-    ESteperType.SelectDependiente,
-    ESteperType.Check,
-    ESteperType.CheckSiNo
+    ESteperType.SelectDependiente
   ];
+
+  public typesChecks: string[] = [ESteperType.Check, ESteperType.CheckSiNo];
 
   public get tipoData(): {
     grupalNombre: TipoDataForm;
@@ -76,14 +77,10 @@ export class AlertasComponent implements OnInit {
   }
 
   public get opciones(): IOptionsSelect[] {
-    return (
-      this.camposVisibles.find(campo => {
-        const isSelect = campo.columnName === this.formulario.value.campo;
-        if (isSelect) {
-        }
-        return isSelect;
-      })?.options || []
+    const campoSeleccionado = this.camposVisibles.find(
+      campo => campo.columnName === this.formulario.value.campo
     );
+    return campoSeleccionado?.options || [];
   }
 
   public get reglas(): IOptionsRule[] {
@@ -105,7 +102,7 @@ export class AlertasComponent implements OnInit {
     return condiciones;
   }
 
-  public get camposVisibles(): any[] {
+  public get camposVisibles(): ISteperValues[] {
     try {
       if (this.formulario.value.fichaTipoVisible === '') {
         return [];
@@ -129,6 +126,13 @@ export class AlertasComponent implements OnInit {
     } catch (error) {
       return [];
     }
+  }
+
+  get verCamposVisibles(): any {
+    const opciones = this.camposVisibles.find(
+      campo => campo.columnName === this.formulario.get('campo')?.value
+    );
+    return opciones;
   }
 
   constructor(
