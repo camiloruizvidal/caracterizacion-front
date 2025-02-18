@@ -4,6 +4,7 @@ import {
   IFamilyCard,
   IGruposFicha,
   IOptionsVisibility,
+  IOptionsVisibilityExtended,
   ISteperValues,
   TipoDataForm,
   TipoForm
@@ -577,4 +578,8 @@ export class InputsGeneratorComponent implements OnInit {
   public agregarAlertasGrupales(): void {
     this.gruposAlertasGrupal.push(this.gruposAlertasGrupal.length + 1);
   }
+
+  public guardarAlertas(
+    reglasCondicionales: IOptionsVisibilityExtended[]
+  ): void {}
 }

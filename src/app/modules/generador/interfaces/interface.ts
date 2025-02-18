@@ -1,3 +1,4 @@
+export type tipoAlertas = 'individual' | 'grupal';
 export interface IGruposFicha {
   id: number;
   title: string;
@@ -124,6 +125,7 @@ export interface IOptionsVisibilityExtended extends IOptionsRule {
   labelField: string;
   labelValue?: string;
   alertaId: number;
+  tipoAlerta: tipoAlertas;
 }
 
 export interface IOptionsRule {

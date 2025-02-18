@@ -418,10 +418,12 @@
                   class="alert alert-info row"
                 >
                   <app-alertas
+                    [indice]="i"
                     tipoAlerta="individual"
                     [formularioGenerado]="formularioGenerado"
                     [tipoCards]="tipoCards"
                     [version]="formularioGenerado.version"
+                    (reglaEmitter)="guardarAlertas($event)"
                   />
                 </div>
               </div>
@@ -443,6 +445,7 @@
                   class="alert alert-info row"
                 >
                   <app-alertas
+                    [indice]="i"
                     tipoAlerta="grupal"
                     [formularioGenerado]="formularioGenerado"
                     [tipoCards]="tipoCards"

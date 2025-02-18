@@ -11,6 +11,7 @@ import {
   IOptionsSelect,
   IOptionsVisibility,
   IOptionsVisibilityExtended,
+  tipoAlertas,
   TipoDataForm,
   TipoForm
 } from '../../interfaces/interface';
@@ -18,37 +19,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputsService } from '../../services/inputs.service';
 import { AlertasService } from '../../services/alertas.service';
 
-type tipoAlertas = 'individual' | 'grupal';
 @Component({
   selector: 'app-alertas',
   templateUrl: './alertas.component.html',
   styleUrls: ['./alertas.component.scss']
 })
 export class AlertasComponent implements OnInit {
-  public formulario: FormGroup;
-  public alertas: IAlertas[] = [];
-  public tipoCampo: ESteperType = ESteperType.Text;
-  public regla!: IOptionsVisibility;
-  public reglaUnitaria: IOptionsVisibilityExtended = {
-    indice: 0,
-    columnDepend: '',
-    rule: EConditions.IGUAL_QUE,
-    value: '',
-    labelCondition: '',
-    labelField: '',
-    labelValue: '',
-    alertaId: 0
-  };
-  public reglasCondicionales: IOptionsVisibilityExtended[] = [];
-  public typesOptions: string[] = [
-    ESteperType.SelectFilter,
-    ESteperType.SelectMultiple,
-    ESteperType.Select,
-    ESteperType.SelectDependiente,
-    ESteperType.Check,
-    ESteperType.CheckSiNo
-  ];
-
   @Input() tipoAlerta!: tipoAlertas;
   @Input() indice: number = 0;
   @Input() public formularioGenerado!: IFamilyCard;
@@ -61,8 +37,33 @@ export class AlertasComponent implements OnInit {
     text: string;
   }[];
 
-  @Output() reglaEmitter: EventEmitter<IOptionsVisibilityExtended> =
+  @Output() reglaEmitter: EventEmitter<IOptionsVisibilityExtended[]> =
     new EventEmitter();
+
+  public formulario: FormGroup;
+  public alertas: IAlertas[] = [];
+  public tipoCampo: ESteperType = ESteperType.Text;
+  public regla!: IOptionsVisibility;
+  public reglaUnitaria: IOptionsVisibilityExtended = {
+    indice: 0,
+    columnDepend: '',
+    rule: EConditions.IGUAL_QUE,
+    value: '',
+    labelCondition: '',
+    labelField: '',
+    labelValue: '',
+    alertaId: 0,
+    tipoAlerta: 'grupal'
+  };
+  public reglasCondicionales: IOptionsVisibilityExtended[] = [];
+  public typesOptions: string[] = [
+    ESteperType.SelectFilter,
+    ESteperType.SelectMultiple,
+    ESteperType.Select,
+    ESteperType.SelectDependiente,
+    ESteperType.Check,
+    ESteperType.CheckSiNo
+  ];
 
   public get tipoData(): {
     grupalNombre: TipoDataForm;
@@ -164,7 +165,6 @@ export class AlertasComponent implements OnInit {
       });
     }
     const campo = this.formulario.get('campo');
-    console.log({ campo });
     if (campo) {
       campo.valueChanges.subscribe(value => {
         this.tipoCampo = this.validarTipoDato(value);
@@ -179,7 +179,8 @@ export class AlertasComponent implements OnInit {
         labelCondition: '',
         labelField: '',
         indice: this.indice,
-        alertaId: 0
+        alertaId: 0,
+        tipoAlerta: this.tipoAlerta
       };
     });
 
@@ -201,9 +202,9 @@ export class AlertasComponent implements OnInit {
     this.reglaUnitaria.labelCondition = this.obtenerTextoPorId('condicion');
     this.reglaUnitaria.labelValue = this.obtenerTextoPorId('valorCondicion');
     this.reglaUnitaria.indice = this.indice;
+    this.reglaUnitaria.tipoAlerta = this.tipoAlerta;
     this.reglasCondicionales.push(this.reglaUnitaria);
-    console.log(this.reglasCondicionales);
-    this.reglaEmitter.emit(this.reglaUnitaria);
+    this.reglaEmitter.emit(this.reglasCondicionales);
   }
 
   public guardarVisibilidad(): void {
