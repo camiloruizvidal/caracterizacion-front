@@ -203,6 +203,7 @@ export class AlertasComponent implements OnInit {
 
   public agregarCondicion(): void {
     if (this.formulario.invalid) {
+      alert('invalido');
       this.formulario.markAllAsTouched();
       return;
     }
