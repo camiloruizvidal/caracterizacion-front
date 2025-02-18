@@ -3,7 +3,6 @@ import {
   condiciones,
   EConditions,
   ESteperType,
-  IAlert,
   IAlertas,
   ICondiciones,
   IFamilyCard,
@@ -11,6 +10,7 @@ import {
   IOptionsRule,
   IOptionsSelect,
   IOptionsVisibility,
+  IOptionsVisibilityExtended,
   TipoDataForm,
   TipoForm
 } from '../../interfaces/interface';
@@ -29,11 +29,17 @@ export class AlertasComponent implements OnInit {
   public alertas: IAlertas[] = [];
   public tipoCampo: ESteperType = ESteperType.Text;
   public regla!: IOptionsVisibility;
-  public reglaUnitaria: IOptionsRule = {
+  public reglaUnitaria: IOptionsVisibilityExtended = {
+    indice: 0,
     columnDepend: '',
     rule: EConditions.IGUAL_QUE,
-    value: ''
+    value: '',
+    labelCondition: '',
+    labelField: '',
+    labelValue: '',
+    alertaId: 0
   };
+  public reglasCondicionales: IOptionsVisibilityExtended[] = [];
   public typesOptions: string[] = [
     ESteperType.SelectFilter,
     ESteperType.SelectMultiple,
@@ -44,6 +50,7 @@ export class AlertasComponent implements OnInit {
   ];
 
   @Input() tipoAlerta!: tipoAlertas;
+  @Input() indice: number = 0;
   @Input() public formularioGenerado!: IFamilyCard;
   @Input() public grupos: IGruposFicha[] = [];
   @Input() public version?: string;
@@ -54,7 +61,8 @@ export class AlertasComponent implements OnInit {
     text: string;
   }[];
 
-  @Output() reglaEmitter: EventEmitter<IOptionsVisibility> = new EventEmitter();
+  @Output() reglaEmitter: EventEmitter<IOptionsVisibilityExtended> =
+    new EventEmitter();
 
   public get tipoData(): {
     grupalNombre: TipoDataForm;
@@ -68,9 +76,12 @@ export class AlertasComponent implements OnInit {
 
   public get opciones(): IOptionsSelect[] {
     return (
-      this.camposVisibles.find(
-        campo => campo.columnName === this.formulario.value.campo
-      )?.options || []
+      this.camposVisibles.find(campo => {
+        const isSelect = campo.columnName === this.formulario.value.campo;
+        if (isSelect) {
+        }
+        return isSelect;
+      })?.options || []
     );
   }
 
@@ -125,11 +136,7 @@ export class AlertasComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.formulario = this.fb.group({
-      alertaNombre: ['', Validators.required],
-      alertaDescripcion: ['', Validators.required],
-      alertaTipo: ['1', Validators.required],
-      alertaMensaje: ['', Validators.required],
-
+      alertaId: ['', Validators.required],
       fichaTipoVisible: ['', Validators.required],
       grupoVisible: ['', Validators.required],
       campoVisible: ['', Validators.required],
@@ -168,7 +175,11 @@ export class AlertasComponent implements OnInit {
       this.reglaUnitaria = {
         columnDepend: formulario.campo.toString(),
         rule: formulario.condicion as EConditions,
-        value: formulario.valorCondicion
+        value: formulario.valorCondicion,
+        labelCondition: '',
+        labelField: '',
+        indice: this.indice,
+        alertaId: 0
       };
     });
 
@@ -186,19 +197,27 @@ export class AlertasComponent implements OnInit {
   }
 
   public agregarCondicion(): void {
-    if (!this.regla) {
-      this.regla = {
-        isDepent: true,
-        rules: [],
-        isShow: true
-      };
-    }
-    this.regla?.rules?.push(this.reglaUnitaria);
-    this.reglaEmitter.emit(this.regla);
+    this.reglaUnitaria.labelField = this.obtenerTextoPorId('campo');
+    this.reglaUnitaria.labelCondition = this.obtenerTextoPorId('condicion');
+    this.reglaUnitaria.labelValue = this.obtenerTextoPorId('valorCondicion');
+    this.reglaUnitaria.indice = this.indice;
+    this.reglasCondicionales.push(this.reglaUnitaria);
+    console.log(this.reglasCondicionales);
+    this.reglaEmitter.emit(this.reglaUnitaria);
   }
 
   public guardarVisibilidad(): void {
     this.formulario;
+  }
+
+  private obtenerTextoPorId(id: string): string {
+    const selectElement = document.getElementById(id) as HTMLSelectElement;
+    if (selectElement && selectElement.tagName === 'SELECT') {
+      const selectedText =
+        selectElement.options[selectElement.selectedIndex].text;
+      return selectedText;
+    }
+    return '';
   }
 
   private validarTipoDato(columna: string): ESteperType {

@@ -1,77 +1,15 @@
 <form class="row" [formGroup]="formulario" (ngSubmit)="guardarVisibilidad()">
-  <hr />
-  <div style="display: none">
-    <h1 class="text-center">Generador de alertas</h1>
-    <h2>Ingrese los datos de la nueva alerta</h2>
-    <div class="col-md-6">
-      <label>Nombre</label>
-      <input
-        type="text"
-        class="form form-control"
-        id="alertaNombre"
-        name="alertaNombre"
-        formArrayName="alertaNombre"
-      />
-    </div>
-    <div class="col-md-4">
-      <label>C&oacute;digo</label>
-      <input
-        type="text"
-        class="form form-control"
-        id="alertaNombre"
-        name="alertaNombre"
-        formArrayName="alertaNombre"
-      />
-    </div>
-    <div class="col-md-2">
-      <label for="">Tipo de alerta</label>
-      <select
-        class="form form-control"
-        name="alertaTipo"
-        id="alertaTipo"
-        name="alertaTipo"
-        formControlName="alertaTipo"
-      >
-        <option value="1">Críticas</option>
-        <option value="2">Importantes</option>
-        <option value="3">Informativas</option>
-        <option value="4">Recomendación</option>
-        <option value="5">Confirmación</option>
-      </select>
-    </div>
-    <div class="col-md-6">
-      <label>Descripci&oacute;n</label>
-      <input
-        type="text"
-        class="form form-control"
-        id="alertaDescripcion"
-        name="alertaDescripcion"
-        formArrayName="alertaDescripcion"
-      />
-    </div>
-    <div class="col-md-12">
-      <label for="">Mensaje para la alerta</label>
-      <textarea
-        class="form form-control"
-        name="alertaMensaje"
-        id="alertaMensaje"
-        name="alertaMensaje"
-        formControlName="alertaMensaje"
-        placeholder="Por favor, ingrese un mensaje de que alerta deberia aparecer aqui"
-        rows="10"
-      ></textarea>
-    </div>
-    <div class="col-md-12 mt-4">
-      <button class="btn btn-success">Agregar alerta</button>
-    </div>
-  </div>
-
   <div class="col-md-12">
     <h2>Ingrese las condiciones para ver esta alertas</h2>
   </div>
   <div class="col-md-4">
     <label>Ingrese la alerta</label>
-    <select name="" id="" class="form form-control">
+    <select
+      name="alertaId"
+      id="alertaId"
+      formControlName="alertaId"
+      class="form form-control"
+    >
       <option value="">Seleccione</option>
       <option *ngFor="let alerta of alertas" [value]="alerta.id">
         {{ alerta.nombre }}
@@ -94,8 +32,13 @@
     </select>
   </div>
   <div class="col-md-4">
-    <label for="">Campo</label>
-    <select name="" id="" formControlName="campo" class="form form-control">
+    <label for="campo">Campo</label>
+    <select
+      name="campo"
+      id="campo"
+      formControlName="campo"
+      class="form form-control"
+    >
       <option value="">Seleccione</option>
       <option *ngFor="let campos of camposVisibles" [value]="campos.columnName">
         {{ campos.label }}
@@ -141,9 +84,12 @@
   </div>
   <div class="col-md-6">
     <label for="valorCondicion">Valor de la condici&oacute;n</label>
+    {{ tipoCampo }}
     <select
       *ngIf="typesOptions.includes(tipoCampo)"
       formControlName="valorCondicion"
+      id="valorCondicion"
+      name="valorCondicion"
       placeholder="Condici&oacute;n"
       class="form form-control"
     >
@@ -165,7 +111,7 @@
   </div>
   <div class="col-md-12 mt-4">
     <button class="btn btn-success" (click)="agregarCondicion()">
-      Agregar condicion
+      Agregar condici&oacute;n
     </button>
   </div>
 </form>
@@ -173,16 +119,19 @@
   <thead>
     <tr>
       <th>Regla</th>
-      <th>Condici&oacute;n</th>
-      <th>Valor</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let regla of reglas">
-      <td>{{ regla.columnDepend }}</td>
-      <td>{{ regla | json }}</td>
-      <td>{{ regla.rule }}</td>
-      <td>{{ regla.value }}</td>
+    <tr *ngFor="let regla of reglasCondicionales">
+      <td>
+        Si el campo <strong>"{{ regla.labelField }}"</strong> es
+        {{ regla.labelCondition }} a
+        <strong
+          >"{{
+            regla.labelValue === '' ? regla.value : regla.labelValue
+          }}"</strong
+        >
+      </td>
     </tr>
   </tbody>
 </table>

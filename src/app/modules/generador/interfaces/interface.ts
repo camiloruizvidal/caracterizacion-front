@@ -118,6 +118,13 @@ export interface IOptionsVisibility {
   rules: IOptionsRule[] | null;
   isShow: boolean;
 }
+export interface IOptionsVisibilityExtended extends IOptionsRule {
+  indice: number;
+  labelCondition: string;
+  labelField: string;
+  labelValue?: string;
+  alertaId: number;
+}
 
 export interface IOptionsRule {
   columnDepend: string;
