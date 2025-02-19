@@ -441,7 +441,10 @@
                 </button>
 
                 <div
-                  *ngFor="let grupoAlerta of gruposAlertasGrupal; let i = index"
+                  *ngFor="
+                    let grupoAlerta of formularioGenerado.alertaGrupal;
+                    let i = index
+                  "
                   class="alert alert-info row"
                 >
                   <app-alertas
@@ -450,6 +453,7 @@
                     [formularioGenerado]="formularioGenerado"
                     [tipoCards]="tipoCards"
                     [version]="formularioGenerado.version"
+                    (reglaEmitter)="guardarAlertas($event)"
                   />
                 </div>
               </div>

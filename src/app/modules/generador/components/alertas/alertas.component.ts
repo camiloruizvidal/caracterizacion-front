@@ -208,15 +208,18 @@ export class AlertasComponent implements OnInit {
       return;
     }
 
-    this.reglaUnitaria.labelField = this.obtenerTextoPorId('campo');
-    this.reglaUnitaria.labelCondition = this.obtenerTextoPorId('condicion');
-    this.reglaUnitaria.labelValue = this.obtenerTextoPorId('valorCondicion');
-    this.reglaUnitaria.indice = this.indice;
-    this.reglaUnitaria.tipoAlerta = this.tipoAlerta;
-    this.reglaUnitaria.alertaId = Number(
-      this.formulario.get('alertaId')?.value
-    );
-    this.reglasCondicionales.push(this.reglaUnitaria);
+    this.reglasCondicionales.push({
+      columnDepend: this.reglaUnitaria.columnDepend,
+      rule: this.reglaUnitaria.rule,
+      value: this.reglaUnitaria.value,
+      labelField: this.obtenerTextoPorId('campo'),
+      labelCondition: this.obtenerTextoPorId('condicion'),
+      labelValue: this.obtenerTextoPorId('valorCondicion'),
+      indice: this.indice,
+      tipoAlerta: this.tipoAlerta,
+      alertaId: Number(this.formulario.get('alertaId')?.value)
+    });
+    console.log(this.reglasCondicionales);
     this.reglaEmitter.emit(this.reglasCondicionales);
   }
 
