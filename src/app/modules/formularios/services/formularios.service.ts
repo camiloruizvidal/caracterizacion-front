@@ -101,15 +101,25 @@ export class FormulariosService {
     });
   }
 
-  public crearNuevoGrupo(
-    nombre: string,
-    tipo: number,
-    version: number
-  ): Observable<any> {
+  public crearNuevoGrupo(data: {
+    nombre: string;
+    tipoFicha: string;
+    version: number;
+    alerta?: {
+      genera_alerta: boolean;
+      clasificaciones: Array<{
+        nombre: string;
+        rango_minimo: number;
+        rango_maximo: number;
+        color: string;
+      }>;
+    };
+  }): Observable<any> {
     return this.http.post(`${this.apiUrl}/tipo`, {
-      titulo: nombre,
-      tipo,
-      version_ficha: Number(version)
+      titulo: data.nombre,
+      tipo: data.tipoFicha,
+      version_ficha: Number(data.version),
+      alerta: data.alerta
     });
   }
 

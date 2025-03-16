@@ -532,6 +532,95 @@
           formControlName="nombre"
         />
       </div>
+
+      <!-- Nueva sección de alertas -->
+      <div class="mb-3" formGroupName="alerta">
+        <div class="form-check mb-2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="genera_alerta"
+            formControlName="genera_alerta"
+          />
+          <label class="form-check-label" for="genera_alerta">
+            ¿Esta categoría genera alertas?
+          </label>
+        </div>
+
+        <!-- Sección de clasificaciones -->
+        <div *ngIf="modalFormTipoFicha.get('alerta.genera_alerta')?.value">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5>Clasificaciones de Alerta</h5>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary"
+              (click)="agregarClasificacion()"
+            >
+              + Agregar Clasificación
+            </button>
+          </div>
+
+          <div formArrayName="clasificaciones">
+            <div
+              *ngFor="
+                let clasificacion of clasificacionesArray.controls;
+                let i = index
+              "
+              [formGroupName]="i"
+              class="border p-3 mb-2 rounded"
+            >
+              <div class="row">
+                <div class="col-md-6">
+                  <label class="form-label">Color</label>
+                  <input
+                    type="color"
+                    class="form-control form-control-color"
+                    formControlName="color"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Nombre</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="nombre"
+                    placeholder="Ej: Alto Riesgo"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Rango Mínimo (%)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="rango_minimo"
+                    min="0"
+                    max="100"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Rango Máximo (%)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="rango_maximo"
+                    min="0"
+                    max="100"
+                  />
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    (click)="eliminarClasificacion(i)"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </form>
   </div>
   <div class="modal-footer">

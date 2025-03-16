@@ -1,5 +1,5 @@
 import { IVersiones } from './../../../../helpers/interface/interface';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import {
   IFamilyCard,
   IGruposFicha,
@@ -91,7 +91,11 @@ export class InputsGeneratorComponent implements OnInit {
 
     this.modalFormTipoFicha = this.formBuilder.group({
       nombre: ['', Validators.required],
-      tipoFicha: ['']
+      tipoFicha: [''],
+      alerta: this.formBuilder.group({
+        genera_alerta: [false],
+        clasificaciones: this.formBuilder.array([])
+      })
     });
   }
   //#region temporal
@@ -482,19 +486,41 @@ export class InputsGeneratorComponent implements OnInit {
     const tipo = this.tipoCards.find(
       tipo => tipo.nombre === this.formulario.value.fichaTipo
     );
-    this.modalFormTipoFicha.value.tipoFicha = tipo?.tipo;
 
-    if (this.modalFormTipoFicha.valid) {
-      this.formulariosService
-        .crearNuevoGrupo(
-          this.modalFormTipoFicha.value.nombre,
-          this.modalFormTipoFicha.value.tipoFicha,
-          this.formulario.value.version
-        )
-        .subscribe(() => {
+    console.log('tipo encontrado:', tipo);
+    console.log('formulario:', this.formulario.value);
+    console.log('modalFormTipoFicha:', this.modalFormTipoFicha.value);
+
+    if (this.modalFormTipoFicha.valid && tipo?.tipo) {
+      const grupoData = {
+        nombre: this.modalFormTipoFicha.value.nombre,
+        tipoFicha: tipo.tipo,
+        version: this.formulario.value.version,
+        alerta: this.modalFormTipoFicha.value.alerta.genera_alerta
+          ? {
+              genera_alerta: true,
+              clasificaciones:
+                this.modalFormTipoFicha.value.alerta.clasificaciones
+            }
+          : undefined
+      };
+
+      console.log('grupoData a enviar:', grupoData);
+
+      this.formulariosService.crearNuevoGrupo(grupoData).subscribe({
+        next: response => {
+          console.log('Respuesta exitosa:', response);
           this.cargarGrupos();
-        });
-      modalTipoFicha.close('Guardado');
+          modalTipoFicha.close('Guardado');
+        },
+        error: error => {
+          console.error('Error al guardar:', error);
+        }
+      });
+    } else {
+      console.log('Formulario no válido o tipo no encontrado');
+      console.log('Validez del formulario:', this.modalFormTipoFicha.valid);
+      console.log('Errores del formulario:', this.modalFormTipoFicha.errors);
     }
   }
 
@@ -594,5 +620,36 @@ export class InputsGeneratorComponent implements OnInit {
     reglasCondicionales.forEach(reglas => {
       this.formularioGenerado[tipo][reglas.indice] = reglas;
     });
+  }
+
+  // Getter para acceder fácilmente al FormArray de clasificaciones
+  get clasificacionesArray() {
+    return this.modalFormTipoFicha.get('alerta.clasificaciones') as FormArray;
+  }
+
+  // Método para agregar una clasificación
+  agregarClasificacion() {
+    const clasificaciones = this.modalFormTipoFicha.get(
+      'alerta.clasificaciones'
+    ) as FormArray;
+    clasificaciones.push(
+      this.formBuilder.group({
+        nombre: ['', Validators.required],
+        rango_minimo: [
+          '',
+          [Validators.required, Validators.min(0), Validators.max(100)]
+        ],
+        rango_maximo: [
+          '',
+          [Validators.required, Validators.min(0), Validators.max(100)]
+        ],
+        color: ['#000000']
+      })
+    );
+  }
+
+  // Método para eliminar una clasificación
+  eliminarClasificacion(index: number) {
+    this.clasificacionesArray.removeAt(index);
   }
 }
