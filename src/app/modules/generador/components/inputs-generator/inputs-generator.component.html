@@ -416,16 +416,7 @@
                     let i = index
                   "
                   class="alert alert-info row"
-                >
-                  <app-alertas
-                    [indice]="i"
-                    tipoAlerta="individual"
-                    [formularioGenerado]="formularioGenerado"
-                    [tipoCards]="tipoCards"
-                    [version]="formularioGenerado.version"
-                    (reglaEmitter)="guardarAlertas($event)"
-                  />
-                </div>
+                ></div>
               </div>
             </ng-template>
           </li>
@@ -446,16 +437,7 @@
                     let i = index
                   "
                   class="alert alert-info row"
-                >
-                  <app-alertas
-                    [indice]="i"
-                    tipoAlerta="grupal"
-                    [formularioGenerado]="formularioGenerado"
-                    [tipoCards]="tipoCards"
-                    [version]="formularioGenerado.version"
-                    (reglaEmitter)="guardarAlertas($event)"
-                  />
-                </div>
+                ></div>
               </div>
             </ng-template>
           </li>
