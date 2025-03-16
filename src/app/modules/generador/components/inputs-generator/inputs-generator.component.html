@@ -399,48 +399,6 @@
               </ngb-accordion>
             </ng-template>
           </li>
-          <li ngbNavItem="alertasIndividuales">
-            <a ngbNavLink class="navbar-items">Alertas individuales</a>
-            <ng-template ngbNavContent>
-              <div class="container mt-4">
-                <button
-                  class="btn btn-primary mb-3"
-                  (click)="agregarAlertasIndividuales()"
-                >
-                  Agregar grupo de Alerta
-                </button>
-
-                <div
-                  *ngFor="
-                    let grupoAlerta of gruposAlertasIndividual;
-                    let i = index
-                  "
-                  class="alert alert-info row"
-                ></div>
-              </div>
-            </ng-template>
-          </li>
-          <li ngbNavItem="alertasGrupales">
-            <a ngbNavLink class="navbar-items">Alertas Grupales</a>
-            <ng-template ngbNavContent>
-              <div class="container mt-4">
-                <button
-                  class="btn btn-primary mb-3"
-                  (click)="agregarAlertasGrupales()"
-                >
-                  Agregar grupo de Alerta
-                </button>
-
-                <div
-                  *ngFor="
-                    let grupoAlerta of formularioGenerado.alertaGrupal;
-                    let i = index
-                  "
-                  class="alert alert-info row"
-                ></div>
-              </div>
-            </ng-template>
-          </li>
         </ul>
         <div [ngbNavOutlet]="nav" class="mt-3"></div>
       </div>
