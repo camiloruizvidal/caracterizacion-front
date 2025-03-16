@@ -50,7 +50,7 @@
               </select>
             </div>
             <div class="col-md-12">
-              <label for="grupo">Seleccione el grupo</label>
+              <label for="grupo">Seleccione la categoría</label>
               <div class="input-group">
                 <button
                   type="button"
@@ -66,7 +66,7 @@
                   class="form-control"
                   required
                 >
-                  <option value="">Seleccione</option>
+                  <option value="">Seleccione...</option>
                   <option *ngFor="let grupo of grupos" [value]="grupo.id">
                     {{ grupo.title }}
                   </option>
@@ -471,7 +471,7 @@
 
 <ng-template #contentTipoFicha let-modalGrupo>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-title">Agregar un nuevo tipo de ficha</h4>
+    <h4 class="modal-title" id="modal-title">Agregar nueva categoria</h4>
     <button
       type="button"
       class="btn-close"
@@ -507,17 +507,6 @@
 
         <!-- Sección de clasificaciones -->
         <div *ngIf="modalFormTipoFicha.get('alerta.genera_alerta')?.value">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5>Clasificaciones de Alerta</h5>
-            <button
-              type="button"
-              class="btn btn-sm btn-primary"
-              (click)="agregarClasificacion()"
-            >
-              + Agregar Clasificación
-            </button>
-          </div>
-
           <div formArrayName="clasificaciones">
             <div
               *ngFor="
@@ -546,16 +535,6 @@
                   />
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label">Rango Mínimo (%)</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    formControlName="rango_minimo"
-                    min="0"
-                    max="100"
-                  />
-                </div>
-                <div class="col-md-6">
                   <label class="form-label">Rango Máximo (%)</label>
                   <input
                     type="number"
@@ -565,18 +544,38 @@
                     max="100"
                   />
                 </div>
-                <div class="col-md-1 d-flex align-items-end">
+                <div class="col-md-6">
+                  <label class="form-label">Rango Mínimo (%)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="rango_minimo"
+                    min="0"
+                    max="100"
+                  />
+                </div>
+                <div class="col-12">
                   <button
                     type="button"
-                    class="btn btn-danger btn-sm"
+                    class="btn btn-danger mt-3"
                     (click)="eliminarClasificacion(i)"
                   >
-                    <i class="bi bi-trash"></i>
+                    <i class="bi bi-trash"></i> Eliminar
                   </button>
                 </div>
               </div>
+              <hr />
             </div>
           </div>
+
+          <!-- Botón para agregar clasificación al final -->
+          <button
+            type="button"
+            class="btn btn-primary mt-3"
+            (click)="agregarClasificacion()"
+          >
+            + Agregar clasificación
+          </button>
         </div>
       </div>
     </form>
