@@ -56,7 +56,7 @@ export interface ISteperValues {
     | IOptionsCheck
     | IOptionsSelect[]
     | IOptionsSelectFilter
-    | IOptionsSelectDependient //Para selectDependiente
+    | IOptionsSelectDependient
     | null
     | any;
   default: boolean | string | null;
@@ -66,7 +66,16 @@ export interface ISteperValues {
   ficha_grupo_id?: string | number | null;
   createdAt?: string | Date;
   updatedAt?: string | Date;
-  nombrePadreDependiente?: string; //Para selectDependiente
+  nombrePadreDependiente?: string;
+  alerta?: IAlertaConfig;
+}
+
+export interface IAlertaConfig {
+  genera_alerta: boolean;
+  valores_alerta?: {
+    [key: string]: number; // Para select/options: {"1": 3, "2": 2, "3": 1}
+  };
+  peso?: number; // Por si algunas preguntas pesan más que otras en el cálculo
 }
 
 export enum ESteperType {
