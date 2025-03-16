@@ -5,13 +5,13 @@ import {
   IGruposFicha,
   IOptionsVisibility,
   IOptionsVisibilityExtended,
-  ISteperValues,
+  IPregunta,
   TipoDataForm,
   TipoForm
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
 import { Component, OnInit } from '@angular/core';
-import { ESteperType } from 'src/app/helpers/interface/interface';
+import { ETipoPregunta } from 'src/app/helpers/interface/interface';
 import { v4 as uuid } from 'uuid';
 import { ToastrService } from 'ngx-toastr';
 import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
@@ -38,10 +38,10 @@ export class InputsGeneratorComponent implements OnInit {
     text: string;
   }[] = [];
   public typesOptions: string[] = [
-    ESteperType.SelectFilter,
-    ESteperType.SelectMultiple,
-    ESteperType.Select,
-    ESteperType.SelectDependiente
+    ETipoPregunta.SelectFilter,
+    ETipoPregunta.SelectMultiple,
+    ETipoPregunta.Select,
+    ETipoPregunta.SelectDependiente
   ];
   public versiones: IVersiones[] = [];
 
@@ -101,7 +101,7 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   private cargarTipoPreguntas() {
-    this.tipos = Object.keys(ESteperType).sort();
+    this.tipos = Object.keys(ETipoPregunta).sort();
   }
 
   public cargarTipoFichas() {
@@ -188,8 +188,8 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   private getTipo() {
-    return this.formulario.value.tipo === ESteperType.CheckSiNo
-      ? ESteperType.Check
+    return this.formulario.value.tipo === ETipoPregunta.CheckSiNo
+      ? ETipoPregunta.Check
       : this.formulario.value.tipo;
   }
 
@@ -207,7 +207,7 @@ export class InputsGeneratorComponent implements OnInit {
         this.formulario.value.reglas === ''
           ? true
           : this.formulario.value.reglas;
-      const steperValues: ISteperValues = {
+      const steperValues: IPregunta = {
         label: this.formulario.value.label.trim(),
         type: this.getTipo(),
         options: this.getOptions(),
@@ -235,7 +235,7 @@ export class InputsGeneratorComponent implements OnInit {
 
   public getOptions() {
     let options;
-    if (this.formulario.value.tipo === ESteperType.CheckSiNo) {
+    if (this.formulario.value.tipo === ETipoPregunta.CheckSiNo) {
       options = { valueTrue: 'Sí', valueFalse: 'No' };
       this.formulario.patchValue({
         options,
@@ -295,7 +295,7 @@ export class InputsGeneratorComponent implements OnInit {
 
   public cambioItem(
     nuevoOrden: any,
-    value: ISteperValues,
+    value: IPregunta,
     indexCard: number,
     tarjeta: TipoForm
   ) {
@@ -313,7 +313,7 @@ export class InputsGeneratorComponent implements OnInit {
   public actualizarOrden() {
     const tipos: TipoForm[] = ['grupalNombre', 'individualNombre'];
     // tipos.forEach((tipo: TipoForm) => {
-    //   this.formularioGenerado[tipo].map((item: IStepers, index: number) => {
+    //   this.formularioGenerado[tipo].map((item: ICategoria, index: number) => {
     //     let orden = 0;
     //     item.orden = index;
     //     return item.values?.map(items => {
@@ -408,7 +408,7 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public getValue(key: any, value: any): any {
-    if (value.type === ESteperType.SelectDependiente) {
+    if (value.type === ETipoPregunta.SelectDependiente) {
       return value.label;
     } else {
       return value[key];
@@ -432,7 +432,7 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public obtenerTipoInput(value: string): string {
-    const values = ESteperType as any;
+    const values = ETipoPregunta as any;
     return values[value];
   }
 
@@ -559,7 +559,7 @@ export class InputsGeneratorComponent implements OnInit {
     };
   }
 
-  public get preguntasFiltradasPorForm(): ISteperValues[] {
+  public get preguntasFiltradasPorForm(): IPregunta[] {
     const fichaTipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
     const campo: TipoDataForm = this.tipoData[fichaTipo] as TipoDataForm;
     let valores: any[] = this.formularioGenerado[campo];

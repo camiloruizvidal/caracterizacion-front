@@ -14,8 +14,8 @@ export interface IFamilyCard {
   dateLastVersion?: Date;
   grupalNombre: string;
   individualNombre: string;
-  grupalData: IStepers[];
-  individualData: IStepers[];
+  grupalData: ICategoria[];
+  individualData: ICategoria[];
   alertaGrupal: IOptionsVisibilityExtended[];
   alertaIndividual: IOptionsVisibilityExtended[];
 }
@@ -29,29 +29,29 @@ export interface ITarjetaRespondidas {
   apellido_primero: string;
   apellido_segundo: string | null;
   documento: string;
-  grupaldata: IStepers[];
-  individualdata: IStepers[];
+  grupaldata: ICategoria[];
+  individualdata: ICategoria[];
 }
 
-export interface IStepers {
+export interface ICategoria {
   id?: number | string;
   orden?: number;
   title: string;
   subtitle?: string | null;
   table?: string;
   ficha_tipo_id?: string | number;
-  values?: ISteperValues[];
+  values?: IPregunta[];
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }
 
-export interface ISteperValues {
+export interface IPregunta {
   id?: number;
   columnName?: string;
   orden?: number;
   label: string;
   description?: string | null;
-  type: ESteperType | string;
+  type: ETipoPregunta | string;
   options?:
     | IOptionsCheck
     | IOptionsSelect[]
@@ -78,7 +78,7 @@ export interface IAlertaConfig {
   peso?: number; // Por si algunas preguntas pesan más que otras en el cálculo
 }
 
-export enum ESteperType {
+export enum ETipoPregunta {
   Address = 'address',
   Calendar = 'calendar',
   Photo = 'photo',
@@ -142,7 +142,7 @@ export interface IOptionsRule {
   rule: EConditions;
   value: string;
 }
-export interface ICodes {
+export interface ICodigos {
   id?: number;
   user_id?: number;
   start: number;

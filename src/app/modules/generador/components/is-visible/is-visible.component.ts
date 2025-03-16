@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   condiciones,
   EConditions,
-  ESteperType,
+  ETipoPregunta,
   ICondiciones,
   IFamilyCard,
   IGruposFicha,
@@ -22,7 +22,7 @@ import { InputsService } from '../../services/inputs.service';
 })
 export class IsVisibleComponent implements OnInit {
   public formulario: FormGroup;
-  public tipoCampo: ESteperType = ESteperType.Text;
+  public tipoCampo: ETipoPregunta = ETipoPregunta.Text;
   public regla!: IOptionsVisibility;
   public reglaUnitaria: IOptionsRule = {
     columnDepend: '',
@@ -31,12 +31,12 @@ export class IsVisibleComponent implements OnInit {
   };
 
   public typesOptions: string[] = [
-    ESteperType.SelectFilter,
-    ESteperType.SelectMultiple,
-    ESteperType.Select,
-    ESteperType.SelectDependiente,
-    ESteperType.Check,
-    ESteperType.CheckSiNo
+    ETipoPregunta.SelectFilter,
+    ETipoPregunta.SelectMultiple,
+    ETipoPregunta.Select,
+    ETipoPregunta.SelectDependiente,
+    ETipoPregunta.Check,
+    ETipoPregunta.CheckSiNo
   ];
 
   @Output() reglaEmitter: EventEmitter<IOptionsVisibility> = new EventEmitter();
@@ -156,7 +156,7 @@ export class IsVisibleComponent implements OnInit {
     this.formulario;
   }
 
-  private validarTipoDato(columna: string): ESteperType {
+  private validarTipoDato(columna: string): ETipoPregunta {
     const fichaTipoVisible: any = this.formulario.value.fichaTipoVisible;
     const formularioGenerado: any = this.formularioGenerado;
     let fichaTipo!: 'grupalData' | 'individualData';
@@ -175,7 +175,7 @@ export class IsVisibleComponent implements OnInit {
 
     const item = values.find((item: any) => item.columnName === columna);
 
-    return item.type as ESteperType;
+    return item.type as ETipoPregunta;
   }
 
   public filtrarGrupos(target: EventTarget | null) {}
@@ -185,7 +185,7 @@ export class IsVisibleComponent implements OnInit {
     this.tipoCampo = this.validarTipoDato(columna);
     let rule: EConditions;
     let value;
-    if (this.tipoCampo === ESteperType.Calendar) {
+    if (this.tipoCampo === ETipoPregunta.Calendar) {
       value = {
         minAnnos: Number(this.formulario.value.rango_inicio),
         maximoAnos: Number(this.formulario.value.rango_fin)

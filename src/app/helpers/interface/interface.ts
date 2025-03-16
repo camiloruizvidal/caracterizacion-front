@@ -232,7 +232,7 @@ export interface ISelect {
   option: string;
 }
 
-export enum ESteperType {
+export enum ETipoPregunta {
   Address = 'address',
   Calendar = 'calendar',
   Photo = 'photo',

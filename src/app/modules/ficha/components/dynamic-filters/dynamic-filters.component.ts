@@ -1,6 +1,6 @@
 import {
   condiciones,
-  IStepers,
+  ICategoria,
   TipoDataForm
 } from './../../../generador/interfaces/interface';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
@@ -70,7 +70,7 @@ export class DynamicFiltersComponent implements OnInit {
     this.filtros.splice(indice, 1);
   }
 
-  public obtenerGrupos(tipoTarjeta: TipoDataForm): IStepers[] {
+  public obtenerGrupos(tipoTarjeta: TipoDataForm): ICategoria[] {
     return this.tarjetaJson[tipoTarjeta];
   }
 
