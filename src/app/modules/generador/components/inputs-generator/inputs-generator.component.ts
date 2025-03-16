@@ -131,11 +131,14 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   private cargarVersiones() {
-    this.formulariosService
-      .obtenerVersiones()
-      .subscribe((resultado: IVersiones[]) => {
-        this.versiones = resultado;
-      });
+    this.formulariosService.obtenerVersiones().subscribe({
+      next: (versiones: IVersiones[]) => {
+        this.versiones = versiones;
+      },
+      error: (error: any) => {
+        console.error('Error al cargar versiones:', error);
+      }
+    });
   }
 
   private deepEqual(obj1: any, obj2: any): boolean {
@@ -477,8 +480,15 @@ export class InputsGeneratorComponent implements OnInit {
           grupalNombre: this.modalForm.value.grupalNombre,
           individualNombre: this.modalForm.value.individualNombre
         })
-        .subscribe();
-      modal.close('Guardado');
+        .subscribe({
+          next: () => {
+            this.cargarVersiones();
+            modal.close('Guardado');
+          },
+          error: (error: any) => {
+            console.error('Error al guardar nueva versión:', error);
+          }
+        });
     }
   }
 
