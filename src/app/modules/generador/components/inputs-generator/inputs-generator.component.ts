@@ -714,13 +714,20 @@ export class InputsGeneratorComponent implements OnInit {
       categoria?.alerta?.genera_alerta &&
       categoria?.alerta?.clasificaciones
     ) {
-      this.alertasDisponibles = categoria.alerta.clasificaciones.map(
+      // Ordenamos las clasificaciones por rango_maximo de mayor a menor
+      const clasificacionesOrdenadas = [
+        ...categoria.alerta.clasificaciones
+      ].sort((a, b) => b.rango_maximo - a.rango_maximo);
+
+      // Mapeamos asignando valores según el orden (el más alto tiene el valor más alto)
+      this.alertasDisponibles = clasificacionesOrdenadas.map(
         (c: any, index: number) => ({
-          id: index.toString(),
+          id: (clasificacionesOrdenadas.length - index).toString(), // El primer elemento (index 0) tendrá el valor más alto
           nombre: c.nombre,
           color: c.color,
           rango_minimo: c.rango_minimo,
-          rango_maximo: c.rango_maximo
+          rango_maximo: c.rango_maximo,
+          valor: clasificacionesOrdenadas.length - index // Guardamos también el valor numérico
         })
       );
     } else {

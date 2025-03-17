@@ -19,6 +19,10 @@
               *ngFor="let alerta of alertasDisponibles"
               [value]="alerta.id"
             >
+              <span
+                class="color-preview"
+                [style.background-color]="alerta.color"
+              ></span>
               {{ alerta.nombre }}
             </option>
           </select>
@@ -35,6 +39,10 @@
               *ngFor="let alerta of alertasDisponibles"
               [value]="alerta.id"
             >
+              <span
+                class="color-preview"
+                [style.background-color]="alerta.color"
+              ></span>
               {{ alerta.nombre }}
             </option>
           </select>
@@ -60,6 +68,10 @@
               *ngFor="let alerta of alertasDisponibles"
               [value]="alerta.id"
             >
+              <span
+                class="color-preview"
+                [style.background-color]="alerta.color"
+              ></span>
               {{ alerta.nombre }}
             </option>
           </select>
