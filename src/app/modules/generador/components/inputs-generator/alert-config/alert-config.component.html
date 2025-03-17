@@ -18,12 +18,8 @@
             <option
               *ngFor="let alerta of alertasDisponibles"
               [value]="alerta.rango_maximo"
+              [style.background-color]="alerta.color"
             >
-              <span
-                class="color-preview"
-                [style.background-color]="alerta.color"
-                >•</span
-              >
               {{ alerta.nombre }} ({{ alerta.rango_maximo }})
             </option>
           </select>
@@ -39,12 +35,8 @@
             <option
               *ngFor="let alerta of alertasDisponibles"
               [value]="alerta.rango_maximo"
+              [style.background-color]="alerta.color"
             >
-              <span
-                class="color-preview"
-                [style.background-color]="alerta.color"
-                >•</span
-              >
               {{ alerta.nombre }} ({{ alerta.rango_maximo }})
             </option>
           </select>
@@ -69,12 +61,8 @@
             <option
               *ngFor="let alerta of alertasDisponibles"
               [value]="alerta.rango_maximo"
+              [style.background-color]="alerta.color"
             >
-              <span
-                class="color-preview"
-                [style.background-color]="alerta.color"
-                >•</span
-              >
               {{ alerta.nombre }} ({{ alerta.rango_maximo }})
             </option>
           </select>

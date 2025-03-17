@@ -22,14 +22,20 @@
 
       select {
         flex: 1;
-
-        option {
-          display: flex;
-          align-items: center;
-          padding: 5px;
-        }
       }
     }
+  }
+}
+
+// Estilos para las opciones del select
+::ng-deep option {
+  padding: 8px;
+  color: white;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+
+  &[value=''] {
+    background-color: white !important;
+    color: #333;
   }
 }
 
