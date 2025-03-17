@@ -1,4 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   ETipoPregunta,
@@ -12,63 +20,56 @@ import {
   templateUrl: './alert-config.component.html',
   styleUrls: ['./alert-config.component.scss']
 })
-export class AlertConfigComponent implements OnInit {
+export class AlertConfigComponent implements OnInit, OnChanges {
   @Input() tipoPregunta!: ETipoPregunta;
   @Input() alertasDisponibles: IAlertas[] = [];
+  @Input() opciones: IOptionsSelect[] = [];
+  @Output() alertasConfiguracion = new EventEmitter<any>();
 
-  public form!: FormGroup;
-  public opciones: any[] = [];
+  public form: FormGroup;
+  protected ETipoPregunta = ETipoPregunta;
 
   constructor(private fb: FormBuilder) {
-    this.initForm();
+    this.form = this.fb.group({});
   }
 
   ngOnInit() {
-    this.cargarOpciones();
+    this.actualizarFormulario();
   }
 
-  private initForm() {
-    const formControls: { [key: string]: any[] } = {};
+  ngOnChanges(changes: SimpleChanges) {
+    if ((changes['tipoPregunta'] || changes['opciones']) && this.tipoPregunta) {
+      this.actualizarFormulario();
+    }
+  }
 
-    if (this.tipoPregunta) {
-      switch (this.tipoPregunta) {
-        case ETipoPregunta.Check:
-        case ETipoPregunta.CheckSiNo:
-          formControls['Si'] = [''];
-          formControls['No'] = [''];
-          break;
-        case ETipoPregunta.Select:
-        case ETipoPregunta.SelectMultiple:
-          // Se agregarán dinámicamente al cargar las opciones
-          break;
-      }
+  private actualizarFormulario() {
+    // Resetear el formulario
+    for (const control in this.form.controls) {
+      this.form.removeControl(control);
     }
 
-    this.form = this.fb.group(formControls);
-  }
-
-  private cargarOpciones() {
     switch (this.tipoPregunta) {
       case ETipoPregunta.Check:
       case ETipoPregunta.CheckSiNo:
-        this.opciones = [
-          { label: 'Sí', value: true },
-          { label: 'No', value: false }
-        ];
+        this.form.addControl('Si', this.fb.control(''));
+        this.form.addControl('No', this.fb.control(''));
         break;
       case ETipoPregunta.Select:
       case ETipoPregunta.SelectMultiple:
-        // Aquí cargaríamos las opciones del select
-        this.opciones = [
-          { label: 'Opción 1', value: '1' },
-          { label: 'Opción 2', value: '2' },
-          { label: 'Opción 3', value: '3' }
-        ];
-        // Agregamos controles dinámicamente
-        this.opciones.forEach(opcion => {
-          this.form.addControl(opcion.label, this.fb.control(''));
-        });
+        if (this.opciones && this.opciones.length > 0) {
+          this.opciones.forEach(opcion => {
+            const controlName = opcion.value;
+            if (controlName) {
+              this.form.addControl(controlName, this.fb.control(''));
+            }
+          });
+        }
         break;
     }
+  }
+
+  onAlertaChange() {
+    this.alertasConfiguracion.emit(this.form.value);
   }
 }

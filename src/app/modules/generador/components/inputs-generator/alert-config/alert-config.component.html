@@ -1,15 +1,70 @@
-<div class="alert-config" *ngIf="tipoPregunta">
-  <form [formGroup]="form">
+<div class="alert-config" *ngIf="tipoPregunta && form.controls">
+  <form [formGroup]="form" (ngSubmit)="onAlertaChange()">
     <div class="alert-options">
-      <div class="option-group" *ngFor="let opcion of opciones">
-        <label>{{ opcion.label }}</label>
-        <select [formControlName]="opcion.label" class="form-control">
-          <option value="">Ninguna (0)</option>
-          <option *ngFor="let alerta of alertasDisponibles" [value]="alerta.id">
-            {{ alerta.nombre }}
-          </option>
-        </select>
-      </div>
+      <ng-container
+        *ngIf="
+          tipoPregunta === ETipoPregunta.Check ||
+          tipoPregunta === ETipoPregunta.CheckSiNo
+        "
+      >
+        <div class="option-group">
+          <label>Sí</label>
+          <select
+            formControlName="Si"
+            class="form-control"
+            (change)="onAlertaChange()"
+          >
+            <option value="">Ninguna (0)</option>
+            <option
+              *ngFor="let alerta of alertasDisponibles"
+              [value]="alerta.id"
+            >
+              {{ alerta.nombre }}
+            </option>
+          </select>
+        </div>
+        <div class="option-group">
+          <label>No</label>
+          <select
+            formControlName="No"
+            class="form-control"
+            (change)="onAlertaChange()"
+          >
+            <option value="">Ninguna (0)</option>
+            <option
+              *ngFor="let alerta of alertasDisponibles"
+              [value]="alerta.id"
+            >
+              {{ alerta.nombre }}
+            </option>
+          </select>
+        </div>
+      </ng-container>
+
+      <ng-container
+        *ngIf="
+          (tipoPregunta === ETipoPregunta.Select ||
+            tipoPregunta === ETipoPregunta.SelectMultiple) &&
+          opciones?.length
+        "
+      >
+        <div class="option-group" *ngFor="let opcion of opciones">
+          <label>{{ opcion.value }}</label>
+          <select
+            [formControlName]="opcion.value"
+            class="form-control"
+            (change)="onAlertaChange()"
+          >
+            <option value="">Ninguna (0)</option>
+            <option
+              *ngFor="let alerta of alertasDisponibles"
+              [value]="alerta.id"
+            >
+              {{ alerta.nombre }}
+            </option>
+          </select>
+        </div>
+      </ng-container>
     </div>
   </form>
 </div>
