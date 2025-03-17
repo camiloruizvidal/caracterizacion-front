@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IVersiones } from 'src/app/helpers/interface/interface';
 import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
 import {
-  IFamilyCard,
+  IFormulario,
   IFiltrosBusqueda,
   ITarjetaRespondidas
 } from 'src/app/modules/generador/interfaces/interface';
@@ -14,7 +14,7 @@ import { InputsService } from 'src/app/modules/generador/services/inputs.service
   styleUrls: ['./informe-dinamico.component.scss']
 })
 export class InformeDinamicoComponent implements OnInit {
-  public fichaJson!: IFamilyCard;
+  public fichaJson!: IFormulario;
   public versiones: IVersiones[] = [];
   public versionSeleccionada: string = '';
   public tarjetasRespondidas: ITarjetaRespondidas[] = [];

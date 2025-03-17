@@ -1,14 +1,14 @@
 import {
   condiciones,
   ICategoria,
-  TipoDataForm
+  TipoDataForm,
+  IFormulario
 } from './../../../generador/interfaces/interface';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   EConditions,
   ICondiciones,
-  IFamilyCard,
   IFiltrosBusqueda
 } from 'src/app/modules/generador/interfaces/interface';
 
@@ -18,7 +18,7 @@ import {
   styleUrls: ['./dynamic-filters.component.scss']
 })
 export class DynamicFiltersComponent implements OnInit {
-  @Input() tarjetaJson!: IFamilyCard;
+  @Input() tarjetaJson!: IFormulario;
   @Output() filtrosEmitidos = new EventEmitter<IFiltrosBusqueda[]>();
   public condiciones: ICondiciones[] = condiciones;
   public filtrosForm: FormGroup;

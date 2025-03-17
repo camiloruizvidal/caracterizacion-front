@@ -1,17 +1,17 @@
 import { IVersiones } from './../../../../helpers/interface/interface';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import {
-  IFamilyCard,
-  IGruposFicha,
   IOptionsVisibility,
   IOptionsVisibilityExtended,
   IPregunta,
   TipoDataForm,
-  TipoForm
+  TipoForm,
+  IFormulario,
+  ETipoPregunta,
+  ICategoria
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
 import { Component, OnInit } from '@angular/core';
-import { ETipoPregunta } from 'src/app/helpers/interface/interface';
 import { v4 as uuid } from 'uuid';
 import { ToastrService } from 'ngx-toastr';
 import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
@@ -23,11 +23,11 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./inputs-generator.component.scss']
 })
 export class InputsGeneratorComponent implements OnInit {
-  public grupos: IGruposFicha[] = [];
+  public grupos: ICategoria[] = [];
   public formulario: FormGroup;
   public agregarGrupoForm: FormGroup;
   public tipos: string[] = [];
-  public formularioGenerado!: IFamilyCard;
+  public formularioGenerado!: IFormulario;
   public esEditable: boolean = false;
   public tipoCards: {
     tipo: TipoDataForm;
@@ -187,7 +187,7 @@ export class InputsGeneratorComponent implements OnInit {
     );
     this.inputsService
       .obtenerGruposFichas(Number(this.formulario.value.version), tipo?.tipo)
-      .subscribe((result: IGruposFicha[]) => {
+      .subscribe((result: ICategoria[]) => {
         this.grupos = result;
       });
   }

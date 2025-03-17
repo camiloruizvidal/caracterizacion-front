@@ -1,14 +1,7 @@
 export type tipoAlertas = 'individual' | 'grupal';
-export interface IGruposFicha {
-  id: number;
-  title: string;
-  subtitle?: string | null;
-  orden: number;
-  ficha_tipo_id?: number;
-}
 
 //Formulario
-export interface IFamilyCard {
+export interface IFormulario {
   isFinish: boolean;
   version?: string;
   dateLastVersion?: Date;

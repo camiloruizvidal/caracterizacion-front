@@ -5,8 +5,8 @@ import {
   EConditions,
   ETipoPregunta,
   ICondiciones,
-  IFamilyCard,
-  IGruposFicha,
+  IFormulario,
+  ICategoria,
   IOptionsRule,
   IOptionsSelect,
   IOptionsVisibility,
@@ -40,8 +40,8 @@ export class IsVisibleComponent implements OnInit {
   ];
 
   @Output() reglaEmitter: EventEmitter<IOptionsVisibility> = new EventEmitter();
-  @Input() public formularioGenerado!: IFamilyCard;
-  @Input() public grupos: IGruposFicha[] = [];
+  @Input() public formularioGenerado!: IFormulario;
+  @Input() public grupos: ICategoria[] = [];
   @Input() public version?: string;
   @Input() public tipoCards!: {
     tipo: TipoDataForm;
@@ -208,13 +208,13 @@ export class IsVisibleComponent implements OnInit {
     };
   }
 
-  public cargarGrupos(): void {
+  public cargarCategorias(): void {
     const tipo = this.tipoCards.find(
       tipo => tipo.nombre === this.formulario.value.fichaTipo
     );
     this.inputsService
       .obtenerGruposFichas(Number(this.version), tipo?.tipo)
-      .subscribe((result: IGruposFicha[]) => {
+      .subscribe((result: ICategoria[]) => {
         this.grupos = result;
       });
   }
