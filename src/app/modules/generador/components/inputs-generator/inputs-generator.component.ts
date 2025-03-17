@@ -8,8 +8,7 @@ import {
   TipoForm,
   IFormulario,
   ETipoPregunta,
-  ICategoria,
-  IAlertas
+  ICategoria
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
 import { Component, OnInit } from '@angular/core';
@@ -17,7 +16,6 @@ import { v4 as uuid } from 'uuid';
 import { ToastrService } from 'ngx-toastr';
 import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AlertasService } from './../../services/alertas.service';
 
 @Component({
   selector: 'app-inputs-generator',
@@ -48,7 +46,7 @@ export class InputsGeneratorComponent implements OnInit {
   public modalForm!: FormGroup;
   public modalFormTipoFicha!: FormGroup;
 
-  public alertasDisponibles: IAlertas[] = [];
+  public alertasDisponibles: any[] = [];
   public tiposConAlertas = [
     ETipoPregunta.Check,
     ETipoPregunta.CheckSiNo,
@@ -64,8 +62,7 @@ export class InputsGeneratorComponent implements OnInit {
     private inputsService: InputsService,
     private toastr: ToastrService,
     private formulariosService: FormulariosService,
-    private modalService: NgbModal,
-    private alertasService: AlertasService
+    private modalService: NgbModal
   ) {
     this.formulario = this.formBuilder.group({
       fichaTipo: ['', Validators.required],
@@ -135,14 +132,22 @@ export class InputsGeneratorComponent implements OnInit {
         this.opcionesSelect = [];
       }
     });
+
+    // Suscribirse a cambios en el grupo seleccionado
+    this.formulario.get('grupo')?.valueChanges.subscribe(grupoId => {
+      if (grupoId) {
+        this.cargarAlertasDeCategoria(grupoId);
+      } else {
+        this.alertasDisponibles = [];
+      }
+    });
   }
-  //#region temporal
+
   public ngOnInit(): void {
     this.cargarTipoFichas();
     this.cargarGrupos();
     this.cargarTipoPreguntas();
     this.cargarVersiones();
-    this.cargarAlertas();
   }
 
   private cargarTipoPreguntas() {
@@ -232,6 +237,8 @@ export class InputsGeneratorComponent implements OnInit {
       .obtenerGruposFichas(Number(this.formulario.value.version), tipo?.tipo)
       .subscribe((result: ICategoria[]) => {
         this.grupos = result;
+        // Limpiar alertas cuando se cambia el tipo de ficha
+        this.alertasDisponibles = [];
       });
   }
 
@@ -696,16 +703,29 @@ export class InputsGeneratorComponent implements OnInit {
     this.clasificacionesArray.removeAt(index);
   }
 
-  private async cargarAlertas() {
-    this.alertasService.obtenerAlertas().subscribe(
-      alertas => {
-        this.alertasDisponibles = alertas;
-      },
-      error => {
-        console.error('Error al cargar alertas:', error);
-        this.toastr.error('Error al cargar las alertas disponibles');
-      }
+  private cargarAlertasDeCategoria(grupoId: number) {
+    const fichaTipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
+    const campo: TipoDataForm = this.tipoData[fichaTipo] as TipoDataForm;
+    const categoria = this.formularioGenerado[campo]?.find(
+      (cat: any) => cat.id === Number(grupoId)
     );
+
+    if (
+      categoria?.alerta?.genera_alerta &&
+      categoria?.alerta?.clasificaciones
+    ) {
+      this.alertasDisponibles = categoria.alerta.clasificaciones.map(
+        (c: any, index: number) => ({
+          id: index.toString(),
+          nombre: c.nombre,
+          color: c.color,
+          rango_minimo: c.rango_minimo,
+          rango_maximo: c.rango_maximo
+        })
+      );
+    } else {
+      this.alertasDisponibles = [];
+    }
   }
 
   public mostrarConfiguracionAlertas(): boolean {
@@ -714,7 +734,6 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public onAlertasConfiguracion(config: any) {
-    // Aquí puedes manejar la configuración de alertas
     console.log('Configuración de alertas:', config);
   }
 }

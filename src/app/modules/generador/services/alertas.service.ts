@@ -12,11 +12,6 @@ export class AlertasService {
 
   constructor(private http: HttpClient) {}
 
-  // Obtener todas las alertas
-  public obtenerAlertas(): Observable<IAlertas[]> {
-    return this.http.get<IAlertas[]>(`${this.apiUrl}/alertas`);
-  }
-
   // Obtener los grupos de alertas por ficha_id
   public obtenerGrupos(fichaId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${fichaId}/grupos/`);

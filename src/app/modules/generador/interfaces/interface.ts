@@ -36,6 +36,15 @@ export interface ICategoria {
   values?: IPregunta[];
   createdAt?: Date | string;
   updatedAt?: Date | string;
+  alerta?: {
+    genera_alerta: boolean;
+    clasificaciones: {
+      color: string;
+      nombre: string;
+      rango_maximo: number;
+      rango_minimo: number;
+    }[];
+  };
 }
 
 export interface IPregunta {
