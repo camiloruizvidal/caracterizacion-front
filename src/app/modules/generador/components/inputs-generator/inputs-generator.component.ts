@@ -49,12 +49,15 @@ export class InputsGeneratorComponent implements OnInit {
   public modalFormTipoFicha!: FormGroup;
 
   public alertasDisponibles: IAlertas[] = [];
-  private tiposConAlertas = [
+  public tiposConAlertas = [
     ETipoPregunta.Check,
     ETipoPregunta.CheckSiNo,
     ETipoPregunta.Select,
     ETipoPregunta.SelectMultiple
   ];
+
+  public jsonValido = true;
+  public opcionesSelect: any[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -106,11 +109,39 @@ export class InputsGeneratorComponent implements OnInit {
         clasificaciones: this.formBuilder.array([])
       })
     });
+
+    // Suscribirse a cambios en optionsJSON
+    this.formulario.get('optionsJSON')?.valueChanges.subscribe(value => {
+      try {
+        if (value) {
+          const jsonData = JSON.parse(value);
+          if (Array.isArray(jsonData)) {
+            this.jsonValido = true;
+            this.opcionesSelect = jsonData;
+            this.formulario.patchValue(
+              { options: jsonData },
+              { emitEvent: false }
+            );
+          } else {
+            this.jsonValido = false;
+            this.opcionesSelect = [];
+          }
+        } else {
+          this.jsonValido = true;
+          this.opcionesSelect = [];
+        }
+      } catch (error) {
+        this.jsonValido = false;
+        this.opcionesSelect = [];
+      }
+    });
   }
   //#region temporal
   public ngOnInit(): void {
-    this.cargarVersiones();
+    this.cargarTipoFichas();
+    this.cargarGrupos();
     this.cargarTipoPreguntas();
+    this.cargarVersiones();
     this.cargarAlertas();
   }
 
@@ -666,10 +697,15 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   private async cargarAlertas() {
-    // Aquí cargarías las alertas disponibles desde tu servicio
-    this.alertasService.obtenerAlertas().subscribe((alertas: IAlertas[]) => {
-      this.alertasDisponibles = alertas;
-    });
+    this.alertasService.obtenerAlertas().subscribe(
+      alertas => {
+        this.alertasDisponibles = alertas;
+      },
+      error => {
+        console.error('Error al cargar alertas:', error);
+        this.toastr.error('Error al cargar las alertas disponibles');
+      }
+    );
   }
 
   public mostrarConfiguracionAlertas(): boolean {
@@ -677,8 +713,8 @@ export class InputsGeneratorComponent implements OnInit {
     return this.tiposConAlertas.includes(tipoActual);
   }
 
-  public onAlertasConfiguracion(event: any) {
-    // Aquí manejarías la configuración de alertas
-    console.log('Configuración de alertas:', event);
+  public onAlertasConfiguracion(config: any) {
+    // Aquí puedes manejar la configuración de alertas
+    console.log('Configuración de alertas:', config);
   }
 }

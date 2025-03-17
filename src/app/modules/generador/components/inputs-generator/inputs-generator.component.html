@@ -139,10 +139,35 @@
                 name="optionsJSON"
                 id="optionsJSON"
                 formControlName="optionsJSON"
-                class="form form-control"
+                [class]="
+                  'form-control ' +
+                  (!jsonValido && formulario.get('optionsJSON')?.value
+                    ? 'is-invalid'
+                    : '')
+                "
                 rows="10"
                 (click)="selectAllText($event)"
               ></textarea>
+              <div
+                class="invalid-feedback"
+                *ngIf="!jsonValido && formulario.get('optionsJSON')?.value"
+              >
+                El texto ingresado no es un JSON array válido
+              </div>
+
+              <!-- Componente de alertas -->
+              <app-alert-config
+                *ngIf="
+                  tiposConAlertas.includes(formulario.get('tipo')?.value) &&
+                  jsonValido &&
+                  opcionesSelect.length > 0
+                "
+                [tipoPregunta]="formulario.get('tipo')?.value"
+                [alertasDisponibles]="alertasDisponibles"
+                [opciones]="opcionesSelect"
+                (alertasConfiguracion)="onAlertasConfiguracion($event)"
+              ></app-alert-config>
+
               <div class="m-1" style="background-color: #f1f1f1">
                 &#91; &lbrace;
                 {{
