@@ -1,0 +1,15 @@
+<div class="alert-config" *ngIf="tipoPregunta">
+  <form [formGroup]="form">
+    <div class="alert-options">
+      <div class="option-group" *ngFor="let opcion of opciones">
+        <label>{{ opcion.label }}</label>
+        <select [formControlName]="opcion.label" class="form-control">
+          <option value="">Ninguna (0)</option>
+          <option *ngFor="let alerta of alertasDisponibles" [value]="alerta.id">
+            {{ alerta.nombre }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </form>
+</div>

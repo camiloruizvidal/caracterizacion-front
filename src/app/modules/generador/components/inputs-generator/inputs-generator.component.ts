@@ -8,7 +8,8 @@ import {
   TipoForm,
   IFormulario,
   ETipoPregunta,
-  ICategoria
+  ICategoria,
+  IAlertas
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
 import { Component, OnInit } from '@angular/core';
@@ -16,6 +17,7 @@ import { v4 as uuid } from 'uuid';
 import { ToastrService } from 'ngx-toastr';
 import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AlertasService } from './../../services/alertas.service';
 
 @Component({
   selector: 'app-inputs-generator',
@@ -46,12 +48,21 @@ export class InputsGeneratorComponent implements OnInit {
   public modalForm!: FormGroup;
   public modalFormTipoFicha!: FormGroup;
 
+  public alertasDisponibles: IAlertas[] = [];
+  private tiposConAlertas = [
+    ETipoPregunta.Check,
+    ETipoPregunta.CheckSiNo,
+    ETipoPregunta.Select,
+    ETipoPregunta.SelectMultiple
+  ];
+
   constructor(
     private formBuilder: FormBuilder,
     private inputsService: InputsService,
     private toastr: ToastrService,
     private formulariosService: FormulariosService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private alertasService: AlertasService
   ) {
     this.formulario = this.formBuilder.group({
       fichaTipo: ['', Validators.required],
@@ -100,6 +111,7 @@ export class InputsGeneratorComponent implements OnInit {
   public ngOnInit(): void {
     this.cargarVersiones();
     this.cargarTipoPreguntas();
+    this.cargarAlertas();
   }
 
   private cargarTipoPreguntas() {
@@ -651,5 +663,22 @@ export class InputsGeneratorComponent implements OnInit {
   // Método para eliminar una clasificación
   eliminarClasificacion(index: number) {
     this.clasificacionesArray.removeAt(index);
+  }
+
+  private async cargarAlertas() {
+    // Aquí cargarías las alertas disponibles desde tu servicio
+    this.alertasService.obtenerAlertas().subscribe((alertas: IAlertas[]) => {
+      this.alertasDisponibles = alertas;
+    });
+  }
+
+  public mostrarConfiguracionAlertas(): boolean {
+    const tipoActual = this.formulario.get('tipo')?.value;
+    return this.tiposConAlertas.includes(tipoActual);
+  }
+
+  public onAlertasConfiguracion(event: any) {
+    // Aquí manejarías la configuración de alertas
+    console.log('Configuración de alertas:', event);
   }
 }
