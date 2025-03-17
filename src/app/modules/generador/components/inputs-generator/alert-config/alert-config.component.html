@@ -17,13 +17,14 @@
             <option value="">Ninguna (0)</option>
             <option
               *ngFor="let alerta of alertasDisponibles"
-              [value]="alerta.id"
+              [value]="alerta.rango_maximo"
             >
               <span
                 class="color-preview"
                 [style.background-color]="alerta.color"
-              ></span>
-              {{ alerta.nombre }}
+                >•</span
+              >
+              {{ alerta.nombre }} ({{ alerta.rango_maximo }})
             </option>
           </select>
         </div>
@@ -37,13 +38,14 @@
             <option value="">Ninguna (0)</option>
             <option
               *ngFor="let alerta of alertasDisponibles"
-              [value]="alerta.id"
+              [value]="alerta.rango_maximo"
             >
               <span
                 class="color-preview"
                 [style.background-color]="alerta.color"
-              ></span>
-              {{ alerta.nombre }}
+                >•</span
+              >
+              {{ alerta.nombre }} ({{ alerta.rango_maximo }})
             </option>
           </select>
         </div>
@@ -66,13 +68,14 @@
             <option value="">Ninguna (0)</option>
             <option
               *ngFor="let alerta of alertasDisponibles"
-              [value]="alerta.id"
+              [value]="alerta.rango_maximo"
             >
               <span
                 class="color-preview"
                 [style.background-color]="alerta.color"
-              ></span>
-              {{ alerta.nombre }}
+                >•</span
+              >
+              {{ alerta.nombre }} ({{ alerta.rango_maximo }})
             </option>
           </select>
         </div>
