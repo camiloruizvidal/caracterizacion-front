@@ -76,7 +76,6 @@ export class AlertConfigComponent implements OnInit, OnChanges {
       this.planesCuidado[controlName] = [];
     }
     this.planesCuidado[controlName].push({
-      nombre: '',
       descripcion: '',
       tipo: 'categoria'
     });

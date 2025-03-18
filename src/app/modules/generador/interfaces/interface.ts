@@ -224,7 +224,7 @@ export interface IAlertas {
 }
 
 export interface IPlanCuidado {
-  nombre: string;
+  nombre?: string;
   descripcion: string;
   tipo: 'individual' | 'categoria';
 }
