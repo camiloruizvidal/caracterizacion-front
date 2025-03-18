@@ -8,7 +8,8 @@ import {
   TipoForm,
   IFormulario,
   ETipoPregunta,
-  ICategoria
+  ICategoria,
+  IAlertaConfig
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
 import { Component, OnInit } from '@angular/core';
@@ -56,6 +57,8 @@ export class InputsGeneratorComponent implements OnInit {
 
   public jsonValido = true;
   public opcionesSelect: any[] = [];
+
+  private alertaConfiguracionTemporal?: IAlertaConfig;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -271,7 +274,8 @@ export class InputsGeneratorComponent implements OnInit {
         default: this.formulario.value.default,
         value: null,
         visibility,
-        orden
+        orden,
+        alerta: this.alertaConfiguracionTemporal
       };
       if (this.formulario.value.nombrePadreDependiente.trim() !== '') {
         steperValues['nombrePadreDependiente'] =
@@ -282,6 +286,9 @@ export class InputsGeneratorComponent implements OnInit {
       this.formularioGenerado.version = this.formulario.value.version;
       this.formularioGenerado.grupalNombre = this.tipoCards[0].tituloTexto;
       this.formularioGenerado.individualNombre = this.tipoCards[1].tituloTexto;
+
+      this.alertaConfiguracionTemporal = undefined;
+
       this.guardarFormulario();
     } else {
       this.formulario.markAllAsTouched();
@@ -704,11 +711,20 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   private cargarAlertasDeCategoria(grupoId: number) {
+    console.log('Cargando alertas para grupo:', grupoId);
     const fichaTipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
     const campo: TipoDataForm = this.tipoData[fichaTipo] as TipoDataForm;
+
+    console.log('Tipo de ficha:', fichaTipo);
+    console.log('Campo:', campo);
+
     const categoria = this.formularioGenerado[campo]?.find(
       (cat: any) => cat.id === Number(grupoId)
     );
+
+    console.log('Categoría encontrada:', categoria);
+    console.log('Tiene alertas:', categoria?.alerta?.genera_alerta);
+    console.log('Clasificaciones:', categoria?.alerta?.clasificaciones);
 
     if (
       categoria?.alerta?.genera_alerta &&
@@ -719,19 +735,23 @@ export class InputsGeneratorComponent implements OnInit {
         ...categoria.alerta.clasificaciones
       ].sort((a, b) => b.rango_maximo - a.rango_maximo);
 
-      // Mapeamos asignando valores según el orden (el más alto tiene el valor más alto)
+      console.log('Clasificaciones ordenadas:', clasificacionesOrdenadas);
+
       this.alertasDisponibles = clasificacionesOrdenadas.map(
         (c: any, index: number) => ({
-          id: (clasificacionesOrdenadas.length - index).toString(), // El primer elemento (index 0) tendrá el valor más alto
+          id: (clasificacionesOrdenadas.length - index).toString(),
           nombre: c.nombre,
           color: c.color,
           rango_minimo: c.rango_minimo,
           rango_maximo: c.rango_maximo,
-          valor: clasificacionesOrdenadas.length - index // Guardamos también el valor numérico
+          valor: clasificacionesOrdenadas.length - index
         })
       );
+
+      console.log('Alertas disponibles:', this.alertasDisponibles);
     } else {
       this.alertasDisponibles = [];
+      console.log('No hay alertas disponibles');
     }
   }
 
@@ -742,5 +762,12 @@ export class InputsGeneratorComponent implements OnInit {
 
   public onAlertasConfiguracion(config: any) {
     console.log('Configuración de alertas:', config);
+
+    // Guardamos la configuración temporalmente
+    this.alertaConfiguracionTemporal = {
+      genera_alerta: true,
+      valores_alerta: config,
+      peso: 1
+    };
   }
 }

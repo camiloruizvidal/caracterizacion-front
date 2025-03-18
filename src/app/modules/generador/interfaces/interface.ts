@@ -11,6 +11,7 @@ export interface IFormulario {
   individualData: ICategoria[];
   alertaGrupal: IOptionsVisibilityExtended[];
   alertaIndividual: IOptionsVisibilityExtended[];
+  alertas?: IAlertaConfig[];
 }
 
 export interface ITarjetaRespondidas {
