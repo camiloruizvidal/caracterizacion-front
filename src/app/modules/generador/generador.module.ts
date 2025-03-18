@@ -4,7 +4,7 @@ import { InputsGeneratorComponent } from './components/inputs-generator/inputs-g
 import { AlertConfigComponent } from './components/inputs-generator/alert-config/alert-config.component';
 import { GeneradorRoutingModule } from './generador-routing.module';
 import { HelpersModule } from 'src/app/helpers/helpers.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IsVisibleComponent } from './components/is-visible/is-visible.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -19,7 +19,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NgbModule,
     GeneradorRoutingModule,
     HelpersModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   exports: [InputsGeneratorComponent, AlertConfigComponent, IsVisibleComponent]
 })

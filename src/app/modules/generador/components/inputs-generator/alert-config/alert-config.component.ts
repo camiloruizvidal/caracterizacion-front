@@ -12,7 +12,8 @@ import {
   ETipoPregunta,
   IAlertas,
   IOptionsCheck,
-  IOptionsSelect
+  IOptionsSelect,
+  IPlanCuidado
 } from '../../../interfaces/interface';
 
 @Component({
@@ -28,6 +29,7 @@ export class AlertConfigComponent implements OnInit, OnChanges {
 
   public form: FormGroup;
   protected ETipoPregunta = ETipoPregunta;
+  public planesCuidado: { [key: string]: IPlanCuidado[] } = {};
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({});
@@ -69,7 +71,45 @@ export class AlertConfigComponent implements OnInit, OnChanges {
     }
   }
 
+  agregarPlanCuidado(controlName: string) {
+    if (!this.planesCuidado[controlName]) {
+      this.planesCuidado[controlName] = [];
+    }
+    this.planesCuidado[controlName].push({
+      nombre: '',
+      descripcion: '',
+      tipo: 'categoria'
+    });
+  }
+
+  eliminarPlanCuidado(controlName: string, index: number) {
+    this.planesCuidado[controlName].splice(index, 1);
+  }
+
   onAlertaChange() {
-    this.alertasConfiguracion.emit(this.form.value);
+    const formValue = this.form.value;
+    const configuracion: {
+      [key: string]: {
+        valor: number;
+        genera_plan: boolean;
+        planes_cuidado: IPlanCuidado[];
+      };
+    } = {};
+
+    // Procesar cada control del formulario
+    Object.keys(formValue).forEach(key => {
+      if (formValue[key]) {
+        configuracion[key] = {
+          valor: formValue[key],
+          genera_plan: this.planesCuidado[key]?.length > 0,
+          planes_cuidado: this.planesCuidado[key] || []
+        };
+      }
+    });
+
+    this.alertasConfiguracion.emit({
+      genera_alerta: true,
+      valores_alerta: configuracion
+    });
   }
 }

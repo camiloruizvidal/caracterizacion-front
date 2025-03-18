@@ -568,7 +568,7 @@
               class="border p-3 mb-2 rounded"
             >
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-3">
                   <label class="form-label">Color</label>
                   <input
                     type="color"
@@ -576,7 +576,7 @@
                     formControlName="color"
                   />
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                   <label class="form-label">Nombre</label>
                   <input
                     type="text"
@@ -585,8 +585,8 @@
                     placeholder="Ej: Alto Riesgo"
                   />
                 </div>
-                <div class="col-md-6">
-                  <label class="form-label">Rango Máximo (%)</label>
+                <div class="col-md-3">
+                  <label class="form-label">M&aacute;ximo</label>
                   <input
                     type="number"
                     class="form-control"
@@ -610,8 +610,8 @@
                     {{ clasificacionesForm.at(i).get('rango_maximo')?.errors?.['overlap'] }}
                   </div>
                 </div>
-                <div class="col-md-6">
-                  <label class="form-label">Rango Mínimo (%)</label>
+                <div class="col-md-3">
+                  <label class="form-label">M&iacute;nimo</label>
                   <input
                     type="number"
                     class="form-control"
