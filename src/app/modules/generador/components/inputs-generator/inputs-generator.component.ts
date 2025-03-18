@@ -552,10 +552,6 @@ export class InputsGeneratorComponent implements OnInit {
       tipo => tipo.nombre === this.formulario.value.fichaTipo
     );
 
-    console.log('tipo encontrado:', tipo);
-    console.log('formulario:', this.formulario.value);
-    console.log('modalFormTipoFicha:', this.modalFormTipoFicha.value);
-
     if (this.modalFormTipoFicha.valid && tipo?.tipo) {
       const grupoData = {
         nombre: this.modalFormTipoFicha.value.nombre,
@@ -570,11 +566,8 @@ export class InputsGeneratorComponent implements OnInit {
           : undefined
       };
 
-      console.log('grupoData a enviar:', grupoData);
-
       this.formulariosService.crearNuevoGrupo(grupoData).subscribe({
-        next: response => {
-          console.log('Respuesta exitosa:', response);
+        next: () => {
           this.cargarGrupos();
           modalTipoFicha.close('Guardado');
         },
@@ -582,10 +575,6 @@ export class InputsGeneratorComponent implements OnInit {
           console.error('Error al guardar:', error);
         }
       });
-    } else {
-      console.log('Formulario no válido o tipo no encontrado');
-      console.log('Validez del formulario:', this.modalFormTipoFicha.valid);
-      console.log('Errores del formulario:', this.modalFormTipoFicha.errors);
     }
   }
 
@@ -679,12 +668,10 @@ export class InputsGeneratorComponent implements OnInit {
     });
   }
 
-  // Getter para acceder fácilmente al FormArray de clasificaciones
   get clasificacionesArray() {
     return this.modalFormTipoFicha.get('alerta.clasificaciones') as FormArray;
   }
 
-  // Método para agregar una clasificación
   agregarClasificacion() {
     const clasificaciones = this.modalFormTipoFicha.get(
       'alerta.clasificaciones'
@@ -705,37 +692,24 @@ export class InputsGeneratorComponent implements OnInit {
     );
   }
 
-  // Método para eliminar una clasificación
   eliminarClasificacion(index: number) {
     this.clasificacionesArray.removeAt(index);
   }
 
   private cargarAlertasDeCategoria(grupoId: number) {
-    console.log('Cargando alertas para grupo:', grupoId);
     const fichaTipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
     const campo: TipoDataForm = this.tipoData[fichaTipo] as TipoDataForm;
-
-    console.log('Tipo de ficha:', fichaTipo);
-    console.log('Campo:', campo);
-
     const categoria = this.formularioGenerado[campo]?.find(
       (cat: any) => cat.id === Number(grupoId)
     );
-
-    console.log('Categoría encontrada:', categoria);
-    console.log('Tiene alertas:', categoria?.alerta?.genera_alerta);
-    console.log('Clasificaciones:', categoria?.alerta?.clasificaciones);
 
     if (
       categoria?.alerta?.genera_alerta &&
       categoria?.alerta?.clasificaciones
     ) {
-      // Ordenamos las clasificaciones por rango_maximo de mayor a menor
       const clasificacionesOrdenadas = [
         ...categoria.alerta.clasificaciones
       ].sort((a, b) => b.rango_maximo - a.rango_maximo);
-
-      console.log('Clasificaciones ordenadas:', clasificacionesOrdenadas);
 
       this.alertasDisponibles = clasificacionesOrdenadas.map(
         (c: any, index: number) => ({
@@ -747,11 +721,8 @@ export class InputsGeneratorComponent implements OnInit {
           valor: clasificacionesOrdenadas.length - index
         })
       );
-
-      console.log('Alertas disponibles:', this.alertasDisponibles);
     } else {
       this.alertasDisponibles = [];
-      console.log('No hay alertas disponibles');
     }
   }
 
@@ -761,9 +732,6 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public onAlertasConfiguracion(config: any) {
-    console.log('Configuración de alertas:', config);
-
-    // Guardamos la configuración temporalmente
     this.alertaConfiguracionTemporal = {
       genera_alerta: true,
       valores_alerta: config,
