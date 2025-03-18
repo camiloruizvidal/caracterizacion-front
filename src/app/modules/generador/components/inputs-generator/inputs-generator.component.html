@@ -522,7 +522,24 @@
           id="nombre"
           class="form-control"
           formControlName="nombre"
+          placeholder="Ej: Alto Riesgo"
+          [class.is-invalid]="
+            modalFormTipoFicha.get('nombre')?.errors &&
+            modalFormTipoFicha.get('nombre')?.touched
+          "
         />
+        <div
+          class="invalid-feedback"
+          *ngIf="modalFormTipoFicha.get('nombre')?.errors?.['required'] && modalFormTipoFicha.get('nombre')?.touched"
+        >
+          El nombre es requerido
+        </div>
+        <div
+          class="invalid-feedback"
+          *ngIf="modalFormTipoFicha.get('nombre')?.errors?.['minlength'] && modalFormTipoFicha.get('nombre')?.touched"
+        >
+          El nombre no puede estar vacío
+        </div>
       </div>
 
       <!-- Nueva sección de alertas -->
@@ -544,7 +561,7 @@
           <div formArrayName="clasificaciones">
             <div
               *ngFor="
-                let clasificacion of clasificacionesArray.controls;
+                let clasificacion of clasificacionesForm.controls;
                 let i = index
               "
               [formGroupName]="i"
@@ -576,7 +593,22 @@
                     formControlName="rango_maximo"
                     min="0"
                     max="100"
+                    [class.is-invalid]="
+                      clasificacionesForm.at(i).get('rango_maximo')?.errors
+                    "
                   />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="clasificacionesForm.at(i).get('rango_maximo')?.errors?.['invalidRange']"
+                  >
+                    {{ clasificacionesForm.at(i).get('rango_maximo')?.errors?.['invalidRange'] }}
+                  </div>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="clasificacionesForm.at(i).get('rango_maximo')?.errors?.['overlap']"
+                  >
+                    {{ clasificacionesForm.at(i).get('rango_maximo')?.errors?.['overlap'] }}
+                  </div>
                 </div>
                 <div class="col-md-6">
                   <label class="form-label">Rango Mínimo (%)</label>
@@ -586,7 +618,16 @@
                     formControlName="rango_minimo"
                     min="0"
                     max="100"
+                    [class.is-invalid]="
+                      clasificacionesForm.at(i).get('rango_minimo')?.errors
+                    "
                   />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="clasificacionesForm.at(i).get('rango_minimo')?.errors?.['overlap']"
+                  >
+                    {{ clasificacionesForm.at(i).get('rango_minimo')?.errors?.['overlap'] }}
+                  </div>
                 </div>
                 <div class="col-12">
                   <button

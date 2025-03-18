@@ -110,7 +110,6 @@ export class InputsGeneratorComponent implements OnInit {
       })
     });
 
-    // Suscribirse a cambios en optionsJSON
     this.formulario.get('optionsJSON')?.valueChanges.subscribe(value => {
       try {
         if (value) {
@@ -136,7 +135,6 @@ export class InputsGeneratorComponent implements OnInit {
       }
     });
 
-    // Suscribirse a cambios en el grupo seleccionado
     this.formulario.get('grupo')?.valueChanges.subscribe(grupoId => {
       if (grupoId) {
         this.cargarAlertasDeCategoria(grupoId);
@@ -240,7 +238,6 @@ export class InputsGeneratorComponent implements OnInit {
       .obtenerGruposFichas(Number(this.formulario.value.version), tipo?.tipo)
       .subscribe((result: ICategoria[]) => {
         this.grupos = result;
-        // Limpiar alertas cuando se cambia el tipo de ficha
         this.alertasDisponibles = [];
       });
   }
@@ -553,6 +550,22 @@ export class InputsGeneratorComponent implements OnInit {
     );
 
     if (this.modalFormTipoFicha.valid && tipo?.tipo) {
+      const clasificaciones = this.modalFormTipoFicha.get(
+        'alerta.clasificaciones'
+      ) as FormArray;
+      this.validarRangos(clasificaciones);
+
+      if (
+        clasificaciones.controls.some(
+          control =>
+            control.get('rango_minimo')?.errors ||
+            control.get('rango_maximo')?.errors
+        )
+      ) {
+        this.toastr.error('Hay errores en los rangos de las clasificaciones');
+        return;
+      }
+
       const grupoData = {
         nombre: this.modalFormTipoFicha.value.nombre,
         tipoFicha: tipo.tipo,
@@ -668,7 +681,7 @@ export class InputsGeneratorComponent implements OnInit {
     });
   }
 
-  get clasificacionesArray() {
+  get clasificacionesForm() {
     return this.modalFormTipoFicha.get('alerta.clasificaciones') as FormArray;
   }
 
@@ -676,24 +689,86 @@ export class InputsGeneratorComponent implements OnInit {
     const clasificaciones = this.modalFormTipoFicha.get(
       'alerta.clasificaciones'
     ) as FormArray;
-    clasificaciones.push(
-      this.formBuilder.group({
-        nombre: ['', Validators.required],
-        rango_minimo: [
-          '',
-          [Validators.required, Validators.min(0), Validators.max(100)]
-        ],
-        rango_maximo: [
-          '',
-          [Validators.required, Validators.min(0), Validators.max(100)]
-        ],
-        color: ['#000000']
-      })
-    );
+
+    const nuevoGrupo = this.formBuilder.group({
+      nombre: ['', [Validators.required, Validators.minLength(1)]],
+      rango_minimo: [
+        '',
+        [Validators.required, Validators.min(0), Validators.max(100)]
+      ],
+      rango_maximo: [
+        '',
+        [Validators.required, Validators.min(0), Validators.max(100)]
+      ],
+      color: ['#000000']
+    });
+
+    nuevoGrupo.get('rango_minimo')?.valueChanges.subscribe(() => {
+      this.validarRangos(clasificaciones);
+    });
+
+    nuevoGrupo.get('rango_maximo')?.valueChanges.subscribe(() => {
+      this.validarRangos(clasificaciones);
+    });
+
+    clasificaciones.push(nuevoGrupo);
+
+    setTimeout(() => {
+      const ultimoIndex = clasificaciones.length - 1;
+      const nombreInput = document.querySelector(
+        `[formGroupName="${ultimoIndex}"] input[formControlName="nombre"]`
+      ) as HTMLInputElement;
+      if (nombreInput) {
+        nombreInput.focus();
+      }
+    });
+  }
+
+  private validarRangos(clasificaciones: FormArray) {
+    const rangos = clasificaciones.controls.map(control => ({
+      min: control.get('rango_minimo')?.value,
+      max: control.get('rango_maximo')?.value
+    }));
+
+    clasificaciones.controls.forEach((control, index) => {
+      const minControl = control.get('rango_minimo');
+      const maxControl = control.get('rango_maximo');
+
+      if (!minControl || !maxControl) return;
+
+      const min = minControl.value;
+      const max = maxControl.value;
+
+      minControl.setErrors(null);
+      maxControl.setErrors(null);
+
+      if (min >= max) {
+        maxControl.setErrors({
+          invalidRange: 'El rango máximo debe ser mayor que el mínimo'
+        });
+      }
+
+      rangos.forEach((rango, otherIndex) => {
+        if (index !== otherIndex && rango.min !== null && rango.max !== null) {
+          if (
+            (min >= rango.min && min <= rango.max) ||
+            (max >= rango.min && max <= rango.max) ||
+            (min <= rango.min && max >= rango.max)
+          ) {
+            minControl.setErrors({
+              overlap: 'Los rangos no pueden cruzarse'
+            });
+            maxControl.setErrors({
+              overlap: 'Los rangos no pueden cruzarse'
+            });
+          }
+        }
+      });
+    });
   }
 
   eliminarClasificacion(index: number) {
-    this.clasificacionesArray.removeAt(index);
+    this.clasificacionesForm.removeAt(index);
   }
 
   private cargarAlertasDeCategoria(grupoId: number) {
