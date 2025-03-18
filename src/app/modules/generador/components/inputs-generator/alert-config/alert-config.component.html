@@ -9,53 +9,57 @@
       >
         <div class="option-group">
           <label>Sí</label>
-          <select
-            formControlName="Si"
-            class="form-control"
-            (change)="onAlertaChange()"
-          >
-            <option value="">Ninguna (0)</option>
-            <option
-              *ngFor="let alerta of alertasDisponibles"
-              [value]="alerta.rango_maximo"
-              [style.background-color]="alerta.color"
+          <div class="d-flex align-items-center mb-2">
+            <select
+              formControlName="Si"
+              class="form-control"
+              (change)="onAlertaChange()"
             >
-              {{ alerta.nombre }} ({{ alerta.rango_maximo }})
-            </option>
-          </select>
-          <button
-            type="button"
-            class="btn btn-sm btn-primary ms-2"
-            (click)="agregarPlanCuidado('Si')"
-            *ngIf="form.get('Si')?.value"
-          >
-            +NPC
-          </button>
+              <option value="">Ninguna (0)</option>
+              <option
+                *ngFor="let alerta of alertasDisponibles"
+                [value]="alerta.rango_maximo"
+                [style.background-color]="alerta.color"
+              >
+                {{ alerta.nombre }} ({{ alerta.rango_maximo }})
+              </option>
+            </select>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary ms-2"
+              (click)="agregarPlanCuidado('Si')"
+              *ngIf="form.get('Si')?.value"
+            >
+              +NPC
+            </button>
+          </div>
         </div>
         <div class="option-group">
           <label>No</label>
-          <select
-            formControlName="No"
-            class="form-control"
-            (change)="onAlertaChange()"
-          >
-            <option value="">Ninguna (0)</option>
-            <option
-              *ngFor="let alerta of alertasDisponibles"
-              [value]="alerta.rango_maximo"
-              [style.background-color]="alerta.color"
+          <div class="d-flex align-items-center mb-2">
+            <select
+              formControlName="No"
+              class="form-control"
+              (change)="onAlertaChange()"
             >
-              {{ alerta.nombre }} ({{ alerta.rango_maximo }})
-            </option>
-          </select>
-          <button
-            type="button"
-            class="btn btn-sm btn-primary ms-2"
-            (click)="agregarPlanCuidado('No')"
-            *ngIf="form.get('No')?.value"
-          >
-            +NPC
-          </button>
+              <option value="">Ninguna (0)</option>
+              <option
+                *ngFor="let alerta of alertasDisponibles"
+                [value]="alerta.rango_maximo"
+                [style.background-color]="alerta.color"
+              >
+                {{ alerta.nombre }} ({{ alerta.rango_maximo }})
+              </option>
+            </select>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary ms-2"
+              (click)="agregarPlanCuidado('No')"
+              *ngIf="form.get('No')?.value"
+            >
+              +NPC
+            </button>
+          </div>
         </div>
       </ng-container>
 
@@ -66,53 +70,66 @@
           opciones?.length
         "
       >
-        <div class="option-group" *ngFor="let opcion of opciones">
-          <label>{{ opcion.value }}</label>
-          <select
-            [formControlName]="opcion.value"
-            class="form-control"
-            (change)="onAlertaChange()"
-          >
-            <option value="">Ninguna (0)</option>
-            <option
-              *ngFor="let alerta of alertasDisponibles"
-              [value]="alerta.rango_maximo"
-              [style.background-color]="alerta.color"
-            >
-              {{ alerta.nombre }} ({{ alerta.rango_maximo }})
-            </option>
-          </select>
-          <button
-            type="button"
-            class="btn btn-sm btn-primary ms-2"
-            (click)="agregarPlanCuidado(opcion.value)"
-            *ngIf="form.get(opcion.value)?.value"
-          >
-            +NPC
-          </button>
-
-          <!-- Planes de cuidado para opciones -->
-          <div
-            *ngIf="form.get(opcion.value)?.value"
-            class="planes-cuidado mt-2"
-          >
-            <div
-              *ngFor="let plan of planesCuidado[opcion.value]; let i = index"
-              class="plan-item mb-2"
-            >
-              <textarea
-                class="form-control mt-1"
-                placeholder="Descripción del plan de cuidado"
-                [ngModel]="plan.descripcion"
-                (ngModelChange)="plan.descripcion = $event; onAlertaChange()"
-              ></textarea>
-              <button
-                type="button"
-                class="btn btn-danger btn-sm mt-1"
-                (click)="eliminarPlanCuidado(opcion.value, i)"
-              >
-                ×
-              </button>
+        <div class="container-fluid" *ngFor="let opcion of opciones">
+          <div class="row">
+            <div class="col-2 mt-2">
+              <label>{{ opcion.value }}</label>
+            </div>
+            <div class="col-10">
+              <div class="d-flex align-items-center mb-2">
+                <select
+                  [formControlName]="opcion.value"
+                  class="form-control"
+                  (change)="onAlertaChange()"
+                >
+                  <option value="">Ninguna (0)</option>
+                  <option
+                    *ngFor="let alerta of alertasDisponibles"
+                    [value]="alerta.rango_maximo"
+                    [style.background-color]="alerta.color"
+                  >
+                    {{ alerta.nombre }} ({{ alerta.rango_maximo }})
+                  </option>
+                </select>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary ms-2"
+                  (click)="agregarPlanCuidado(opcion.value)"
+                  *ngIf="form.get(opcion.value)?.value"
+                >
+                  +NPC
+                </button>
+              </div>
+            </div>
+            <div class="col-12">
+              <!-- Planes de cuidado para opciones -->
+              <div *ngIf="form.get(opcion.value)?.value" class="planes-cuidado">
+                <div
+                  *ngFor="
+                    let plan of planesCuidado[opcion.value];
+                    let i = index
+                  "
+                  class="plan-item mb-2"
+                >
+                  <div class="d-flex">
+                    <textarea
+                      class="form-control"
+                      placeholder="Descripción del plan de cuidado"
+                      [ngModel]="plan.descripcion"
+                      (ngModelChange)="
+                        plan.descripcion = $event; onAlertaChange()
+                      "
+                    ></textarea>
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-sm ms-2"
+                      (click)="eliminarPlanCuidado(opcion.value, i)"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -120,46 +137,50 @@
     </div>
 
     <!-- Planes de cuidado para Sí -->
-    <div *ngIf="form.get('Si')?.value" class="planes-cuidado mt-2">
+    <div *ngIf="form.get('Si')?.value" class="planes-cuidado">
       <div
         *ngFor="let plan of planesCuidado['Si']; let i = index"
         class="plan-item mb-2"
       >
-        <textarea
-          class="form-control mt-1"
-          placeholder="Descripción del plan de cuidado"
-          [ngModel]="plan.descripcion"
-          (ngModelChange)="plan.descripcion = $event; onAlertaChange()"
-        ></textarea>
-        <button
-          type="button"
-          class="btn btn-danger btn-sm mt-1"
-          (click)="eliminarPlanCuidado('Si', i)"
-        >
-          ×
-        </button>
+        <div class="d-flex">
+          <textarea
+            class="form-control"
+            placeholder="Descripción del plan de cuidado"
+            [ngModel]="plan.descripcion"
+            (ngModelChange)="plan.descripcion = $event; onAlertaChange()"
+          ></textarea>
+          <button
+            type="button"
+            class="btn btn-danger btn-sm ms-2"
+            (click)="eliminarPlanCuidado('Si', i)"
+          >
+            ×
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Planes de cuidado para No -->
-    <div *ngIf="form.get('No')?.value" class="planes-cuidado mt-2">
+    <div *ngIf="form.get('No')?.value" class="planes-cuidado">
       <div
         *ngFor="let plan of planesCuidado['No']; let i = index"
         class="plan-item mb-2"
       >
-        <textarea
-          class="form-control mt-1"
-          placeholder="Descripción del plan de cuidado"
-          [ngModel]="plan.descripcion"
-          (ngModelChange)="plan.descripcion = $event; onAlertaChange()"
-        ></textarea>
-        <button
-          type="button"
-          class="btn btn-danger btn-sm mt-1"
-          (click)="eliminarPlanCuidado('No', i)"
-        >
-          ×
-        </button>
+        <div class="d-flex">
+          <textarea
+            class="form-control"
+            placeholder="Descripción del plan de cuidado"
+            [ngModel]="plan.descripcion"
+            (ngModelChange)="plan.descripcion = $event; onAlertaChange()"
+          ></textarea>
+          <button
+            type="button"
+            class="btn btn-danger btn-sm ms-2"
+            (click)="eliminarPlanCuidado('No', i)"
+          >
+            ×
+          </button>
+        </div>
       </div>
     </div>
   </form>
