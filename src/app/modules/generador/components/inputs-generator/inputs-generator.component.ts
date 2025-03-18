@@ -663,24 +663,6 @@ export class InputsGeneratorComponent implements OnInit {
     return values.filter(value => this.typesOptions.includes(value.type)) || [];
   }
 
-  public guardarAlertas(
-    reglasCondicionales: IOptionsVisibilityExtended[]
-  ): void {
-    return;
-    const grupal = reglasCondicionales.filter(
-      reglas => reglas.tipoAlerta === 'grupal'
-    );
-    const individual = reglasCondicionales.filter(
-      reglas => reglas.tipoAlerta === 'individual'
-    );
-
-    const tipo = individual.length > 0 ? 'alertaGrupal' : 'alertaIndividual';
-    this.formularioGenerado[tipo] = reglasCondicionales;
-    reglasCondicionales.forEach(reglas => {
-      this.formularioGenerado[tipo][reglas.indice] = reglas;
-    });
-  }
-
   get clasificacionesForm() {
     return this.modalFormTipoFicha.get('alerta.clasificaciones') as FormArray;
   }
