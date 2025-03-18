@@ -682,7 +682,8 @@ export class InputsGeneratorComponent implements OnInit {
         '',
         [Validators.required, Validators.min(0), Validators.max(100)]
       ],
-      color: ['#000000']
+      color: ['#000000'],
+      planes_cuidado: this.formBuilder.array([])
     });
 
     nuevoGrupo.get('rango_minimo')?.valueChanges.subscribe(() => {
@@ -794,5 +795,47 @@ export class InputsGeneratorComponent implements OnInit {
       valores_alerta: config,
       peso: 1
     };
+  }
+
+  private initClasificacionForm(): FormGroup {
+    return this.formBuilder.group({
+      color: ['#000000'],
+      nombre: [''],
+      rango_maximo: [0],
+      rango_minimo: [0],
+      planes_cuidado: this.formBuilder.array([])
+    });
+  }
+
+  agregarPlanCuidadoAlerta(clasificacionIndex: number) {
+    const clasificacion = this.clasificacionesForm.at(clasificacionIndex);
+    if (!clasificacion) {
+      console.error('No se encontró la clasificación');
+      return;
+    }
+
+    const planesCuidado = clasificacion.get('planes_cuidado') as FormArray;
+    if (!planesCuidado) {
+      console.error('No se encontró el FormArray de planes de cuidado');
+      return;
+    }
+
+    planesCuidado.push(
+      this.formBuilder.group({
+        descripcion: [''],
+        tipo: ['categoria']
+      })
+    );
+  }
+
+  eliminarPlanCuidadoAlerta(clasificacionIndex: number, planIndex: number) {
+    const clasificacion = this.clasificacionesForm.at(clasificacionIndex);
+    const planesCuidado = clasificacion.get('planes_cuidado') as FormArray;
+    planesCuidado.removeAt(planIndex);
+  }
+
+  getPlanesCuidado(clasificacionIndex: number): FormArray {
+    const clasificacion = this.clasificacionesForm.at(clasificacionIndex);
+    return clasificacion.get('planes_cuidado') as FormArray;
   }
 }
