@@ -138,6 +138,7 @@
                 "
                 rows="10"
                 (click)="selectAllText($event)"
+                (input)="onOptionsJSONChange()"
               ></textarea>
               <div
                 class="invalid-feedback"
@@ -196,7 +197,20 @@
                 "value": "RC", "option": "Registro Civil" &rbrace; &#93;
               </div>
               <hr />
-              <div class="col-md-12" *ngIf="isShowJson"></div>
+              <div class="col-md-12" *ngIf="isShowJson">
+                <button
+                  *ngIf="esFormatoExcel"
+                  type="button"
+                  class="btn btn-primary mt-2"
+                  (click)="transformarExcelAJson()"
+                >
+                  Transformar a JSON
+                </button>
+                <small class="form-text text-muted" *ngIf="esFormatoExcel">
+                  Se ha detectado formato Excel. Haga clic en "Transformar a
+                  JSON" para convertir el contenido.
+                </small>
+              </div>
               <hr />
             </ng-container>
 

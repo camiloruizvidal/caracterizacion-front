@@ -64,6 +64,9 @@ export class InputsGeneratorComponent implements OnInit {
 
   public indexEditar: number = -1;
 
+  public esFormatoExcel: boolean = false;
+  public contenidoExcel: string = '';
+
   constructor(
     private formBuilder: FormBuilder,
     private inputsService: InputsService,
@@ -1022,5 +1025,61 @@ export class InputsGeneratorComponent implements OnInit {
 
   getPlanesCuidadoList(value: any, opcionValue: string): string[] {
     return value?.alerta?.valores_alerta?.[opcionValue]?.planes_cuidado || [];
+  }
+
+  detectarFormatoExcel(contenido: string): boolean {
+    // Dividir el contenido en líneas
+    const lineas = contenido.trim().split('\n');
+    if (lineas.length < 2) return false;
+
+    // Verificar si cada línea tiene exactamente dos columnas separadas por tab o múltiples espacios
+    return lineas.every(linea => {
+      const columnas = linea.trim().split(/\t|\s{2,}/);
+      return columnas.length === 2;
+    });
+  }
+
+  transformarExcelAJson() {
+    try {
+      const lineas = this.contenidoExcel.trim().split('\n');
+      const opciones = lineas.map(linea => {
+        const [value, option] = linea.trim().split(/\t|\s{2,}/);
+        return { value: value.trim(), option: option.trim() };
+      });
+
+      const jsonString = JSON.stringify(opciones, null, 2);
+      this.formulario.patchValue({ optionsJSON: jsonString });
+      this.esFormatoExcel = false;
+      this.contenidoExcel = '';
+
+      // Actualizar las opciones
+      this.onOptionsJSONChange();
+    } catch (error) {
+      console.error('Error al transformar Excel a JSON:', error);
+    }
+  }
+
+  onOptionsJSONChange() {
+    try {
+      const contenido = this.formulario.get('optionsJSON')?.value;
+      if (!contenido) {
+        this.esFormatoExcel = false;
+        return;
+      }
+
+      try {
+        // Intentar parsear como JSON
+        JSON.parse(contenido);
+        this.esFormatoExcel = false;
+      } catch {
+        // Si no es JSON válido, verificar si es formato Excel
+        this.esFormatoExcel = this.detectarFormatoExcel(contenido);
+        if (this.esFormatoExcel) {
+          this.contenidoExcel = contenido;
+        }
+      }
+    } catch (error) {
+      console.error('Error al procesar el contenido:', error);
+    }
   }
 }
