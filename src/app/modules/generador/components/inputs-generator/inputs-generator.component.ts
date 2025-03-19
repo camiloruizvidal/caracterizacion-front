@@ -117,6 +117,12 @@ export class InputsGeneratorComponent implements OnInit {
           if (Array.isArray(jsonData)) {
             this.jsonValido = true;
             this.opcionesSelect = jsonData;
+            console.log('Opciones procesadas:', {
+              tipoPregunta: this.formulario.get('tipo')?.value,
+              jsonValido: this.jsonValido,
+              opcionesSelect: this.opcionesSelect,
+              tiposConAlertas: this.tiposConAlertas
+            });
             this.formulario.patchValue(
               { options: jsonData },
               { emitEvent: false }
@@ -219,14 +225,56 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   private cargarFormulario(id: number) {
-    this.inputsService.obtenerFormularioJson(id).subscribe(response => {
-      if (!this.deepEqual(this.formularioGenerado, response.data)) {
-        this.formularioGenerado = response.data;
+    if (!id) {
+      console.warn('ID no válido para cargar formulario');
+      this.formularioGenerado = {
+        isFinish: false,
+        grupalNombre: '',
+        individualNombre: '',
+        grupalData: [],
+        individualData: [],
+        alertaGrupal: [],
+        alertaIndividual: [],
+        version: '0'
+      };
+      return;
+    }
+
+    this.inputsService.obtenerFormularioJson(id).subscribe({
+      next: response => {
+        if (!this.deepEqual(this.formularioGenerado, response.data)) {
+          this.formularioGenerado = response.data || {
+            isFinish: false,
+            grupalNombre: '',
+            individualNombre: '',
+            grupalData: [],
+            individualData: [],
+            alertaGrupal: [],
+            alertaIndividual: [],
+            version: '0'
+          };
+          console.log('Formulario cargado:', this.formularioGenerado);
+        }
+        const navbarItems = document.querySelectorAll(
+          '.navbar-items'
+        ) as NodeListOf<HTMLElement>;
+        if (navbarItems && navbarItems.length > 0) {
+          navbarItems[0].click();
+        }
+      },
+      error: error => {
+        console.error('Error al cargar formulario:', error);
+        this.formularioGenerado = {
+          isFinish: false,
+          grupalNombre: '',
+          individualNombre: '',
+          grupalData: [],
+          individualData: [],
+          alertaGrupal: [],
+          alertaIndividual: [],
+          version: '0'
+        };
       }
-      const navbarItems = document.querySelectorAll(
-        '.navbar-items'
-      ) as NodeListOf<HTMLElement>;
-      navbarItems[0].click();
     });
   }
 
@@ -642,15 +690,10 @@ export class InputsGeneratorComponent implements OnInit {
     return this.typesOptions.includes(this.formulario.value.tipo);
   }
 
-  public get tipoData(): {
-    grupalNombre: TipoDataForm;
-    individualNombre: TipoDataForm;
-  } {
-    return {
-      grupalNombre: 'grupalData',
-      individualNombre: 'individualData'
-    };
-  }
+  public tipoData: { [key in TipoForm]: TipoDataForm } = {
+    grupalNombre: 'grupalData',
+    individualNombre: 'individualData'
+  };
 
   public get preguntasFiltradasPorForm(): IPregunta[] {
     const fichaTipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
@@ -755,38 +798,87 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   private cargarAlertasDeCategoria(grupoId: number) {
-    const fichaTipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
-    const campo: TipoDataForm = this.tipoData[fichaTipo] as TipoDataForm;
-    const categoria = this.formularioGenerado[campo]?.find(
-      (cat: any) => cat.id === Number(grupoId)
-    );
+    try {
+      if (!grupoId) {
+        console.warn('ID de grupo no válido');
+        this.alertasDisponibles = [];
+        return;
+      }
 
-    if (
-      categoria?.alerta?.genera_alerta &&
-      categoria?.alerta?.clasificaciones
-    ) {
-      const clasificacionesOrdenadas = [
-        ...categoria.alerta.clasificaciones
-      ].sort((a, b) => b.rango_maximo - a.rango_maximo);
+      const fichaTipo: TipoForm = this.formulario.get('fichaTipo')?.value;
+      if (!fichaTipo) {
+        console.warn('No hay tipo de ficha seleccionado');
+        this.alertasDisponibles = [];
+        return;
+      }
 
-      this.alertasDisponibles = clasificacionesOrdenadas.map(
-        (c: any, index: number) => ({
-          id: (clasificacionesOrdenadas.length - index).toString(),
-          nombre: c.nombre,
-          color: c.color,
-          rango_minimo: c.rango_minimo,
-          rango_maximo: c.rango_maximo,
-          valor: clasificacionesOrdenadas.length - index
-        })
-      );
-    } else {
+      const campo: TipoDataForm = this.tipoData[fichaTipo];
+      if (!campo || !this.formularioGenerado) {
+        console.warn('No hay formulario generado o tipo de ficha no válido');
+        this.alertasDisponibles = [];
+        return;
+      }
+
+      const datos = this.formularioGenerado[campo];
+      if (!Array.isArray(datos)) {
+        console.warn('Los datos no son un array:', datos);
+        this.alertasDisponibles = [];
+        return;
+      }
+
+      const categoria = datos.find((cat: any) => cat.id === Number(grupoId));
+      if (!categoria) {
+        console.warn('No se encontró la categoría:', grupoId);
+        this.alertasDisponibles = [];
+        return;
+      }
+
+      if (
+        categoria?.alerta?.genera_alerta &&
+        Array.isArray(categoria?.alerta?.clasificaciones)
+      ) {
+        const clasificacionesOrdenadas = [
+          ...categoria.alerta.clasificaciones
+        ].sort((a, b) => b.rango_maximo - a.rango_maximo);
+
+        this.alertasDisponibles = clasificacionesOrdenadas.map(
+          (c: any, index: number) => ({
+            id: (clasificacionesOrdenadas.length - index).toString(),
+            nombre: c.nombre,
+            color: c.color,
+            rango_minimo: c.rango_minimo,
+            rango_maximo: c.rango_maximo,
+            valor: clasificacionesOrdenadas.length - index
+          })
+        );
+        console.log('Alertas disponibles cargadas:', this.alertasDisponibles);
+      } else {
+        console.warn('La categoría no tiene alertas configuradas');
+        this.alertasDisponibles = [];
+      }
+    } catch (error) {
+      console.error('Error al cargar alertas:', error);
       this.alertasDisponibles = [];
     }
   }
 
   public mostrarConfiguracionAlertas(): boolean {
     const tipoActual = this.formulario.get('tipo')?.value;
-    return this.tiposConAlertas.includes(tipoActual);
+    const resultado = this.tiposConAlertas.includes(tipoActual);
+    const tieneOpciones = this.opcionesSelect.length > 0;
+    const tieneAlertas = this.alertasDisponibles.length > 0;
+
+    console.log('Condiciones para mostrar alertas:', {
+      tipoActual,
+      tiposConAlertas: this.tiposConAlertas,
+      resultado,
+      jsonValido: this.jsonValido,
+      opcionesSelectLength: this.opcionesSelect.length,
+      alertasDisponibles: this.alertasDisponibles.length,
+      mostrarAlertas: resultado && this.jsonValido && tieneOpciones
+    });
+
+    return resultado && this.jsonValido && tieneOpciones;
   }
 
   public onAlertasConfiguracion(config: any) {

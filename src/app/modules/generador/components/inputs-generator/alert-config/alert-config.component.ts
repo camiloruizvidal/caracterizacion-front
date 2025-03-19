@@ -75,14 +75,20 @@ export class AlertConfigComponent implements OnInit, OnChanges {
     if (!this.planesCuidado[controlName]) {
       this.planesCuidado[controlName] = [];
     }
+    const index = this.planesCuidado[controlName].length;
     this.planesCuidado[controlName].push({
       descripcion: '',
       tipo: 'categoria'
     });
+    this.form.addControl(
+      `planesCuidado_${controlName}_${index}`,
+      this.fb.control('')
+    );
   }
 
   eliminarPlanCuidado(controlName: string, index: number) {
     this.planesCuidado[controlName].splice(index, 1);
+    this.form.removeControl(`planesCuidado_${controlName}_${index}`);
   }
 
   onAlertaChange() {
@@ -97,7 +103,13 @@ export class AlertConfigComponent implements OnInit, OnChanges {
 
     // Procesar cada control del formulario
     Object.keys(formValue).forEach(key => {
-      if (formValue[key]) {
+      if (key.startsWith('planesCuidado_')) {
+        const [_, controlName, index] = key.split('_');
+        if (this.planesCuidado[controlName]) {
+          this.planesCuidado[controlName][parseInt(index)].descripcion =
+            formValue[key];
+        }
+      } else if (formValue[key]) {
         configuracion[key] = {
           valor: formValue[key],
           genera_plan: this.planesCuidado[key]?.length > 0,

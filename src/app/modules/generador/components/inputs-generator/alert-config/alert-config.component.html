@@ -115,9 +115,8 @@
                     <textarea
                       class="form-control"
                       placeholder="Descripción del plan de cuidado"
-                      [ngModel]="plan.descripcion"
-                      (ngModelChange)="
-                        plan.descripcion = $event; onAlertaChange()
+                      [formControlName]="
+                        'planesCuidado_' + opcion.value + '_' + i
                       "
                     ></textarea>
                     <button
@@ -146,8 +145,7 @@
           <textarea
             class="form-control"
             placeholder="Descripción del plan de cuidado"
-            [ngModel]="plan.descripcion"
-            (ngModelChange)="plan.descripcion = $event; onAlertaChange()"
+            [formControlName]="'planesCuidado_Si_' + i"
           ></textarea>
           <button
             type="button"
@@ -170,8 +168,7 @@
           <textarea
             class="form-control"
             placeholder="Descripción del plan de cuidado"
-            [ngModel]="plan.descripcion"
-            (ngModelChange)="plan.descripcion = $event; onAlertaChange()"
+            [formControlName]="'planesCuidado_No_' + i"
           ></textarea>
           <button
             type="button"
