@@ -86,6 +86,19 @@ export class AlertConfigComponent implements OnInit, OnChanges {
     );
   }
 
+  onPlanCuidadoChange(controlName: string, index: number) {
+    const formControl = this.form.get(`planesCuidado_${controlName}_${index}`);
+    if (
+      formControl &&
+      this.planesCuidado[controlName] &&
+      this.planesCuidado[controlName][index]
+    ) {
+      this.planesCuidado[controlName][index].descripcion =
+        formControl.value?.trim() || '';
+      this.onAlertaChange();
+    }
+  }
+
   eliminarPlanCuidado(controlName: string, index: number) {
     this.planesCuidado[controlName].splice(index, 1);
     this.form.removeControl(`planesCuidado_${controlName}_${index}`);
@@ -96,26 +109,47 @@ export class AlertConfigComponent implements OnInit, OnChanges {
     const configuracion: {
       [key: string]: {
         valor: number;
-        genera_plan: boolean;
-        planes_cuidado: IPlanCuidado[];
+        planes_cuidado?: string[];
       };
     } = {};
 
-    // Procesar cada control del formulario
+    // Primero, actualizar los planes de cuidado con los valores del formulario
     Object.keys(formValue).forEach(key => {
       if (key.startsWith('planesCuidado_')) {
         const [_, controlName, index] = key.split('_');
-        if (this.planesCuidado[controlName]) {
+        if (
+          this.planesCuidado[controlName] &&
+          this.planesCuidado[controlName][parseInt(index)]
+        ) {
           this.planesCuidado[controlName][parseInt(index)].descripcion =
             formValue[key];
         }
-      } else if (formValue[key]) {
-        configuracion[key] = {
-          valor: formValue[key],
-          genera_plan: this.planesCuidado[key]?.length > 0,
-          planes_cuidado: this.planesCuidado[key] || []
-        };
       }
+    });
+
+    // Luego, construir la configuración
+    Object.keys(formValue).forEach(key => {
+      if (!key.startsWith('planesCuidado_') && formValue[key]) {
+        // Configuración base con el valor de la alerta
+        configuracion[key] = {
+          valor: parseInt(formValue[key])
+        };
+
+        // Solo agregar planes de cuidado si existen y no están vacíos
+        const planesCuidadoActuales = this.planesCuidado[key] || [];
+        const planesCuidadoFiltrados = planesCuidadoActuales
+          .filter(plan => plan.descripcion.trim() !== '')
+          .map(plan => plan.descripcion.trim());
+
+        if (planesCuidadoFiltrados.length > 0) {
+          configuracion[key].planes_cuidado = planesCuidadoFiltrados;
+        }
+      }
+    });
+
+    console.log('Configuración a emitir:', {
+      genera_alerta: true,
+      valores_alerta: configuracion
     });
 
     this.alertasConfiguracion.emit({

@@ -9,7 +9,8 @@ import {
   IFormulario,
   ETipoPregunta,
   ICategoria,
-  IAlertaConfig
+  IAlertaConfig,
+  IPlanCuidado
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
 import { Component, OnInit } from '@angular/core';
@@ -864,11 +865,52 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public onAlertasConfiguracion(config: any) {
+    console.log('Configuración de alertas recibida:', config);
+
+    if (!config || !config.valores_alerta) {
+      console.warn('Configuración de alertas inválida');
+      return;
+    }
+
+    interface IValorAlerta {
+      valor: number;
+      genera_plan: boolean;
+      planes_cuidado?: IPlanCuidado[];
+    }
+
+    // Asegurarse de que la estructura sea correcta y preservar los planes de cuidado
+    const valores_alerta = Object.keys(config.valores_alerta).reduce<{
+      [key: string]: IValorAlerta;
+    }>((acc, key) => {
+      const valor = config.valores_alerta[key];
+
+      // Solo incluir planes_cuidado si realmente existen y tienen contenido
+      const planesCuidadoFiltrados = Array.isArray(valor.planes_cuidado)
+        ? valor.planes_cuidado.filter(
+            (plan: IPlanCuidado) => plan?.descripcion?.trim() !== ''
+          )
+        : [];
+
+      acc[key] = {
+        valor: valor.valor,
+        genera_plan: planesCuidadoFiltrados.length > 0,
+        ...(planesCuidadoFiltrados.length > 0 && {
+          planes_cuidado: planesCuidadoFiltrados
+        })
+      };
+      return acc;
+    }, {});
+
     this.alertaConfiguracionTemporal = {
       genera_alerta: true,
-      valores_alerta: config,
+      valores_alerta,
       peso: 1
     };
+
+    console.log(
+      'Configuración temporal guardada:',
+      this.alertaConfiguracionTemporal
+    );
   }
 
   private initClasificacionForm(): FormGroup {

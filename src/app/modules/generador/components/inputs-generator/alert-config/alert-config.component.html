@@ -109,22 +109,25 @@
                     let plan of planesCuidado[opcion.value];
                     let i = index
                   "
-                  class="plan-item mb-2"
+                  class="mt-2"
                 >
-                  <div class="d-flex">
+                  <div class="d-flex align-items-start gap-2">
                     <textarea
-                      class="form-control"
-                      placeholder="Descripción del plan de cuidado"
                       [formControlName]="
                         'planesCuidado_' + opcion.value + '_' + i
                       "
+                      class="form-control"
+                      rows="2"
+                      (blur)="onPlanCuidadoChange(opcion.value, i)"
+                      (input)="onPlanCuidadoChange(opcion.value, i)"
+                      placeholder="Descripción del plan de cuidado"
                     ></textarea>
                     <button
                       type="button"
-                      class="btn btn-danger btn-sm ms-2"
+                      class="btn btn-danger btn-sm"
                       (click)="eliminarPlanCuidado(opcion.value, i)"
                     >
-                      ×
+                      <i class="fas fa-trash"></i>
                     </button>
                   </div>
                 </div>
