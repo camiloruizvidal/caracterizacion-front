@@ -9,8 +9,8 @@ import {
   IFormulario,
   ETipoPregunta,
   ICategoria,
-  IAlertaConfig,
-  IPlanCuidado
+  IAlertaConfig
+  //IPlanCuidado
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
 import { Component, OnInit } from '@angular/core';
@@ -872,34 +872,23 @@ export class InputsGeneratorComponent implements OnInit {
       return;
     }
 
-    interface IValorAlerta {
-      valor: number;
-      genera_plan: boolean;
-      planes_cuidado?: IPlanCuidado[];
-    }
+    // Asegurarse de que la estructura sea correcta
+    const valores_alerta = Object.keys(config.valores_alerta).reduce(
+      (acc: any, key) => {
+        const valor = config.valores_alerta[key];
+        acc[key] = {
+          valor: valor.valor
+        };
 
-    // Asegurarse de que la estructura sea correcta y preservar los planes de cuidado
-    const valores_alerta = Object.keys(config.valores_alerta).reduce<{
-      [key: string]: IValorAlerta;
-    }>((acc, key) => {
-      const valor = config.valores_alerta[key];
+        // Solo agregar planes de cuidado si existen y no están vacíos
+        if (valor.planes_cuidado?.length > 0) {
+          acc[key].planes_cuidado = valor.planes_cuidado;
+        }
 
-      // Solo incluir planes_cuidado si realmente existen y tienen contenido
-      const planesCuidadoFiltrados = Array.isArray(valor.planes_cuidado)
-        ? valor.planes_cuidado.filter(
-            (plan: IPlanCuidado) => plan?.descripcion?.trim() !== ''
-          )
-        : [];
-
-      acc[key] = {
-        valor: valor.valor,
-        genera_plan: planesCuidadoFiltrados.length > 0,
-        ...(planesCuidadoFiltrados.length > 0 && {
-          planes_cuidado: planesCuidadoFiltrados
-        })
-      };
-      return acc;
-    }, {});
+        return acc;
+      },
+      {}
+    );
 
     this.alertaConfiguracionTemporal = {
       genera_alerta: true,
@@ -936,12 +925,7 @@ export class InputsGeneratorComponent implements OnInit {
       return;
     }
 
-    planesCuidado.push(
-      this.formBuilder.group({
-        descripcion: [''],
-        tipo: ['categoria']
-      })
-    );
+    planesCuidado.push('');
   }
 
   eliminarPlanCuidadoAlerta(clasificacionIndex: number, planIndex: number) {

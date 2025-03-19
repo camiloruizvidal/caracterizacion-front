@@ -12,8 +12,8 @@ import {
   ETipoPregunta,
   IAlertas,
   IOptionsCheck,
-  IOptionsSelect,
-  IPlanCuidado
+  IOptionsSelect
+  //IPlanCuidado
 } from '../../../interfaces/interface';
 
 @Component({
@@ -29,7 +29,7 @@ export class AlertConfigComponent implements OnInit, OnChanges {
 
   public form: FormGroup;
   protected ETipoPregunta = ETipoPregunta;
-  public planesCuidado: { [key: string]: IPlanCuidado[] } = {};
+  public planesCuidado: { [key: string]: string[] } = {};
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({});
@@ -76,14 +76,13 @@ export class AlertConfigComponent implements OnInit, OnChanges {
       this.planesCuidado[controlName] = [];
     }
     const index = this.planesCuidado[controlName].length;
-    this.planesCuidado[controlName].push({
-      descripcion: '',
-      tipo: 'categoria'
-    });
+    this.planesCuidado[controlName].push('');
     this.form.addControl(
       `planesCuidado_${controlName}_${index}`,
       this.fb.control('')
     );
+    // Emitir cambios cuando se agrega un nuevo plan
+    this.onAlertaChange();
   }
 
   onPlanCuidadoChange(controlName: string, index: number) {
@@ -91,10 +90,9 @@ export class AlertConfigComponent implements OnInit, OnChanges {
     if (
       formControl &&
       this.planesCuidado[controlName] &&
-      this.planesCuidado[controlName][index]
+      index < this.planesCuidado[controlName].length
     ) {
-      this.planesCuidado[controlName][index].descripcion =
-        formControl.value?.trim() || '';
+      this.planesCuidado[controlName][index] = formControl.value?.trim() || '';
       this.onAlertaChange();
     }
   }
@@ -102,6 +100,7 @@ export class AlertConfigComponent implements OnInit, OnChanges {
   eliminarPlanCuidado(controlName: string, index: number) {
     this.planesCuidado[controlName].splice(index, 1);
     this.form.removeControl(`planesCuidado_${controlName}_${index}`);
+    this.onAlertaChange();
   }
 
   onAlertaChange() {
@@ -116,13 +115,18 @@ export class AlertConfigComponent implements OnInit, OnChanges {
     // Primero, actualizar los planes de cuidado con los valores del formulario
     Object.keys(formValue).forEach(key => {
       if (key.startsWith('planesCuidado_')) {
-        const [_, controlName, index] = key.split('_');
+        const [_, controlName, indexStr] = key.split('_');
+        const index = parseInt(indexStr);
         if (
           this.planesCuidado[controlName] &&
-          this.planesCuidado[controlName][parseInt(index)]
+          !isNaN(index) &&
+          index < this.planesCuidado[controlName].length
         ) {
-          this.planesCuidado[controlName][parseInt(index)].descripcion =
-            formValue[key];
+          // Guardar solo la descripción como string
+          const descripcion = formValue[key]?.trim() || '';
+          if (descripcion) {
+            this.planesCuidado[controlName][index] = descripcion;
+          }
         }
       }
     });
@@ -136,13 +140,14 @@ export class AlertConfigComponent implements OnInit, OnChanges {
         };
 
         // Solo agregar planes de cuidado si existen y no están vacíos
-        const planesCuidadoActuales = this.planesCuidado[key] || [];
-        const planesCuidadoFiltrados = planesCuidadoActuales
-          .filter(plan => plan.descripcion.trim() !== '')
-          .map(plan => plan.descripcion.trim());
+        if (this.planesCuidado[key]) {
+          const planesCuidadoFiltrados = this.planesCuidado[key].filter(
+            plan => plan.trim() !== ''
+          );
 
-        if (planesCuidadoFiltrados.length > 0) {
-          configuracion[key].planes_cuidado = planesCuidadoFiltrados;
+          if (planesCuidadoFiltrados.length > 0) {
+            configuracion[key].planes_cuidado = planesCuidadoFiltrados;
+          }
         }
       }
     });
