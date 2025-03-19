@@ -117,12 +117,6 @@ export class InputsGeneratorComponent implements OnInit {
           if (Array.isArray(jsonData)) {
             this.jsonValido = true;
             this.opcionesSelect = jsonData;
-            console.log('Opciones procesadas:', {
-              tipoPregunta: this.formulario.get('tipo')?.value,
-              jsonValido: this.jsonValido,
-              opcionesSelect: this.opcionesSelect,
-              tiposConAlertas: this.tiposConAlertas
-            });
             this.formulario.patchValue(
               { options: jsonData },
               { emitEvent: false }
@@ -866,18 +860,6 @@ export class InputsGeneratorComponent implements OnInit {
     const tipoActual = this.formulario.get('tipo')?.value;
     const resultado = this.tiposConAlertas.includes(tipoActual);
     const tieneOpciones = this.opcionesSelect.length > 0;
-    const tieneAlertas = this.alertasDisponibles.length > 0;
-
-    console.log('Condiciones para mostrar alertas:', {
-      tipoActual,
-      tiposConAlertas: this.tiposConAlertas,
-      resultado,
-      jsonValido: this.jsonValido,
-      opcionesSelectLength: this.opcionesSelect.length,
-      alertasDisponibles: this.alertasDisponibles.length,
-      mostrarAlertas: resultado && this.jsonValido && tieneOpciones
-    });
-
     return resultado && this.jsonValido && tieneOpciones;
   }
 
