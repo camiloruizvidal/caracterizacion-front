@@ -100,15 +100,6 @@
               </select>
             </div>
 
-            <!-- Configuración de Alertas -->
-            <div class="col-md-12" *ngIf="mostrarConfiguracionAlertas()">
-              <app-alert-config
-                [tipoPregunta]="formulario.get('tipo')?.value"
-                [alertasDisponibles]="alertasDisponibles"
-                (alertasConfiguracion)="onAlertasConfiguracion($event)"
-              ></app-alert-config>
-            </div>
-
             <div
               class="col-md-12"
               *ngIf="formulario.value.tipo === 'selectDependiente'"
@@ -165,6 +156,7 @@
                 [alertasDisponibles]="alertasDisponibles"
                 [opciones]="opcionesSelect"
                 (alertasConfiguracion)="onAlertasConfiguracion($event)"
+                [configuracion]="alertaConfiguracionTemporal"
               ></app-alert-config>
 
               <div class="m-1" style="background-color: #f1f1f1">

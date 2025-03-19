@@ -9,7 +9,8 @@ import {
   IFormulario,
   ETipoPregunta,
   ICategoria,
-  IAlertaConfig
+  IAlertaConfig,
+  IAlertas
   //IPlanCuidado
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
@@ -48,7 +49,7 @@ export class InputsGeneratorComponent implements OnInit {
   public modalForm!: FormGroup;
   public modalFormTipoFicha!: FormGroup;
 
-  public alertasDisponibles: any[] = [];
+  public alertasDisponibles: IAlertas[] = [];
   public tiposConAlertas = [
     ETipoPregunta.Check,
     ETipoPregunta.CheckSiNo,
@@ -59,7 +60,9 @@ export class InputsGeneratorComponent implements OnInit {
   public jsonValido = true;
   public opcionesSelect: any[] = [];
 
-  private alertaConfiguracionTemporal?: IAlertaConfig;
+  public alertaConfiguracionTemporal: any;
+
+  public indexEditar: number = -1;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -441,26 +444,111 @@ export class InputsGeneratorComponent implements OnInit {
     return values.filter(value => !valuesDelete.includes(value));
   }
 
-  public editar(tipo: TipoForm, index: number, indexValue: number, value: any) {
-    // this.formulario.patchValue({
-    //   fichaTipo: tipo,
-    //   tipo: value.type,
-    //   options: value.options,
-    //   label: value.label,
-    //   grupo: this.formularioGenerado[tipo][index].id,
-    //   default: this.formulario.value.default
-    // });
-    // try {
-    //   this.formulario.patchValue({
-    //     optionsJSON: JSON.stringify(value.options, null, 2)
-    //   });
-    // } catch (error) {
-    //   this.formulario.patchValue({
-    //     optionsJSON: ''
-    //   });
-    // }
-    // this.indexEditar = indexValue;
-    // this.esEditable = true;
+  public editar(
+    tipo: TipoForm,
+    index: number,
+    indexValue: number,
+    value: IPregunta
+  ) {
+    const tipoData = this.tipoData[tipo];
+    const grupo = this.formularioGenerado[tipoData]?.[index];
+
+    if (!grupo || typeof grupo.id !== 'number') return;
+
+    this.formulario.patchValue({
+      fichaTipo: tipo,
+      tipo: value.type,
+      options: value.options,
+      label: value.label,
+      grupo: grupo.id,
+      default: value.default,
+      esRequerido: value.required
+    });
+
+    // Manejar las opciones JSON
+    try {
+      this.formulario.patchValue({
+        optionsJSON: JSON.stringify(value.options, null, 2)
+      });
+    } catch (error) {
+      this.formulario.patchValue({
+        optionsJSON: ''
+      });
+    }
+
+    // Cargar alertas de la categoría
+    if (grupo.id) {
+      this.cargarAlertasDeCategoria(grupo.id);
+    }
+
+    // Si hay configuración de alerta, guardarla temporalmente
+    if (value.alerta) {
+      this.alertaConfiguracionTemporal = {
+        genera_alerta: true,
+        valores_alerta: value.alerta.valores_alerta,
+        peso: value.alerta.peso || 1
+      };
+    } else {
+      this.alertaConfiguracionTemporal = undefined;
+    }
+
+    this.indexEditar = indexValue;
+    this.esEditable = true;
+  }
+
+  public guardarEdicion() {
+    if (!this.isValidForm) {
+      this.toastr.error('Por favor complete todos los campos requeridos');
+      return;
+    }
+
+    const tipo: TipoForm = this.formulario.value.fichaTipo;
+    const tipoData = this.tipoData[tipo];
+    const datos = this.formularioGenerado[tipoData];
+
+    if (!Array.isArray(datos)) {
+      this.toastr.error('Error al guardar la edición');
+      return;
+    }
+
+    const indexGrupo = datos.findIndex(
+      (value: ICategoria) => value.id === Number(this.formulario.value.grupo)
+    );
+
+    if (indexGrupo === -1) {
+      this.toastr.error('No se encontró el grupo seleccionado');
+      return;
+    }
+
+    const values = datos[indexGrupo]?.values?.[this.indexEditar];
+
+    if (values) {
+      values.label = this.formulario.value.label.trim();
+      values.options = this.getOptions();
+      values.type = this.getTipo();
+      values.visibility = true;
+      values.required = this.formulario.value.esRequerido;
+      values.default = this.formulario.value.default;
+
+      // Actualizar la configuración de alertas
+      if (this.alertaConfiguracionTemporal) {
+        values.alerta = this.alertaConfiguracionTemporal;
+      }
+
+      this.guardarFormulario();
+      this.esEditable = false;
+      this.indexEditar = -1;
+      this.alertaConfiguracionTemporal = undefined;
+
+      this.toastr.success('Pregunta actualizada correctamente');
+    }
+  }
+
+  public cancelarEdicion() {
+    this.esEditable = false;
+    this.indexEditar = -1;
+    this.alertaConfiguracionTemporal = undefined;
+    this.formulario.reset();
   }
 
   public guardarRegla(reglas: IOptionsVisibility) {
@@ -472,28 +560,6 @@ export class InputsGeneratorComponent implements OnInit {
     if (!checkbox.checked) {
       this.formulario.get('reglas')?.setValue('');
     }
-  }
-
-  public guardarEdicion() {
-    const tipo: TipoForm = this.formulario.value.fichaTipo as TipoForm;
-
-    // const indexGrupo = this.formularioGenerado[tipo].findIndex(
-    //   value => value.id === Number(this.formulario.value.grupo)
-    // );
-
-    // const values =
-    //   this.formularioGenerado?.[tipo]?.[indexGrupo]?.values?.[this.indexEditar];
-
-    // if (values) {
-    //   values.label = this.formulario.value.label.trim();
-    //   values.options = this.getOptions();
-    //   values.type = this.getTipo();
-    //   values.visibility = true;
-    //   values.required = this.formulario.value.esRequerido;
-    //   values.default = this.formulario.value.default;
-    //   this.guardarFormulario();
-    //   this.esEditable = false;
-    // }
   }
 
   public eliminar(

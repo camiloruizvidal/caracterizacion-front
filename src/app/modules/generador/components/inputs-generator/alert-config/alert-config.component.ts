@@ -25,6 +25,7 @@ export class AlertConfigComponent implements OnInit, OnChanges {
   @Input() tipoPregunta!: ETipoPregunta;
   @Input() alertasDisponibles: IAlertas[] = [];
   @Input() opciones: IOptionsSelect[] = [];
+  @Input() configuracion: any;
   @Output() alertasConfiguracion = new EventEmitter<any>();
 
   public form: FormGroup;
@@ -42,6 +43,9 @@ export class AlertConfigComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if ((changes['tipoPregunta'] || changes['opciones']) && this.tipoPregunta) {
       this.actualizarFormulario();
+    }
+    if (changes['configuracion'] && this.configuracion) {
+      this.cargarConfiguracion();
     }
   }
 
@@ -69,6 +73,45 @@ export class AlertConfigComponent implements OnInit, OnChanges {
         }
         break;
     }
+
+    // Cargar la configuración después de inicializar el formulario
+    if (this.configuracion) {
+      this.cargarConfiguracion();
+    }
+  }
+
+  private cargarConfiguracion() {
+    if (!this.configuracion?.valores_alerta) return;
+
+    console.log('Cargando configuración:', this.configuracion);
+
+    // Cargar valores de alerta
+    Object.keys(this.configuracion.valores_alerta).forEach(key => {
+      const valor = this.configuracion.valores_alerta[key];
+      if (this.form.contains(key)) {
+        console.log(`Cargando valor para ${key}:`, valor.valor);
+        this.form.get(key)?.setValue(valor.valor);
+      }
+    });
+
+    // Cargar planes de cuidado
+    Object.keys(this.configuracion.valores_alerta).forEach(key => {
+      const valor = this.configuracion.valores_alerta[key];
+      if (valor.planes_cuidado?.length > 0) {
+        console.log(
+          `Cargando planes de cuidado para ${key}:`,
+          valor.planes_cuidado
+        );
+        this.planesCuidado[key] = [...valor.planes_cuidado];
+        // Agregar controles para los planes de cuidado
+        valor.planes_cuidado.forEach((plan: string, index: number) => {
+          this.form.addControl(
+            `planesCuidado_${key}_${index}`,
+            this.fb.control(plan)
+          );
+        });
+      }
+    });
   }
 
   agregarPlanCuidado(controlName: string) {
