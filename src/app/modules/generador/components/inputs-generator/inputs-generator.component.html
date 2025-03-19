@@ -386,14 +386,50 @@
                                     [name]="'options-' + indexValue.toString()"
                                   >
                                     <option *ngFor="let item of value.options">
-                                      {{ item.value }}:
-                                      {{ item.option }}
+                                      {{ item.value }}: {{ item.option }}
                                     </option>
                                   </select>
+                                  <!-- Mostrar alertas y planes de cuidado para opciones -->
+                                  <div
+                                    *ngFor="let item of value?.options"
+                                    class="mt-2"
+                                  >
+                                    <div
+                                      *ngIf="hasAlertaValor(value, item?.value)"
+                                      class="alert alert-info"
+                                    >
+                                      <strong
+                                        >Alerta para {{ item?.option }}:</strong
+                                      >
+                                      {{ getAlertaValor(value, item?.value) }}
+                                      <div
+                                        *ngIf="
+                                          hasPlanesCuidado(value, item?.value)
+                                        "
+                                        class="mt-2"
+                                      >
+                                        <strong>Planes de cuidado:</strong>
+                                        <ul class="list-unstyled ms-3">
+                                          <li
+                                            *ngFor="
+                                              let plan of getPlanesCuidadoList(
+                                                value,
+                                                item?.value
+                                              )
+                                            "
+                                            class="text-muted"
+                                          >
+                                            • {{ plan }}
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
                                 <div
                                   *ngIf="
-                                    value.type === 'check' && item === 'options'
+                                    value?.type === 'check' &&
+                                    item === 'options'
                                   "
                                 >
                                   <select
@@ -402,12 +438,70 @@
                                     [name]="'valueTrue' + indexValue"
                                   >
                                     <option>
-                                      valueTrue: {{ value.options.valueTrue }}
+                                      valueTrue: {{ value?.options?.valueTrue }}
                                     </option>
                                     <option>
-                                      valueFalse: {{ value.options.valueFalse }}
+                                      valueFalse:
+                                      {{ value?.options?.valueFalse }}
                                     </option>
                                   </select>
+                                  <!-- Mostrar alertas y planes de cuidado para Sí/No -->
+                                  <div class="mt-2">
+                                    <!-- Alerta para Sí -->
+                                    <div
+                                      *ngIf="hasAlertaValor(value, 'Si')"
+                                      class="alert alert-info"
+                                    >
+                                      <strong>Alerta para Sí:</strong>
+                                      {{ getAlertaValor(value, 'Si') }}
+                                      <div
+                                        *ngIf="hasPlanesCuidado(value, 'Si')"
+                                        class="mt-2"
+                                      >
+                                        <strong>Planes de cuidado:</strong>
+                                        <ul class="list-unstyled ms-3">
+                                          <li
+                                            *ngFor="
+                                              let plan of getPlanesCuidadoList(
+                                                value,
+                                                'Si'
+                                              )
+                                            "
+                                            class="text-muted"
+                                          >
+                                            • {{ plan }}
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                    <!-- Alerta para No -->
+                                    <div
+                                      *ngIf="hasAlertaValor(value, 'No')"
+                                      class="alert alert-info mt-2"
+                                    >
+                                      <strong>Alerta para No:</strong>
+                                      {{ getAlertaValor(value, 'No') }}
+                                      <div
+                                        *ngIf="hasPlanesCuidado(value, 'No')"
+                                        class="mt-2"
+                                      >
+                                        <strong>Planes de cuidado:</strong>
+                                        <ul class="list-unstyled ms-3">
+                                          <li
+                                            *ngFor="
+                                              let plan of getPlanesCuidadoList(
+                                                value,
+                                                'No'
+                                              )
+                                            "
+                                            class="text-muted"
+                                          >
+                                            • {{ plan }}
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
                                 <div
                                   *ngIf="

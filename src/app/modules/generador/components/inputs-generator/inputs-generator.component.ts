@@ -938,4 +938,23 @@ export class InputsGeneratorComponent implements OnInit {
     const clasificacion = this.clasificacionesForm.at(clasificacionIndex);
     return clasificacion.get('planes_cuidado') as FormArray;
   }
+
+  getAlertaValor(value: any, opcionValue: string): string {
+    return value?.alerta?.valores_alerta?.[opcionValue]?.valor || '';
+  }
+
+  hasAlertaValor(value: any, opcionValue: string): boolean {
+    return !!value?.alerta?.valores_alerta?.[opcionValue]?.valor;
+  }
+
+  hasPlanesCuidado(value: any, opcionValue: string): boolean {
+    return (
+      (value?.alerta?.valores_alerta?.[opcionValue]?.planes_cuidado?.length ||
+        0) > 0
+    );
+  }
+
+  getPlanesCuidadoList(value: any, opcionValue: string): string[] {
+    return value?.alerta?.valores_alerta?.[opcionValue]?.planes_cuidado || [];
+  }
 }

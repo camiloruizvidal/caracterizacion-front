@@ -1,4 +1,32 @@
+.alert-info {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+
+  strong {
+    color: #495057;
+  }
+
+  ul.list-unstyled {
+    margin-bottom: 0;
+
+    li {
+      padding: 0.25rem 0;
+      color: #6c757d;
+
+      &:before {
+        content: '•';
+        margin-right: 0.5rem;
+        color: #0d6efd;
+      }
+    }
+  }
+}
+
 .scrollable {
-  height: 50vh;
-  overflow-y: scroll;
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 1rem;
 }
