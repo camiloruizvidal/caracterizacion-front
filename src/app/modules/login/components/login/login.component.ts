@@ -31,7 +31,7 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.loginService.loguearse(this.loginForm.value).subscribe(
         (response: any) => {
-          localStorage.setItem('token', response.token);
+          localStorage.setItem('token', response?.user?.token);
           localStorage.setItem('user', JSON.stringify(response?.user));
           this.router.navigate(['/']);
         },
