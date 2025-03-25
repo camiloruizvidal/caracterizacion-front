@@ -1,16 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ExcelMappingComponent } from './excel-mapping.component';
+import { MapeoExcelComponent } from './mapeo-excel.component';
 
 describe('ExcelMappingComponent', () => {
-  let component: ExcelMappingComponent;
-  let fixture: ComponentFixture<ExcelMappingComponent>;
+  let component: MapeoExcelComponent;
+  let fixture: ComponentFixture<MapeoExcelComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ExcelMappingComponent]
+      declarations: [MapeoExcelComponent]
     });
-    fixture = TestBed.createComponent(ExcelMappingComponent);
+    fixture = TestBed.createComponent(MapeoExcelComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

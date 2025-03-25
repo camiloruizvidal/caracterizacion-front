@@ -46,14 +46,14 @@
             <td class="text-center">
               <div class="btn-group">
                 <button
-                  *ngIf="encabezadoEditando?.index === i"
+                  *ngIf="encabezadoEditando?.indice === i"
                   class="btn btn-success btn-sm"
                   (click)="guardarEdicion()"
                 >
                   <i class="bi bi-check-lg"></i>
                 </button>
                 <button
-                  *ngIf="encabezadoEditando?.index !== i"
+                  *ngIf="encabezadoEditando?.indice !== i"
                   class="btn btn-warning btn-sm"
                   (click)="editarEncabezado(i)"
                   [disabled]="encabezadoEditando !== null"
@@ -62,7 +62,7 @@
                 </button>
                 <button
                   class="btn btn-danger btn-sm"
-                  (click)="confirmarEliminar(modalEliminar, i, encabezado)"
+                  (click)="confirmarEliminacion(modalEliminar, i, encabezado)"
                   [disabled]="encabezadoEditando !== null"
                 >
                   <i class="bi bi-trash"></i>
@@ -71,7 +71,7 @@
                   class="btn btn-sm"
                   [class.btn-primary]="!encabezado.esBusqueda"
                   [class.btn-success]="encabezado.esBusqueda"
-                  (click)="toggleBusqueda(i)"
+                  (click)="alternarBusqueda(i)"
                   [disabled]="encabezadoEditando !== null"
                 >
                   <i class="bi bi-search"></i>
@@ -79,18 +79,18 @@
               </div>
             </td>
             <td>
-              <ng-container *ngIf="encabezadoEditando?.index === i">
+              <ng-container *ngIf="encabezadoEditando?.indice === i">
                 <input
                   #editInput
                   type="text"
                   class="form-control"
                   [value]="encabezado.nombre"
-                  (input)="onEditInput($event)"
+                  (input)="actualizarValorEditando($event)"
                   (keyup.enter)="guardarEdicion()"
                   (keyup.escape)="cancelarEdicion()"
                 />
               </ng-container>
-              <ng-container *ngIf="encabezadoEditando?.index !== i">
+              <ng-container *ngIf="encabezadoEditando?.indice !== i">
                 {{ encabezado.nombre }}
               </ng-container>
             </td>
