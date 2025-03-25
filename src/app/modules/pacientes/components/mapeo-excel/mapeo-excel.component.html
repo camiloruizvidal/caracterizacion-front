@@ -20,7 +20,6 @@
               formControlName="versionId"
               (change)="onVersionSeleccionada($event)"
             >
-              <option value="">Seleccione una versión</option>
               <option *ngFor="let version of versiones" [value]="version.id">
                 {{ version.nombre }} - v{{ version.version }}
               </option>
@@ -62,121 +61,145 @@
 
     <!-- Tabla de encabezados -->
     <div class="table-responsive" *ngIf="encabezados.length > 0">
-      <table class="table table-bordered table-hover">
-        <thead>
-          <tr>
-            <th style="width: 200px">Opciones</th>
-            <th>Encabezados</th>
-            <th>Preguntas</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let encabezado of encabezados; let i = index">
-            <td class="text-center">
-              <div class="btn-group">
-                <button
-                  *ngIf="encabezadoEditando?.indice === i"
-                  class="btn btn-success btn-sm"
-                  (click)="guardarEdicion()"
-                >
-                  <i class="bi bi-check-lg"></i>
-                </button>
-                <button
-                  *ngIf="encabezadoEditando?.indice !== i"
-                  class="btn btn-warning btn-sm"
-                  (click)="editarEncabezado(i)"
-                  [disabled]="encabezadoEditando !== null"
-                >
-                  <i class="bi bi-pencil"></i>
-                </button>
-                <button
-                  class="btn btn-danger btn-sm"
-                  (click)="confirmarEliminacion(modalEliminar, encabezado)"
-                  [disabled]="encabezadoEditando !== null"
-                >
-                  <i class="bi bi-trash"></i>
-                </button>
-                <button
-                  class="btn btn-sm"
-                  [class.btn-primary]="!encabezado.esBusqueda"
-                  [class.btn-success]="encabezado.esBusqueda"
-                  (click)="alternarBusqueda(i)"
-                  [disabled]="encabezadoEditando !== null"
-                >
-                  <i class="bi bi-search"></i>
-                </button>
-              </div>
-            </td>
-            <td>
-              <ng-container *ngIf="encabezadoEditando?.indice === i">
-                <input
-                  #editInput
-                  type="text"
-                  class="form-control"
-                  [value]="encabezado.nombre"
-                  (input)="actualizarValorEditando($event)"
-                  (keyup.enter)="guardarEdicion()"
-                  (keyup.escape)="cancelarEdicion()"
-                />
-              </ng-container>
-              <ng-container *ngIf="encabezadoEditando?.indice !== i">
-                {{ encabezado.nombre }}
-              </ng-container>
-            </td>
-            <td>
-              <div class="row g-2">
-                <div class="col-md-6">
-                  <select
-                    class="form-select form-select-sm"
-                    (change)="onCategoriaSeleccionada($event, i)"
-                    [class.is-invalid]="
-                      mostrarErrores && !encabezado.categoriaId
-                    "
+      <form [formGroup]="encabezadosForm">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th style="width: 200px">Opciones</th>
+              <th>Encabezados</th>
+              <th>Preguntas</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="encabezados">
+            <tr
+              *ngFor="
+                let encabezado of encabezadosArray.controls;
+                let i = index
+              "
+              [formGroupName]="i"
+            >
+              <td class="text-center">
+                <div class="btn-group">
+                  <button
+                    *ngIf="encabezadoEditando?.indice === i"
+                    class="btn btn-success btn-sm"
+                    (click)="guardarEdicion()"
                   >
-                    <option value="">Seleccione categoría</option>
-                    <option
-                      *ngFor="let categoria of categorias"
-                      [value]="categoria.id"
-                    >
-                      {{ categoria.title }}
-                    </option>
-                  </select>
-                  <div class="invalid-feedback">
-                    Debe seleccionar una categoría
-                  </div>
+                    <i class="bi bi-check-lg"></i>
+                  </button>
+                  <button
+                    *ngIf="encabezadoEditando?.indice !== i"
+                    class="btn btn-warning btn-sm"
+                    (click)="editarEncabezado(i)"
+                    [disabled]="encabezadoEditando !== null"
+                  >
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button
+                    class="btn btn-danger btn-sm"
+                    (click)="
+                      confirmarEliminacion(modalEliminar, encabezados[i])
+                    "
+                    [disabled]="encabezadoEditando !== null"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm"
+                    [class.btn-primary]="!encabezados[i].esBusqueda"
+                    [class.btn-success]="encabezados[i].esBusqueda"
+                    (click)="alternarBusqueda(i)"
+                    [disabled]="encabezadoEditando !== null"
+                  >
+                    <i class="bi bi-search"></i>
+                  </button>
                 </div>
-                <div class="col-md-6">
-                  <select
-                    class="form-select form-select-sm"
-                    (change)="onPreguntaSeleccionada($event, i)"
-                    [disabled]="!encabezado.categoriaId"
-                    [class.is-invalid]="
-                      mostrarErrores &&
-                      encabezado.categoriaId &&
-                      !encabezado.preguntaId
-                    "
-                  >
-                    <option value="">Seleccione pregunta</option>
-                    <option
-                      *ngFor="
-                        let pregunta of obtenerPreguntasPorCategoria(
-                          encabezado.categoriaId
-                        )
+              </td>
+              <td>
+                <ng-container *ngIf="encabezadoEditando?.indice === i">
+                  <input
+                    #editInput
+                    type="text"
+                    class="form-control"
+                    [value]="encabezados[i].nombre"
+                    (input)="actualizarValorEditando($event)"
+                    (keyup.enter)="guardarEdicion()"
+                    (keyup.escape)="cancelarEdicion()"
+                  />
+                </ng-container>
+                <ng-container *ngIf="encabezadoEditando?.indice !== i">
+                  {{ encabezados[i].nombre }}
+                </ng-container>
+              </td>
+              <td>
+                <div class="row g-2">
+                  <div class="col-md-6">
+                    <select
+                      class="form-select form-select-sm"
+                      formControlName="categoriaId"
+                      (change)="onCategoriaSeleccionada($event, i)"
+                      [class.is-invalid]="
+                        encabezado.get('categoriaId')?.errors?.['required'] &&
+                        (encabezado.get('categoriaId')?.touched || encabezadosForm.get('encabezados')?.touched)
                       "
-                      [value]="pregunta.id"
                     >
-                      {{ pregunta.nombre }}
-                    </option>
-                  </select>
-                  <div class="invalid-feedback">
-                    Debe seleccionar una pregunta
+                      <option [ngValue]="null">Seleccione categoría</option>
+                      <option
+                        *ngFor="let categoria of categorias"
+                        [ngValue]="categoria.id"
+                      >
+                        {{ categoria.title }}
+                      </option>
+                    </select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        encabezado.get('categoriaId')?.errors?.['required'] &&
+                        (encabezado.get('categoriaId')?.touched || encabezadosForm.get('encabezados')?.touched)
+                      "
+                    >
+                      Debe seleccionar una categoría
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <select
+                      class="form-select form-select-sm"
+                      formControlName="preguntaId"
+                      (change)="onPreguntaSeleccionada($event, i)"
+                      [disabled]="!encabezado.get('categoriaId')?.value"
+                      [class.is-invalid]="
+                        encabezado.get('preguntaId')?.errors?.['required'] &&
+                        (encabezado.get('preguntaId')?.touched || encabezadosForm.get('encabezados')?.touched)
+                      "
+                    >
+                      <option [ngValue]="null">Seleccione pregunta</option>
+                      <option
+                        *ngFor="
+                          let pregunta of obtenerPreguntasPorCategoria(
+                            encabezado.get('categoriaId')?.value
+                          )
+                        "
+                        [ngValue]="pregunta.id"
+                      >
+                        {{ pregunta.nombre }}
+                      </option>
+                    </select>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        encabezado.get('preguntaId')?.errors?.['required'] &&
+                        (encabezado.get('preguntaId')?.touched || encabezadosForm.get('encabezados')?.touched)
+                      "
+                    >
+                      Debe seleccionar una pregunta
+                    </div>
                   </div>
                 </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
     </div>
 
     <!-- Botón para guardar -->

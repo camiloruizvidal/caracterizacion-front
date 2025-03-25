@@ -5,7 +5,7 @@ import {
 } from './../../../generador/interfaces/interface';
 import { FormulariosService } from './../../../formularios/services/formularios.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
@@ -17,12 +17,18 @@ interface IEncabezadoExcel {
   nombre: string;
   esBusqueda: boolean;
   categoriaId?: number;
-  preguntaId?: number;
+  preguntaId?: string;
+  categoriaTouched?: boolean;
+  preguntaTouched?: boolean;
 }
 
 interface IPreguntaFicha {
-  id: number;
+  id: string;
   nombre: string;
+}
+
+interface ICategoriaLocal extends ICategoria {
+  preguntas: IPreguntaFicha[];
 }
 
 @Component({
@@ -37,12 +43,13 @@ export class MapeoExcelComponent implements OnInit {
 
   public encabezados: IEncabezadoExcel[] = [];
   public formularioEncabezado: FormGroup;
+  public encabezadosForm: FormGroup;
   public encabezadoAEliminar: IEncabezadoExcel | null = null;
   public encabezadoEditando: { indice: number; valorOriginal: string } | null =
     null;
   public valorEditando: string = '';
   public versiones: IVersiones[] = [];
-  public categorias: ICategoria[] = [];
+  public categorias: ICategoriaLocal[] = [];
   public plantillaMapeada: IExcelMappingTemplate = {
     fichaJsonId: 0,
     columnasExcel: [],
@@ -60,6 +67,23 @@ export class MapeoExcelComponent implements OnInit {
     this.formularioEncabezado = this.fb.group({
       nuevoEncabezado: ['', [Validators.required]],
       versionId: [null, [Validators.required]]
+    });
+
+    this.encabezadosForm = this.fb.group({
+      encabezados: this.fb.array([])
+    });
+  }
+
+  get encabezadosArray() {
+    return this.encabezadosForm.get('encabezados') as FormArray;
+  }
+
+  private crearEncabezadoFormGroup(encabezado: IEncabezadoExcel): FormGroup {
+    return this.fb.group({
+      nombre: [encabezado.nombre],
+      esBusqueda: [encabezado.esBusqueda],
+      categoriaId: [encabezado.categoriaId || null, Validators.required],
+      preguntaId: [encabezado.preguntaId || null, Validators.required]
     });
   }
 
@@ -87,6 +111,7 @@ export class MapeoExcelComponent implements OnInit {
               categoria.values && categoria.values.length > 0
           )
           .map((categoria: ICategoria) => ({
+            ...categoria,
             id: categoria.id as number,
             order: categoria.orden || 0,
             title: categoria.title,
@@ -137,10 +162,15 @@ export class MapeoExcelComponent implements OnInit {
         nuevoNombre &&
         !this.encabezados.some(e => e.nombre === nuevoNombre)
       ) {
-        this.encabezados.push({
+        const nuevoEncabezado: IEncabezadoExcel = {
           nombre: nuevoNombre,
           esBusqueda: false
-        });
+        };
+
+        this.encabezados.push(nuevoEncabezado);
+        this.encabezadosArray.push(
+          this.crearEncabezadoFormGroup(nuevoEncabezado)
+        );
 
         this.plantillaMapeada.columnasExcel.push(nuevoNombre);
         this.plantillaMapeada.mapeo[nuevoNombre] = {
@@ -149,7 +179,6 @@ export class MapeoExcelComponent implements OnInit {
           esBusqueda: false
         };
         this.formularioEncabezado.patchValue({ nuevoEncabezado: '' });
-        this.mostrarErrores = false;
       }
     }
   }
@@ -247,7 +276,15 @@ export class MapeoExcelComponent implements OnInit {
   }
 
   public guardarEncabezados(): void {
-    this.mostrarErrores = true;
+    this.encabezadosForm.markAllAsTouched();
+
+    if (this.encabezadosForm.invalid) {
+      this.toastr.warning(
+        'Debe completar la categoría y pregunta para todos los encabezados',
+        'Advertencia'
+      );
+      return;
+    }
 
     if (this.encabezados.length === 0) {
       this.toastr.warning('No hay encabezados para exportar', 'Advertencia');
@@ -263,31 +300,25 @@ export class MapeoExcelComponent implements OnInit {
       return;
     }
 
-    const encabezadosIncompletos = this.encabezados.some(
-      e => !e.categoriaId || !e.preguntaId
-    );
-
-    if (encabezadosIncompletos) {
-      this.toastr.warning(
-        'Debe completar la categoría y pregunta para todos los encabezados',
-        'Advertencia'
-      );
-      return;
-    }
-
     const datos = [this.encabezados.map(e => e.nombre)];
     const libroExcel: XLSX.WorkBook = XLSX.utils.book_new();
     const hojaExcel: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(datos);
     XLSX.utils.book_append_sheet(libroExcel, hojaExcel, 'Encabezados');
     XLSX.writeFile(libroExcel, 'encabezados.xlsx');
     this.toastr.success('Archivo Excel generado correctamente', 'Éxito');
-    this.mostrarErrores = false;
   }
 
   public onCategoriaSeleccionada(evento: Event, indice: number): void {
     const select = evento.target as HTMLSelectElement;
-    const categoriaId = parseInt(select.value, 10);
-    this.encabezados[indice].categoriaId = categoriaId;
+    const categoriaId = select.value ? parseInt(select.value, 10) : null;
+    const encabezadoForm = this.encabezadosArray.at(indice) as FormGroup;
+
+    encabezadoForm.patchValue({
+      categoriaId: categoriaId,
+      preguntaId: null
+    });
+
+    this.encabezados[indice].categoriaId = categoriaId || undefined;
     this.encabezados[indice].preguntaId = undefined;
 
     if (categoriaId) {
@@ -300,17 +331,25 @@ export class MapeoExcelComponent implements OnInit {
 
   public onPreguntaSeleccionada(evento: Event, indice: number): void {
     const select = evento.target as HTMLSelectElement;
-    const preguntaId = parseInt(select.value, 10);
-    this.encabezados[indice].preguntaId = preguntaId;
+    const preguntaId = select.value || null;
+    const encabezadoForm = this.encabezadosArray.at(indice) as FormGroup;
+
+    encabezadoForm.patchValue({
+      preguntaId: preguntaId
+    });
+
+    this.encabezados[indice].preguntaId = preguntaId || undefined;
 
     if (preguntaId) {
       this.toastr.success('Relación establecida correctamente', 'Éxito');
     }
   }
 
-  public obtenerPreguntasPorCategoria(categoriaId: number | undefined): any[] {
+  public obtenerPreguntasPorCategoria(
+    categoriaId: number | undefined
+  ): IPreguntaFicha[] {
     if (!categoriaId) return [];
-    const categoria: any = this.categorias.find(c => c.id === categoriaId);
-    return categoria.preguntas;
+    const categoria = this.categorias.find(c => c.id === categoriaId);
+    return categoria?.preguntas || [];
   }
 }
