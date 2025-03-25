@@ -13,6 +13,7 @@ import {
   IFiltrosBusqueda,
   ITarjetaRespondidas
 } from '../../generador/interfaces/interface';
+import { IExcelMappingTemplate as IFormatoMapeoExcel } from 'src/app/interfaces/excel-mapping-template.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -139,5 +140,42 @@ export class FormulariosService {
       this.apiUrl + '/busqueda_dinamica',
       { params }
     );
+  }
+
+  public guardarMapeoExcel(mapeo: IFormatoMapeoExcel): Observable<void> {
+    return this.http.post<void>(this.apiUrl + '/mapeo-excel', mapeo);
+  }
+
+  public obtenerMapeoExcel(
+    fichaJsonId: number
+  ): Observable<IFormatoMapeoExcel> {
+    // Simulación de respuesta exitosa
+    return new Observable(subscriber => {
+      subscriber.next({
+        fichaJsonId: fichaJsonId,
+        columnasExcel: ['Nombre', 'Apellido', 'Edad'],
+        mapeo: [
+          {
+            categoriaId: '1',
+            preguntaId: 'nombre',
+            columnaExcel: 'Nombre',
+            esBusqueda: true
+          },
+          {
+            categoriaId: '1',
+            preguntaId: 'apellido',
+            columnaExcel: 'Apellido',
+            esBusqueda: false
+          },
+          {
+            categoriaId: '1',
+            preguntaId: 'edad',
+            columnaExcel: 'Edad',
+            esBusqueda: false
+          }
+        ]
+      });
+      subscriber.complete();
+    });
   }
 }

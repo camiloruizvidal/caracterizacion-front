@@ -18,6 +18,10 @@ import * as XLSX from 'xlsx';
 import { IExcelMappingTemplate } from 'src/app/interfaces/excel-mapping-template.interface';
 import { IVersiones } from 'src/app/helpers/interface/interface';
 import { InputsService } from '../../../generador/services/inputs.service';
+import {
+  CargasService,
+  ICargaResponse
+} from '../../services/cargas/cargas.service';
 
 interface IEncabezadoExcel {
   nombre: string;
@@ -46,16 +50,20 @@ export class MapeoExcelComponent implements OnInit {
     null;
   public valorEditando: string = '';
   public versiones: IVersiones[] = [];
+  public versionSeleccionada: number | null = null;
   public categorias: ICategoria[] = [];
   public plantillaMapeada: FormGroup;
   public mostrarErrores: boolean = false;
+  public archivoSeleccionado: File | null = null;
+  public cargaActual: ICargaResponse | null = null;
 
   constructor(
     private fb: FormBuilder,
     private modalService: NgbModal,
     private toastr: ToastrService,
     private formulariosService: FormulariosService,
-    private inputsService: InputsService
+    private inputsService: InputsService,
+    private cargasService: CargasService
   ) {
     this.formularioEncabezado = this.fb.group({
       nuevoEncabezado: ['', [Validators.required]],
@@ -101,6 +109,7 @@ export class MapeoExcelComponent implements OnInit {
 
   public ngOnInit(): void {
     this.cargarVersiones();
+    this.cargarCargaActual();
   }
 
   private cargarVersiones(): void {
@@ -140,9 +149,39 @@ export class MapeoExcelComponent implements OnInit {
     });
   }
 
+  private cargarCargaActual(): void {
+    this.cargaActual = this.cargasService.obtenerCargaDelLocalStorage();
+    if (this.cargaActual) {
+      this.verificarEstadoCarga();
+    }
+  }
+
+  private verificarEstadoCarga(): void {
+    if (this.cargaActual) {
+      this.cargasService
+        .verificarEstadoCarga(this.cargaActual.carga_id)
+        .subscribe(response => {
+          this.cargaActual = response;
+          this.cargasService.guardarCargaEnLocalStorage(response);
+
+          if (
+            response.estado === 'rechazado' ||
+            response.estado === 'cancelado'
+          ) {
+            this.cargasService.limpiarCargaDelLocalStorage();
+            this.cargaActual = null;
+          } else {
+            // Si sigue en proceso, verificamos de nuevo en 5 segundos
+            setTimeout(() => this.verificarEstadoCarga(), 5000);
+          }
+        });
+    }
+  }
+
   public onVersionSeleccionada(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const fichaId = Number(selectElement.value);
+    this.versionSeleccionada = fichaId;
     this.plantillaMapeada.get('fichaJsonId')?.setValue(fichaId);
     if (fichaId) {
       const versionSeleccionada = this.versiones.find(
@@ -154,6 +193,31 @@ export class MapeoExcelComponent implements OnInit {
       }
     } else {
       this.categorias = [];
+    }
+  }
+
+  public onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.archivoSeleccionado = file;
+    }
+  }
+
+  public cargarArchivo(): void {
+    if (
+      this.plantillaMapeada.get('fichaJsonId')?.value &&
+      this.archivoSeleccionado
+    ) {
+      this.cargasService
+        .cargarArchivo(
+          this.plantillaMapeada.get('fichaJsonId')?.value,
+          this.archivoSeleccionado
+        )
+        .subscribe(response => {
+          this.cargaActual = response;
+          this.cargasService.guardarCargaEnLocalStorage(response);
+          this.verificarEstadoCarga();
+        });
     }
   }
 
@@ -303,7 +367,7 @@ export class MapeoExcelComponent implements OnInit {
       encabezado.esBusqueda = false;
     });
     this.encabezados[indice].esBusqueda = true;
-    console.log({ encabezados: this.encabezados });
+
     this.mapeoArray.controls.forEach((control: AbstractControl) => {
       const columnaExcel = (control as FormGroup).get('columnaExcel')?.value;
       (control as FormGroup).patchValue({
@@ -343,13 +407,24 @@ export class MapeoExcelComponent implements OnInit {
       return;
     }
 
-    const datos = [this.encabezados.map(e => e.nombre)];
-    const libroExcel: XLSX.WorkBook = XLSX.utils.book_new();
-    const hojaExcel: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(datos);
-    XLSX.utils.book_append_sheet(libroExcel, hojaExcel, 'Encabezados');
-    XLSX.writeFile(libroExcel, 'encabezados.xlsx');
-    this.toastr.success('Archivo Excel generado correctamente', 'Éxito');
-    console.log({ formulario: this.plantillaMapeada.value });
+    this.formulariosService
+      .guardarMapeoExcel(this.plantillaMapeada.value)
+      .subscribe({
+        next: () => {
+          this.toastr.success('Mapeo guardado correctamente', 'Éxito');
+
+          const datos = [this.encabezados.map(e => e.nombre)];
+          const libroExcel: XLSX.WorkBook = XLSX.utils.book_new();
+          const hojaExcel: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(datos);
+          XLSX.utils.book_append_sheet(libroExcel, hojaExcel, 'Encabezados');
+          XLSX.writeFile(libroExcel, 'encabezados.xlsx');
+          this.toastr.success('Archivo Excel generado correctamente', 'Éxito');
+        },
+        error: error => {
+          this.toastr.error('Error al guardar el mapeo', 'Error');
+          console.error('Error al guardar mapeo:', error);
+        }
+      });
   }
 
   public onCategoriaSeleccionada(evento: Event, indice: number): void {

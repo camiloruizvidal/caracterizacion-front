@@ -9,24 +9,21 @@
       class="mb-4"
     >
       <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="versionId" class="form-label"
-              >Versión de la ficha</label
-            >
-            <select
-              id="versionId"
-              class="form-select"
-              formControlName="versionId"
-              (change)="onVersionSeleccionada($event)"
-            >
-              <option *ngFor="let version of versiones" [value]="version.id">
-                {{ version.nombre }}
-              </option>
-            </select>
-          </div>
+        <div class="col-lg-3">
+          <label for="versionId" class="form-label">Versión de la ficha</label>
+          <select
+            id="versionId"
+            class="form-select"
+            formControlName="versionId"
+            (change)="onVersionSeleccionada($event)"
+          >
+            <option *ngFor="let version of versiones" [value]="version.id">
+              {{ version.nombre }}
+            </option>
+          </select>
         </div>
-        <div class="col-md-8">
+
+        <div class="col-lg-3">
           <div class="form-group">
             <label for="nuevoEncabezado" class="form-label"
               >Nombre del encabezado</label
@@ -38,7 +35,7 @@
                 type="text"
                 class="form-control"
                 formControlName="nuevoEncabezado"
-                placeholder="Ingrese el nombre del encabezado"
+                placeholder="Nombre del encabezado"
               />
               <button
                 class="btn btn-primary"
@@ -47,6 +44,54 @@
               >
                 <i class="bi bi-plus-lg"></i> Agregar
               </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <label class="form-label">Cargar archivo Excel</label>
+          <div class="input-group">
+            <input
+              type="file"
+              class="form-control"
+              id="excelFile"
+              accept=".xls,.xlsx,.csv"
+              (change)="onFileSelected($event)"
+              [disabled]="!versionSeleccionada"
+            />
+            <button
+              class="btn btn-primary"
+              type="button"
+              (click)="cargarArchivo()"
+              [disabled]="!versionSeleccionada || !archivoSeleccionado"
+            >
+              <i class="bi bi-file-earmark-excel"></i> Cargar
+            </button>
+          </div>
+          <div class="form-text">Formatos permitidos: XLS, XLSX, CSV</div>
+          <!-- Estado de la carga -->
+          <div *ngIf="cargaActual" class="mt-2">
+            <div
+              [class]="
+                'alert alert-' +
+                (cargaActual.estado === 'registrado'
+                  ? 'info'
+                  : cargaActual.estado === 'rechazado'
+                  ? 'danger'
+                  : 'warning')
+              "
+            >
+              <i
+                class="bi"
+                [class]="
+                  cargaActual.estado === 'registrado'
+                    ? 'bi-info-circle'
+                    : cargaActual.estado === 'rechazado'
+                    ? 'bi-x-circle'
+                    : 'bi-exclamation-circle'
+                "
+              ></i>
+              {{ cargaActual.message }}
             </div>
           </div>
         </div>
