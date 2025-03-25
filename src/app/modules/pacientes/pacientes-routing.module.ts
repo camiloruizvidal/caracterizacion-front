@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PacientesListComponent } from './components/pacientes-list/pacientes-list.component';
+import { MapeoExcelComponent } from './components/mapeo-excel/mapeo-excel.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,10 @@ const routes: Routes = [
   {
     path: 'create',
     component: PacientesListComponent
+  },
+  {
+    path: 'mapeo-excel',
+    component: MapeoExcelComponent
   }
 ];
 

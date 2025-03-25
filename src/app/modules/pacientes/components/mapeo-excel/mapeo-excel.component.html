@@ -21,7 +21,7 @@
               (change)="onVersionSeleccionada($event)"
             >
               <option *ngFor="let version of versiones" [value]="version.id">
-                {{ version.nombre }} - v{{ version.version }}
+                {{ version.nombre }}
               </option>
             </select>
           </div>
@@ -139,8 +139,7 @@
                       formControlName="categoriaId"
                       (change)="onCategoriaSeleccionada($event, i)"
                       [class.is-invalid]="
-                        encabezado.get('categoriaId')?.errors?.['required'] &&
-                        (encabezado.get('categoriaId')?.touched || encabezadosForm.get('encabezados')?.touched)
+                        encabezado.get('categoriaId')?.errors?.['required']
                       "
                     >
                       <option [value]="null">Seleccione categoría</option>
@@ -154,8 +153,7 @@
                     <div
                       class="invalid-feedback"
                       *ngIf="
-                        encabezado.get('categoriaId')?.errors?.['required'] &&
-                        (encabezado.get('categoriaId')?.touched || encabezadosForm.get('encabezados')?.touched)
+                        encabezado.get('categoriaId')?.errors?.['required']
                       "
                     >
                       Debe seleccionar una categoría
@@ -168,8 +166,7 @@
                       (change)="onPreguntaSeleccionada($event, i)"
                       [disabled]="!encabezado.get('categoriaId')?.value"
                       [class.is-invalid]="
-                        encabezado.get('preguntaId')?.errors?.['required'] &&
-                        (encabezado.get('preguntaId')?.touched || encabezadosForm.get('encabezados')?.touched)
+                        encabezado.get('preguntaId')?.errors?.['required']
                       "
                     >
                       <option [value]="null">Seleccione pregunta</option>
@@ -187,9 +184,7 @@
                     <div
                       class="invalid-feedback"
                       *ngIf="
-                        encabezado.get('preguntaId')?.errors?.['required'] &&
-                        (encabezado.get('preguntaId')?.touched || encabezadosForm.get('encabezados')?.touched)
-                      "
+                        encabezado.get('preguntaId')?.errors?.['required']                      "
                     >
                       Debe seleccionar una pregunta
                     </div>

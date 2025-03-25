@@ -144,10 +144,12 @@ export class MapeoExcelComponent implements OnInit {
     const selectElement = event.target as HTMLSelectElement;
     const fichaId = Number(selectElement.value);
     this.plantillaMapeada.get('fichaJsonId')?.setValue(fichaId);
-
     if (fichaId) {
-      const versionSeleccionada = this.versiones.find(v => v.id === fichaId);
+      const versionSeleccionada = this.versiones.find(
+        (version: IVersiones) => version.id === fichaId
+      );
       if (versionSeleccionada) {
+        console.log({ fichaId: versionSeleccionada.version });
         this.cargarCategorias(Number(versionSeleccionada.version));
       }
     } else {
