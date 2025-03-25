@@ -2,13 +2,14 @@ import { IVersiones } from './../../../helpers/interface/interface';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'enviroment/enviroment';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import {
   EFileStatus,
   IFichaFmiliar,
   IPagination,
   IResultadoGenerarArchivoExcel
 } from 'src/app/helpers/interface/interface';
+import { IRespuesta } from 'src/app/core/interfaces/global.interface';
 import {
   IFiltrosBusqueda,
   ITarjetaRespondidas
@@ -149,33 +150,10 @@ export class FormulariosService {
   public obtenerMapeoExcel(
     fichaJsonId: number
   ): Observable<IFormatoMapeoExcel> {
-    // Simulación de respuesta exitosa
-    return new Observable(subscriber => {
-      subscriber.next({
-        fichaJsonId: fichaJsonId,
-        columnasExcel: ['Nombre', 'Apellido', 'Edad'],
-        mapeo: [
-          {
-            categoriaId: '1',
-            preguntaId: 'nombre',
-            columnaExcel: 'Nombre',
-            esBusqueda: true
-          },
-          {
-            categoriaId: '1',
-            preguntaId: 'apellido',
-            columnaExcel: 'Apellido',
-            esBusqueda: false
-          },
-          {
-            categoriaId: '1',
-            preguntaId: 'edad',
-            columnaExcel: 'Edad',
-            esBusqueda: false
-          }
-        ]
-      });
-      subscriber.complete();
-    });
+    return this.http
+      .get<IRespuesta<IFormatoMapeoExcel>>(
+        `${this.apiUrl}/encabezados-excel/${fichaJsonId}`
+      )
+      .pipe(map(response => response.data));
   }
 }
