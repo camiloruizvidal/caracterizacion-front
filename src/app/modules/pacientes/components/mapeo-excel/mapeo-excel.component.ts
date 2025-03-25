@@ -74,7 +74,7 @@ export class MapeoExcelComponent implements OnInit {
     });
   }
 
-  get encabezadosArray() {
+  get listaEncabezados() {
     return this.encabezadosForm.get('encabezados') as FormArray;
   }
 
@@ -168,7 +168,7 @@ export class MapeoExcelComponent implements OnInit {
         };
 
         this.encabezados.push(nuevoEncabezado);
-        this.encabezadosArray.push(
+        this.listaEncabezados.push(
           this.crearEncabezadoFormGroup(nuevoEncabezado)
         );
 
@@ -311,7 +311,7 @@ export class MapeoExcelComponent implements OnInit {
   public onCategoriaSeleccionada(evento: Event, indice: number): void {
     const select = evento.target as HTMLSelectElement;
     const categoriaId = select.value ? parseInt(select.value, 10) : null;
-    const encabezadoForm = this.encabezadosArray.at(indice) as FormGroup;
+    const encabezadoForm = this.listaEncabezados.at(indice) as FormGroup;
 
     encabezadoForm.patchValue({
       categoriaId: categoriaId,
@@ -332,7 +332,7 @@ export class MapeoExcelComponent implements OnInit {
   public onPreguntaSeleccionada(evento: Event, indice: number): void {
     const select = evento.target as HTMLSelectElement;
     const preguntaId = select.value || null;
-    const encabezadoForm = this.encabezadosArray.at(indice) as FormGroup;
+    const encabezadoForm = this.listaEncabezados.at(indice) as FormGroup;
 
     encabezadoForm.patchValue({
       preguntaId: preguntaId

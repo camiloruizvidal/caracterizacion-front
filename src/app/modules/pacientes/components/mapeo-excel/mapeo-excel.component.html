@@ -73,7 +73,7 @@
           <tbody formArrayName="encabezados">
             <tr
               *ngFor="
-                let encabezado of encabezadosArray.controls;
+                let encabezado of listaEncabezados.controls;
                 let i = index
               "
               [formGroupName]="i"
