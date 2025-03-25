@@ -1,10 +1,11 @@
+import { FormulariosService } from './../../../formularios/services/formularios.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
 import { IExcelMappingTemplate } from 'src/app/interfaces/excel-mapping-template.interface';
-import { InputsService } from '../../../generador/services/inputs.service';
+import { IVersiones } from 'src/app/helpers/interface/interface';
 
 interface IEncabezadoExcel {
   nombre: string;
@@ -26,7 +27,7 @@ export class MapeoExcelComponent implements OnInit {
   public encabezadoAEliminar: { indice: number; nombre: string } | null = null;
   public encabezadoEditando: { indice: number; nombre: string } | null = null;
   public valorEditando: string = '';
-  public versiones: any[] = [];
+  public versiones: IVersiones[] = [];
   public plantillaMapeada: IExcelMappingTemplate = {
     fichaJsonId: 0,
     columnasExcel: [],
@@ -37,7 +38,7 @@ export class MapeoExcelComponent implements OnInit {
     private fb: FormBuilder,
     private modalService: NgbModal,
     private toastr: ToastrService,
-    private inputsService: InputsService
+    private formulariosService: FormulariosService
   ) {
     this.formularioEncabezado = this.fb.group({
       nuevoEncabezado: ['', [Validators.required]],
@@ -50,8 +51,8 @@ export class MapeoExcelComponent implements OnInit {
   }
 
   private cargarVersiones(): void {
-    this.inputsService.obtenerFormularioJson(0).subscribe({
-      next: versiones => {
+    this.formulariosService.obtenerVersiones().subscribe({
+      next: (versiones: IVersiones[]) => {
         this.versiones = versiones;
       },
       error: error => {
