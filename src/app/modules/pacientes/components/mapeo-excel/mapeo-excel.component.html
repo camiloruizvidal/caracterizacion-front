@@ -8,21 +8,49 @@
       (ngSubmit)="agregarEncabezado()"
       class="mb-4"
     >
-      <div class="input-group">
-        <input
-          #inputNuevoEncabezado
-          type="text"
-          class="form-control"
-          formControlName="nuevoEncabezado"
-          placeholder="Ingrese el nombre del encabezado"
-        />
-        <button
-          class="btn btn-primary"
-          type="submit"
-          [disabled]="!formularioEncabezado.valid"
-        >
-          <i class="bi bi-plus-lg"></i> Agregar
-        </button>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="versionId" class="form-label"
+              >Versión de la ficha</label
+            >
+            <select
+              id="versionId"
+              class="form-select"
+              formControlName="versionId"
+              (change)="onVersionSeleccionada($event)"
+            >
+              <option value="">Seleccione una versión</option>
+              <option *ngFor="let version of versiones" [value]="version.id">
+                {{ version.nombre }} - v{{ version.version }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="form-group">
+            <label for="nuevoEncabezado" class="form-label"
+              >Nombre del encabezado</label
+            >
+            <div class="input-group">
+              <input
+                #inputNuevoEncabezado
+                id="nuevoEncabezado"
+                type="text"
+                class="form-control"
+                formControlName="nuevoEncabezado"
+                placeholder="Ingrese el nombre del encabezado"
+              />
+              <button
+                class="btn btn-primary"
+                type="submit"
+                [disabled]="!formularioEncabezado.valid"
+              >
+                <i class="bi bi-plus-lg"></i> Agregar
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </form>
 

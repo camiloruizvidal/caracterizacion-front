@@ -4,10 +4,17 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
 import { IExcelMappingTemplate } from 'src/app/interfaces/excel-mapping-template.interface';
+import { InputsService } from '../../../generador/services/inputs.service';
 
 interface IEncabezadoExcel {
   nombre: string;
   esBusqueda: boolean;
+}
+
+interface IVersion {
+  id: number;
+  version: string;
+  nombre: string;
 }
 
 @Component({
@@ -25,6 +32,7 @@ export class MapeoExcelComponent implements OnInit {
   public encabezadoAEliminar: { indice: number; nombre: string } | null = null;
   public encabezadoEditando: { indice: number; nombre: string } | null = null;
   public valorEditando: string = '';
+  public versiones: any[] = [];
   public plantillaMapeada: IExcelMappingTemplate = {
     fichaJsonId: 0,
     columnasExcel: [],
@@ -34,20 +42,52 @@ export class MapeoExcelComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private modalService: NgbModal,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private inputsService: InputsService
   ) {
     this.formularioEncabezado = this.fb.group({
-      nuevoEncabezado: ['', [Validators.required]]
+      nuevoEncabezado: ['', [Validators.required]],
+      versionId: [null, [Validators.required]]
     });
   }
 
-  public ngOnInit(): void {}
+  public ngOnInit(): void {
+    this.cargarVersiones();
+  }
+
+  private cargarVersiones(): void {
+    this.inputsService.obtenerFormularioJson(0).subscribe({
+      next: versiones => {
+        this.versiones = versiones;
+      },
+      error: error => {
+        console.error('Error al cargar las versiones:', error);
+        this.toastr.error('Error al cargar las versiones de la ficha', 'Error');
+      }
+    });
+  }
+
+  public onVersionSeleccionada(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const versionId = Number(selectElement.value);
+    this.plantillaMapeada.fichaJsonId = versionId;
+  }
 
   public agregarEncabezado(): void {
     if (this.formularioEncabezado.valid) {
       const nuevoNombre = this.formularioEncabezado
         .get('nuevoEncabezado')
         ?.value?.trim();
+      const versionId = this.formularioEncabezado.get('versionId')?.value;
+
+      if (!versionId) {
+        this.toastr.warning(
+          'Debe seleccionar una versión de la ficha',
+          'Advertencia'
+        );
+        return;
+      }
+
       if (
         nuevoNombre &&
         !this.encabezados.some(e => e.nombre === nuevoNombre)
@@ -63,7 +103,7 @@ export class MapeoExcelComponent implements OnInit {
           preguntaId: '',
           esBusqueda: false
         };
-        this.formularioEncabezado.reset();
+        this.formularioEncabezado.patchValue({ nuevoEncabezado: '' });
       }
     }
   }
