@@ -5,6 +5,7 @@ export interface IExcelMappingTemplate {
     [columnaExcel: string]: {
       categoriaId: string;
       preguntaId: string;
+      esBusqueda: boolean;
     };
   };
 }

@@ -2,6 +2,11 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+interface IEncabezado {
+  nombre: string;
+  esBusqueda: boolean;
+}
+
 @Component({
   selector: 'app-excel-mapping',
   templateUrl: './excel-mapping.component.html',
@@ -10,7 +15,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class ExcelMappingComponent implements OnInit {
   @ViewChild('editInput') editInput!: ElementRef;
 
-  public encabezados: string[] = [];
+  public encabezados: IEncabezado[] = [];
   public formularioEncabezado: FormGroup;
   public encabezadoAEliminar: { index: number; nombre: string } | null = null;
   public encabezadoEditando: { index: number; nombre: string } | null = null;
@@ -26,17 +31,23 @@ export class ExcelMappingComponent implements OnInit {
 
   agregarEncabezado(): void {
     if (this.formularioEncabezado.valid) {
-      const nuevoEncabezado =
+      const nuevoNombre =
         this.formularioEncabezado.get('nuevoEncabezado')?.value;
-      if (nuevoEncabezado && !this.encabezados.includes(nuevoEncabezado)) {
-        this.encabezados.push(nuevoEncabezado);
+      if (
+        nuevoNombre &&
+        !this.encabezados.some(e => e.nombre === nuevoNombre)
+      ) {
+        this.encabezados.push({
+          nombre: nuevoNombre,
+          esBusqueda: false
+        });
         this.formularioEncabezado.reset();
       }
     }
   }
 
-  confirmarEliminar(modal: any, index: number, nombre: string): void {
-    this.encabezadoAEliminar = { index, nombre };
+  confirmarEliminar(modal: any, index: number, encabezado: IEncabezado): void {
+    this.encabezadoAEliminar = { index, nombre: encabezado.nombre };
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' });
   }
 
@@ -51,9 +62,9 @@ export class ExcelMappingComponent implements OnInit {
   editarEncabezado(index: number): void {
     this.encabezadoEditando = {
       index,
-      nombre: this.encabezados[index]
+      nombre: this.encabezados[index].nombre
     };
-    this.valorEditando = this.encabezados[index];
+    this.valorEditando = this.encabezados[index].nombre;
     setTimeout(() => {
       this.editInput.nativeElement.focus();
     });
@@ -65,7 +76,8 @@ export class ExcelMappingComponent implements OnInit {
 
   guardarEdicion(): void {
     if (this.encabezadoEditando !== null && this.valorEditando.trim()) {
-      this.encabezados[this.encabezadoEditando.index] = this.valorEditando;
+      this.encabezados[this.encabezadoEditando.index].nombre =
+        this.valorEditando;
       this.encabezadoEditando = null;
       this.valorEditando = '';
     }
@@ -74,6 +86,13 @@ export class ExcelMappingComponent implements OnInit {
   cancelarEdicion(): void {
     this.encabezadoEditando = null;
     this.valorEditando = '';
+  }
+
+  toggleBusqueda(index: number): void {
+    // Primero desactivamos la búsqueda en todos los encabezados
+    this.encabezados.forEach((encabezado, i) => {
+      encabezado.esBusqueda = i === index;
+    });
   }
 
   guardarEncabezados(): void {
