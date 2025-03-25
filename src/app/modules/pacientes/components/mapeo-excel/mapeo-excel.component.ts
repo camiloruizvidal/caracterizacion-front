@@ -5,7 +5,13 @@ import {
 } from './../../../generador/interfaces/interface';
 import { FormulariosService } from './../../../formularios/services/formularios.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+  AbstractControl
+} from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
@@ -214,7 +220,8 @@ export class MapeoExcelComponent implements OnInit {
       });
 
       const mapeoIndex = this.mapeoArray.controls.findIndex(
-        control => control.get('columnaExcel')?.value === nombreEncabezado
+        (control: AbstractControl) =>
+          (control as FormGroup).get('columnaExcel')?.value === nombreEncabezado
       );
       if (mapeoIndex !== -1) {
         this.mapeoArray.removeAt(mapeoIndex);
@@ -257,7 +264,8 @@ export class MapeoExcelComponent implements OnInit {
       });
 
       const mapeoIndex = this.mapeoArray.controls.findIndex(
-        control => control.get('columnaExcel')?.value === nombreAntiguo
+        (control: AbstractControl) =>
+          (control as FormGroup).get('columnaExcel')?.value === nombreAntiguo
       );
       if (mapeoIndex !== -1) {
         const mapeoControl = this.mapeoArray.at(mapeoIndex);
@@ -289,14 +297,15 @@ export class MapeoExcelComponent implements OnInit {
       return;
     }
 
-    this.encabezados.forEach((encabezado, i) => {
-      encabezado.esBusqueda = i === indice;
+    this.encabezados.forEach(encabezado => {
+      encabezado.esBusqueda = false;
     });
-
-    this.mapeoArray.controls.forEach(control => {
-      control.patchValue({
-        esBusqueda:
-          control.get('columnaExcel')?.value === encabezadoSeleccionado.nombre
+    this.encabezados[indice].esBusqueda = true;
+    console.log({ encabezados: this.encabezados });
+    this.mapeoArray.controls.forEach((control: AbstractControl) => {
+      const columnaExcel = (control as FormGroup).get('columnaExcel')?.value;
+      (control as FormGroup).patchValue({
+        esBusqueda: columnaExcel === encabezadoSeleccionado.nombre
       });
     });
 
@@ -338,7 +347,7 @@ export class MapeoExcelComponent implements OnInit {
     XLSX.utils.book_append_sheet(libroExcel, hojaExcel, 'Encabezados');
     XLSX.writeFile(libroExcel, 'encabezados.xlsx');
     this.toastr.success('Archivo Excel generado correctamente', 'Éxito');
-    console.log({ formulario: this.encabezadosForm.value });
+    console.log({ formulario: this.plantillaMapeada.value });
   }
 
   public onCategoriaSeleccionada(evento: Event, indice: number): void {
@@ -356,7 +365,8 @@ export class MapeoExcelComponent implements OnInit {
     this.encabezados[indice].preguntaId = undefined;
 
     const mapeoIndex = this.mapeoArray.controls.findIndex(
-      control => control.get('columnaExcel')?.value === nombreEncabezado
+      (control: AbstractControl) =>
+        (control as FormGroup).get('columnaExcel')?.value === nombreEncabezado
     );
     if (mapeoIndex !== -1) {
       const mapeoControl = this.mapeoArray.at(mapeoIndex);
@@ -364,13 +374,6 @@ export class MapeoExcelComponent implements OnInit {
         categoriaId: categoriaId?.toString() || '',
         preguntaId: ''
       });
-    }
-
-    if (categoriaId) {
-      this.toastr.info(
-        'Seleccione una pregunta para completar la relación',
-        'Información'
-      );
     }
   }
 
@@ -387,16 +390,13 @@ export class MapeoExcelComponent implements OnInit {
     this.encabezados[indice].preguntaId = preguntaId || undefined;
 
     const mapeoIndex = this.mapeoArray.controls.findIndex(
-      control => control.get('columnaExcel')?.value === nombreEncabezado
+      (control: AbstractControl) =>
+        (control as FormGroup).get('columnaExcel')?.value === nombreEncabezado
     );
     if (mapeoIndex !== -1) {
       this.mapeoArray.at(mapeoIndex).patchValue({
         preguntaId: preguntaId || ''
       });
-    }
-
-    if (preguntaId) {
-      this.toastr.success('Relación establecida correctamente', 'Éxito');
     }
   }
 
