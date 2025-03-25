@@ -9,10 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
-import {
-  IExcelMappingTemplate,
-  IMapeoColumna
-} from 'src/app/interfaces/excel-mapping-template.interface';
+import { IExcelMappingTemplate } from 'src/app/interfaces/excel-mapping-template.interface';
 import { IVersiones } from 'src/app/helpers/interface/interface';
 import { InputsService } from '../../../generador/services/inputs.service';
 
@@ -51,6 +48,7 @@ export class MapeoExcelComponent implements OnInit {
     columnasExcel: [],
     mapeo: {}
   };
+  public mostrarErrores: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -107,11 +105,11 @@ export class MapeoExcelComponent implements OnInit {
 
   public onVersionSeleccionada(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
-    const versionId = Number(selectElement.value);
-    this.plantillaMapeada.fichaJsonId = versionId;
+    const fichaId = Number(selectElement.value);
+    this.plantillaMapeada.fichaJsonId = fichaId;
 
-    if (versionId) {
-      const versionSeleccionada = this.versiones.find(v => v.id === versionId);
+    if (fichaId) {
+      const versionSeleccionada = this.versiones.find(v => v.id === fichaId);
       if (versionSeleccionada) {
         this.cargarCategorias(Number(versionSeleccionada.version));
       }
@@ -151,6 +149,7 @@ export class MapeoExcelComponent implements OnInit {
           esBusqueda: false
         };
         this.formularioEncabezado.patchValue({ nuevoEncabezado: '' });
+        this.mostrarErrores = false;
       }
     }
   }
@@ -248,6 +247,8 @@ export class MapeoExcelComponent implements OnInit {
   }
 
   public guardarEncabezados(): void {
+    this.mostrarErrores = true;
+
     if (this.encabezados.length === 0) {
       this.toastr.warning('No hay encabezados para exportar', 'Advertencia');
       return;
@@ -262,28 +263,52 @@ export class MapeoExcelComponent implements OnInit {
       return;
     }
 
+    const encabezadosIncompletos = this.encabezados.some(
+      e => !e.categoriaId || !e.preguntaId
+    );
+
+    if (encabezadosIncompletos) {
+      this.toastr.warning(
+        'Debe completar la categoría y pregunta para todos los encabezados',
+        'Advertencia'
+      );
+      return;
+    }
+
     const datos = [this.encabezados.map(e => e.nombre)];
     const libroExcel: XLSX.WorkBook = XLSX.utils.book_new();
     const hojaExcel: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(datos);
     XLSX.utils.book_append_sheet(libroExcel, hojaExcel, 'Encabezados');
     XLSX.writeFile(libroExcel, 'encabezados.xlsx');
     this.toastr.success('Archivo Excel generado correctamente', 'Éxito');
+    this.mostrarErrores = false;
   }
 
-  public onCategoriaSeleccionada(event: Event, indice: number): void {
-    const select = event.target as HTMLSelectElement;
+  public onCategoriaSeleccionada(evento: Event, indice: number): void {
+    const select = evento.target as HTMLSelectElement;
     const categoriaId = parseInt(select.value, 10);
     this.encabezados[indice].categoriaId = categoriaId;
     this.encabezados[indice].preguntaId = undefined;
+
+    if (categoriaId) {
+      this.toastr.info(
+        'Seleccione una pregunta para completar la relación',
+        'Información'
+      );
+    }
   }
 
-  public onPreguntaSeleccionada(event: Event, indice: number): void {
-    const select = event.target as HTMLSelectElement;
+  public onPreguntaSeleccionada(evento: Event, indice: number): void {
+    const select = evento.target as HTMLSelectElement;
     const preguntaId = parseInt(select.value, 10);
     this.encabezados[indice].preguntaId = preguntaId;
+
+    if (preguntaId) {
+      this.toastr.success('Relación establecida correctamente', 'Éxito');
+    }
   }
 
-  public getPreguntasPorCategoria(categoriaId: number | undefined): any[] {
+  public obtenerPreguntasPorCategoria(categoriaId: number | undefined): any[] {
     if (!categoriaId) return [];
     const categoria: any = this.categorias.find(c => c.id === categoriaId);
     return categoria.preguntas;

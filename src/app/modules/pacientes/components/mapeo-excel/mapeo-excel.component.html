@@ -129,6 +129,9 @@
                   <select
                     class="form-select form-select-sm"
                     (change)="onCategoriaSeleccionada($event, i)"
+                    [class.is-invalid]="
+                      mostrarErrores && !encabezado.categoriaId
+                    "
                   >
                     <option value="">Seleccione categoría</option>
                     <option
@@ -138,17 +141,25 @@
                       {{ categoria.title }}
                     </option>
                   </select>
+                  <div class="invalid-feedback">
+                    Debe seleccionar una categoría
+                  </div>
                 </div>
                 <div class="col-md-6">
                   <select
                     class="form-select form-select-sm"
                     (change)="onPreguntaSeleccionada($event, i)"
                     [disabled]="!encabezado.categoriaId"
+                    [class.is-invalid]="
+                      mostrarErrores &&
+                      encabezado.categoriaId &&
+                      !encabezado.preguntaId
+                    "
                   >
                     <option value="">Seleccione pregunta</option>
                     <option
                       *ngFor="
-                        let pregunta of getPreguntasPorCategoria(
+                        let pregunta of obtenerPreguntasPorCategoria(
                           encabezado.categoriaId
                         )
                       "
@@ -157,6 +168,9 @@
                       {{ pregunta.nombre }}
                     </option>
                   </select>
+                  <div class="invalid-feedback">
+                    Debe seleccionar una pregunta
+                  </div>
                 </div>
               </div>
             </td>
