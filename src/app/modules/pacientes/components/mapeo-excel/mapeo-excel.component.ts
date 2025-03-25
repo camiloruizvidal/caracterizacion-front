@@ -39,9 +39,9 @@ export class MapeoExcelComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  public ngOnInit(): void {}
 
-  agregarEncabezado(): void {
+  public agregarEncabezado(): void {
     if (this.formularioEncabezado.valid) {
       const nuevoNombre = this.formularioEncabezado
         .get('nuevoEncabezado')
@@ -66,7 +66,7 @@ export class MapeoExcelComponent implements OnInit {
     }
   }
 
-  confirmarEliminacion(
+  public confirmarEliminacion(
     modal: any,
     indice: number,
     encabezado: IEncabezadoExcel
@@ -75,13 +75,13 @@ export class MapeoExcelComponent implements OnInit {
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' });
   }
 
-  eliminarEncabezado(): void {
+  public eliminarEncabezado(): void {
     if (this.encabezadoAEliminar !== null) {
       const nombreEncabezado =
         this.encabezados[this.encabezadoAEliminar.indice].nombre;
-      // Eliminamos el encabezado de la lista
+
       this.encabezados.splice(this.encabezadoAEliminar.indice, 1);
-      // Eliminamos el encabezado de la plantilla
+
       this.plantillaMapeada.columnasExcel =
         this.plantillaMapeada.columnasExcel.filter(c => c !== nombreEncabezado);
       delete this.plantillaMapeada.mapeo[nombreEncabezado];
@@ -90,7 +90,7 @@ export class MapeoExcelComponent implements OnInit {
     }
   }
 
-  editarEncabezado(indice: number): void {
+  public editarEncabezado(indice: number): void {
     this.encabezadoEditando = {
       indice,
       nombre: this.encabezados[indice].nombre
@@ -101,21 +101,19 @@ export class MapeoExcelComponent implements OnInit {
     });
   }
 
-  actualizarValorEditando(evento: Event): void {
+  public actualizarValorEditando(evento: Event): void {
     this.valorEditando = (evento.target as HTMLInputElement).value;
   }
 
-  guardarEdicion(): void {
+  public guardarEdicion(): void {
     const valorTrimmed = this.valorEditando.trim();
     if (this.encabezadoEditando !== null && valorTrimmed) {
       const nombreAntiguo =
         this.encabezados[this.encabezadoEditando.indice].nombre;
       const mapeoAntiguo = this.plantillaMapeada.mapeo[nombreAntiguo];
 
-      // Actualizamos el nombre en la lista de encabezados
       this.encabezados[this.encabezadoEditando.indice].nombre = valorTrimmed;
 
-      // Actualizamos la plantilla
       this.plantillaMapeada.columnasExcel =
         this.plantillaMapeada.columnasExcel.map(c =>
           c === nombreAntiguo ? valorTrimmed : c
@@ -128,22 +126,20 @@ export class MapeoExcelComponent implements OnInit {
     }
   }
 
-  cancelarEdicion(): void {
+  public cancelarEdicion(): void {
     this.encabezadoEditando = null;
     this.valorEditando = '';
   }
 
-  alternarBusqueda(indice: number): void {
+  public alternarBusqueda(indice: number): void {
     const encabezadoSeleccionado = this.encabezados[indice];
 
     if (encabezadoSeleccionado.esBusqueda) {
       return;
     }
 
-    // Actualizamos el estado de búsqueda en los encabezados
     this.encabezados.forEach((encabezado, i) => {
       encabezado.esBusqueda = i === indice;
-      // Actualizamos el estado de búsqueda en la plantilla
       this.plantillaMapeada.mapeo[encabezado.nombre].esBusqueda = i === indice;
     });
 
@@ -154,7 +150,7 @@ export class MapeoExcelComponent implements OnInit {
     );
   }
 
-  guardarEncabezados(): void {
+  public guardarEncabezados(): void {
     if (this.encabezados.length === 0) {
       this.toastr.warning('No hay encabezados para exportar', 'Advertencia');
       return;
