@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import * as XLSX from 'xlsx';
 
 interface IEncabezadoExcel {
   nombre: string;
@@ -20,7 +21,7 @@ export class MapeoExcelComponent implements OnInit {
   public formularioEncabezado: FormGroup;
   public encabezadoAEliminar: { indice: number; nombre: string } | null = null;
   public encabezadoEditando: { indice: number; nombre: string } | null = null;
-  private valorEditando: string = '';
+  public valorEditando: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -36,8 +37,9 @@ export class MapeoExcelComponent implements OnInit {
 
   agregarEncabezado(): void {
     if (this.formularioEncabezado.valid) {
-      const nuevoNombre =
-        this.formularioEncabezado.get('nuevoEncabezado')?.value;
+      const nuevoNombre = this.formularioEncabezado
+        .get('nuevoEncabezado')
+        ?.value?.trim();
       if (
         nuevoNombre &&
         !this.encabezados.some(e => e.nombre === nuevoNombre)
@@ -84,9 +86,9 @@ export class MapeoExcelComponent implements OnInit {
   }
 
   guardarEdicion(): void {
-    if (this.encabezadoEditando !== null && this.valorEditando.trim()) {
-      this.encabezados[this.encabezadoEditando.indice].nombre =
-        this.valorEditando;
+    const valorTrimmed = this.valorEditando.trim();
+    if (this.encabezadoEditando !== null && valorTrimmed) {
+      this.encabezados[this.encabezadoEditando.indice].nombre = valorTrimmed;
       this.encabezadoEditando = null;
       this.valorEditando = '';
     }
@@ -119,7 +121,26 @@ export class MapeoExcelComponent implements OnInit {
   }
 
   guardarEncabezados(): void {
-    // Aquí implementaremos la lógica para guardar los encabezados
-    console.log('Encabezados guardados:', this.encabezados);
+    if (this.encabezados.length === 0) {
+      this.toastr.warning('No hay encabezados para exportar', 'Advertencia');
+      return;
+    }
+
+    // Creamos una matriz con solo los nombres de los encabezados
+    const datos = [this.encabezados.map(e => e.nombre)];
+
+    // Creamos un nuevo libro de trabajo
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+
+    // Creamos una nueva hoja de cálculo con los datos
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(datos);
+
+    // Agregamos la hoja al libro
+    XLSX.utils.book_append_sheet(wb, ws, 'Encabezados');
+
+    // Generamos el archivo y lo descargamos
+    XLSX.writeFile(wb, 'encabezados.xlsx');
+
+    this.toastr.success('Archivo Excel generado correctamente', 'Éxito');
   }
 }
