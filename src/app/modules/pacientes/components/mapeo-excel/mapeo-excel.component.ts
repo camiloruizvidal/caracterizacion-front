@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
+import { IExcelMappingTemplate } from 'src/app/interfaces/excel-mapping-template.interface';
 
 interface IEncabezadoExcel {
   nombre: string;
@@ -22,6 +23,11 @@ export class MapeoExcelComponent implements OnInit {
   public encabezadoAEliminar: { indice: number; nombre: string } | null = null;
   public encabezadoEditando: { indice: number; nombre: string } | null = null;
   public valorEditando: string = '';
+  public plantillaMapeada: IExcelMappingTemplate = {
+    fichaJsonId: 0,
+    columnasExcel: [],
+    mapeo: {}
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -48,6 +54,13 @@ export class MapeoExcelComponent implements OnInit {
           nombre: nuevoNombre,
           esBusqueda: false
         });
+
+        this.plantillaMapeada.columnasExcel.push(nuevoNombre);
+        this.plantillaMapeada.mapeo[nuevoNombre] = {
+          categoriaId: '',
+          preguntaId: '',
+          esBusqueda: false
+        };
         this.formularioEncabezado.reset();
       }
     }
@@ -64,7 +77,14 @@ export class MapeoExcelComponent implements OnInit {
 
   eliminarEncabezado(): void {
     if (this.encabezadoAEliminar !== null) {
+      const nombreEncabezado =
+        this.encabezados[this.encabezadoAEliminar.indice].nombre;
+      // Eliminamos el encabezado de la lista
       this.encabezados.splice(this.encabezadoAEliminar.indice, 1);
+      // Eliminamos el encabezado de la plantilla
+      this.plantillaMapeada.columnasExcel =
+        this.plantillaMapeada.columnasExcel.filter(c => c !== nombreEncabezado);
+      delete this.plantillaMapeada.mapeo[nombreEncabezado];
       this.modalService.dismissAll();
       this.encabezadoAEliminar = null;
     }
@@ -88,7 +108,21 @@ export class MapeoExcelComponent implements OnInit {
   guardarEdicion(): void {
     const valorTrimmed = this.valorEditando.trim();
     if (this.encabezadoEditando !== null && valorTrimmed) {
+      const nombreAntiguo =
+        this.encabezados[this.encabezadoEditando.indice].nombre;
+      const mapeoAntiguo = this.plantillaMapeada.mapeo[nombreAntiguo];
+
+      // Actualizamos el nombre en la lista de encabezados
       this.encabezados[this.encabezadoEditando.indice].nombre = valorTrimmed;
+
+      // Actualizamos la plantilla
+      this.plantillaMapeada.columnasExcel =
+        this.plantillaMapeada.columnasExcel.map(c =>
+          c === nombreAntiguo ? valorTrimmed : c
+        );
+      delete this.plantillaMapeada.mapeo[nombreAntiguo];
+      this.plantillaMapeada.mapeo[valorTrimmed] = mapeoAntiguo;
+
       this.encabezadoEditando = null;
       this.valorEditando = '';
     }
@@ -102,17 +136,17 @@ export class MapeoExcelComponent implements OnInit {
   alternarBusqueda(indice: number): void {
     const encabezadoSeleccionado = this.encabezados[indice];
 
-    // Si ya estaba seleccionado, no hacemos nada
     if (encabezadoSeleccionado.esBusqueda) {
       return;
     }
 
-    // Desactivamos la búsqueda en todos los encabezados
+    // Actualizamos el estado de búsqueda en los encabezados
     this.encabezados.forEach((encabezado, i) => {
       encabezado.esBusqueda = i === indice;
+      // Actualizamos el estado de búsqueda en la plantilla
+      this.plantillaMapeada.mapeo[encabezado.nombre].esBusqueda = i === indice;
     });
 
-    // Mostramos el toast
     this.toastr.info(
       `El elemento "${encabezadoSeleccionado.nombre}" es el parámetro por el que se hará la búsqueda`,
       'Parámetro de búsqueda',
@@ -126,20 +160,15 @@ export class MapeoExcelComponent implements OnInit {
       return;
     }
 
-    // Creamos una matriz con solo los nombres de los encabezados
     const datos = [this.encabezados.map(e => e.nombre)];
 
-    // Creamos un nuevo libro de trabajo
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    const libroExcel: XLSX.WorkBook = XLSX.utils.book_new();
 
-    // Creamos una nueva hoja de cálculo con los datos
-    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(datos);
+    const hojaExcel: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(datos);
 
-    // Agregamos la hoja al libro
-    XLSX.utils.book_append_sheet(wb, ws, 'Encabezados');
+    XLSX.utils.book_append_sheet(libroExcel, hojaExcel, 'Encabezados');
 
-    // Generamos el archivo y lo descargamos
-    XLSX.writeFile(wb, 'encabezados.xlsx');
+    XLSX.writeFile(libroExcel, 'encabezados.xlsx');
 
     this.toastr.success('Archivo Excel generado correctamente', 'Éxito');
   }
