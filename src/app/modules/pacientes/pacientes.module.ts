@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { PacientesRoutingModule } from './pacientes-routing.module';
 import { PacientesListComponent } from './components/pacientes-list/pacientes-list.component';
@@ -18,7 +19,8 @@ import { ExcelMappingComponent } from './components/excel-mapping/excel-mapping.
     CommonModule,
     HelpersModule,
     PacientesRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule
   ]
 })
 export class PacientesModule {}

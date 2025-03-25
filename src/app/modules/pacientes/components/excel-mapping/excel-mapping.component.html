@@ -36,7 +36,7 @@
       <table class="table table-bordered table-hover">
         <thead>
           <tr>
-            <th style="width: 100px">Opciones</th>
+            <th style="width: 150px">Opciones</th>
             <th>Encabezados</th>
             <th>Preguntas</th>
           </tr>
@@ -44,14 +44,47 @@
         <tbody>
           <tr *ngFor="let encabezado of encabezados; let i = index">
             <td class="text-center">
-              <button
-                class="btn btn-danger btn-sm"
-                (click)="eliminarEncabezado(i)"
-              >
-                <i class="bi bi-trash"></i>
-              </button>
+              <div class="btn-group">
+                <button
+                  *ngIf="encabezadoEditando?.index === i"
+                  class="btn btn-success btn-sm"
+                  (click)="guardarEdicion()"
+                >
+                  <i class="bi bi-check-lg"></i>
+                </button>
+                <button
+                  *ngIf="encabezadoEditando?.index !== i"
+                  class="btn btn-warning btn-sm"
+                  (click)="editarEncabezado(i)"
+                  [disabled]="encabezadoEditando !== null"
+                >
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button
+                  class="btn btn-danger btn-sm"
+                  (click)="confirmarEliminar(modalEliminar, i, encabezado)"
+                  [disabled]="encabezadoEditando !== null"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
             </td>
-            <td>{{ encabezado }}</td>
+            <td>
+              <ng-container *ngIf="encabezadoEditando?.index === i">
+                <input
+                  #editInput
+                  type="text"
+                  class="form-control"
+                  [value]="encabezado"
+                  (input)="onEditInput($event)"
+                  (keyup.enter)="guardarEdicion()"
+                  (keyup.escape)="cancelarEdicion()"
+                />
+              </ng-container>
+              <ng-container *ngIf="encabezadoEditando?.index !== i">
+                {{ encabezado }}
+              </ng-container>
+            </td>
             <td>
               <!-- Aquí irán las preguntas -->
             </td>
@@ -62,9 +95,41 @@
 
     <!-- Botón para guardar -->
     <div class="mt-4" *ngIf="encabezados.length > 0">
-      <button class="btn btn-success" (click)="guardarEncabezados()">
+      <button
+        class="btn btn-success"
+        (click)="guardarEncabezados()"
+        [disabled]="encabezadoEditando !== null"
+      >
         <i class="bi bi-save"></i> Guardar Encabezados
       </button>
     </div>
   </div>
 </div>
+
+<!-- Modal de confirmación de eliminación -->
+<ng-template #modalEliminar let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Confirmar eliminación</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <p>
+      ¿Está seguro que desea eliminar el encabezado "{{
+        encabezadoAEliminar?.nombre
+      }}"?
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">
+      Cancelar
+    </button>
+    <button type="button" class="btn btn-danger" (click)="eliminarEncabezado()">
+      Eliminar
+    </button>
+  </div>
+</ng-template>
