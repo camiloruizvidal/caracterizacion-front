@@ -1,0 +1,54 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Configuración de Encabezados Excel</h5>
+
+    <!-- Formulario para agregar encabezados -->
+    <form
+      [formGroup]="formularioEncabezado"
+      (ngSubmit)="agregarEncabezado()"
+      class="mb-4"
+    >
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          formControlName="nuevoEncabezado"
+          placeholder="Ingrese el nombre del encabezado"
+        />
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="!formularioEncabezado.valid"
+        >
+          <i class="bi bi-plus-lg"></i> Agregar
+        </button>
+      </div>
+    </form>
+
+    <!-- Lista de encabezados -->
+    <div class="list-group">
+      <div
+        *ngFor="let encabezado of encabezados; let i = index"
+        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+      >
+        {{ encabezado }}
+        <button class="btn btn-danger btn-sm" (click)="eliminarEncabezado(i)">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mensaje cuando no hay encabezados -->
+    <div *ngIf="encabezados.length === 0" class="alert alert-info mt-3">
+      No hay encabezados definidos. Agregue algunos usando el formulario
+      superior.
+    </div>
+
+    <!-- Botón para guardar -->
+    <div class="mt-4" *ngIf="encabezados.length > 0">
+      <button class="btn btn-success" (click)="guardarEncabezados()">
+        <i class="bi bi-save"></i> Guardar Encabezados
+      </button>
+    </div>
+  </div>
+</div>
