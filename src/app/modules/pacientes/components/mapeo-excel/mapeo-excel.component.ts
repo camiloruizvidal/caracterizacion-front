@@ -1,3 +1,8 @@
+import {
+  ICategoria,
+  IFormulario,
+  IPregunta
+} from './../../../generador/interfaces/interface';
 import { FormulariosService } from './../../../formularios/services/formularios.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -16,14 +21,6 @@ interface IEncabezadoExcel {
   esBusqueda: boolean;
   categoriaId?: number;
   preguntaId?: number;
-}
-
-interface ICategoriaFicha {
-  id: number;
-  order: number;
-  title: string;
-  subtitle: string | null;
-  preguntas: IPreguntaFicha[];
 }
 
 interface IPreguntaFicha {
@@ -48,7 +45,7 @@ export class MapeoExcelComponent implements OnInit {
     null;
   public valorEditando: string = '';
   public versiones: IVersiones[] = [];
-  public categorias: ICategoriaFicha[] = [];
+  public categorias: ICategoria[] = [];
   public plantillaMapeada: IExcelMappingTemplate = {
     fichaJsonId: 0,
     columnasExcel: [],
@@ -85,28 +82,25 @@ export class MapeoExcelComponent implements OnInit {
 
   private cargarCategorias(versionId: number): void {
     this.inputsService.obtenerFormularioJson(versionId).subscribe({
-      next: (response: any) => {
-        if (response && response.data && response.data.individualData) {
-          this.categorias = response.data.individualData.map(
-            (categoria: any) => ({
-              id: categoria.id,
-              title: categoria.title,
-              order: categoria.order,
-              subtitle: categoria.subtitle,
-              preguntas: categoria.values.map((pregunta: any) => ({
-                id: pregunta.id || pregunta.columnName,
-                nombre: pregunta.label
-              }))
-            })
-          );
-        }
-      },
-      error: error => {
-        console.error('Error al cargar las categorías:', error);
-        this.toastr.error(
-          'Error al cargar las categorías de la ficha',
-          'Error'
-        );
+      next: (response: { data: IFormulario }) => {
+        this.categorias = response.data.individualData
+          .filter(
+            (categoria: ICategoria) =>
+              categoria.values && categoria.values.length > 0
+          )
+          .map((categoria: ICategoria) => ({
+            id: categoria.id as number,
+            order: categoria.orden || 0,
+            title: categoria.title,
+            subtitle: categoria.subtitle || null,
+            preguntas:
+              categoria.values
+                ?.filter((pregunta: IPregunta) => pregunta.type !== 'subtitle')
+                .map((pregunta: IPregunta) => ({
+                  id: pregunta.columnName as string,
+                  nombre: pregunta.label
+                })) || []
+          }));
       }
     });
   }
@@ -289,11 +283,9 @@ export class MapeoExcelComponent implements OnInit {
     this.encabezados[indice].preguntaId = preguntaId;
   }
 
-  public getPreguntasPorCategoria(
-    categoriaId: number | undefined
-  ): IPreguntaFicha[] {
+  public getPreguntasPorCategoria(categoriaId: number | undefined): any[] {
     if (!categoriaId) return [];
-    const categoria = this.categorias.find(c => c.id === categoriaId);
-    return categoria?.preguntas || [];
+    const categoria: any = this.categorias.find(c => c.id === categoriaId);
+    return categoria.preguntas;
   }
 }
