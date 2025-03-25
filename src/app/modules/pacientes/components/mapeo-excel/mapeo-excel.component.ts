@@ -23,6 +23,7 @@ interface ICategoriaFicha {
   order: number;
   title: string;
   subtitle: string | null;
+  preguntas: IPreguntaFicha[];
 }
 
 interface IPreguntaFicha {
@@ -82,28 +83,32 @@ export class MapeoExcelComponent implements OnInit {
     });
   }
 
-  private cargarCategorias(version: number): void {
-    this.inputsService
-      .obtenerGruposFichas(version, 'individualData')
-      .subscribe({
-        next: (response: ICategoriaFicha[]) => {
-          if (response && response.length > 0) {
-            this.categorias = response.map((categoria: ICategoriaFicha) => ({
+  private cargarCategorias(versionId: number): void {
+    this.inputsService.obtenerFormularioJson(versionId).subscribe({
+      next: (response: any) => {
+        if (response && response.data && response.data.individualData) {
+          this.categorias = response.data.individualData.map(
+            (categoria: any) => ({
               id: categoria.id,
               title: categoria.title,
               order: categoria.order,
-              subtitle: categoria.subtitle
-            }));
-          }
-        },
-        error: error => {
-          console.error('Error al cargar las categorías:', error);
-          this.toastr.error(
-            'Error al cargar las categorías de la ficha',
-            'Error'
+              subtitle: categoria.subtitle,
+              preguntas: categoria.values.map((pregunta: any) => ({
+                id: pregunta.id || pregunta.columnName,
+                nombre: pregunta.label
+              }))
+            })
           );
         }
-      });
+      },
+      error: error => {
+        console.error('Error al cargar las categorías:', error);
+        this.toastr.error(
+          'Error al cargar las categorías de la ficha',
+          'Error'
+        );
+      }
+    });
   }
 
   public onVersionSeleccionada(event: Event): void {
@@ -289,6 +294,6 @@ export class MapeoExcelComponent implements OnInit {
   ): IPreguntaFicha[] {
     if (!categoriaId) return [];
     const categoria = this.categorias.find(c => c.id === categoriaId);
-    return [];
+    return categoria?.preguntas || [];
   }
 }
