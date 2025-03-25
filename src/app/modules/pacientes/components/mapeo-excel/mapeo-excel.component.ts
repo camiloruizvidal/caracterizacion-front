@@ -4,12 +4,30 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
-import { IExcelMappingTemplate } from 'src/app/interfaces/excel-mapping-template.interface';
+import {
+  IExcelMappingTemplate,
+  IMapeoColumna
+} from 'src/app/interfaces/excel-mapping-template.interface';
 import { IVersiones } from 'src/app/helpers/interface/interface';
+import { InputsService } from '../../../generador/services/inputs.service';
 
 interface IEncabezadoExcel {
   nombre: string;
   esBusqueda: boolean;
+  categoriaId?: number;
+  preguntaId?: number;
+}
+
+interface ICategoriaFicha {
+  id: number;
+  order: number;
+  title: string;
+  subtitle: string | null;
+}
+
+interface IPreguntaFicha {
+  id: number;
+  nombre: string;
 }
 
 @Component({
@@ -24,10 +42,12 @@ export class MapeoExcelComponent implements OnInit {
 
   public encabezados: IEncabezadoExcel[] = [];
   public formularioEncabezado: FormGroup;
-  public encabezadoAEliminar: { indice: number; nombre: string } | null = null;
-  public encabezadoEditando: { indice: number; nombre: string } | null = null;
+  public encabezadoAEliminar: IEncabezadoExcel | null = null;
+  public encabezadoEditando: { indice: number; valorOriginal: string } | null =
+    null;
   public valorEditando: string = '';
   public versiones: IVersiones[] = [];
+  public categorias: ICategoriaFicha[] = [];
   public plantillaMapeada: IExcelMappingTemplate = {
     fichaJsonId: 0,
     columnasExcel: [],
@@ -38,7 +58,8 @@ export class MapeoExcelComponent implements OnInit {
     private fb: FormBuilder,
     private modalService: NgbModal,
     private toastr: ToastrService,
-    private formulariosService: FormulariosService
+    private formulariosService: FormulariosService,
+    private inputsService: InputsService
   ) {
     this.formularioEncabezado = this.fb.group({
       nuevoEncabezado: ['', [Validators.required]],
@@ -56,16 +77,48 @@ export class MapeoExcelComponent implements OnInit {
         this.versiones = versiones;
       },
       error: error => {
-        console.error('Error al cargar las versiones:', error);
-        this.toastr.error('Error al cargar las versiones de la ficha', 'Error');
+        console.error('Error al cargar versiones:', error);
       }
     });
+  }
+
+  private cargarCategorias(version: number): void {
+    this.inputsService
+      .obtenerGruposFichas(version, 'individualData')
+      .subscribe({
+        next: (response: ICategoriaFicha[]) => {
+          if (response && response.length > 0) {
+            this.categorias = response.map((categoria: ICategoriaFicha) => ({
+              id: categoria.id,
+              title: categoria.title,
+              order: categoria.order,
+              subtitle: categoria.subtitle
+            }));
+          }
+        },
+        error: error => {
+          console.error('Error al cargar las categorías:', error);
+          this.toastr.error(
+            'Error al cargar las categorías de la ficha',
+            'Error'
+          );
+        }
+      });
   }
 
   public onVersionSeleccionada(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const versionId = Number(selectElement.value);
     this.plantillaMapeada.fichaJsonId = versionId;
+
+    if (versionId) {
+      const versionSeleccionada = this.versiones.find(v => v.id === versionId);
+      if (versionSeleccionada) {
+        this.cargarCategorias(Number(versionSeleccionada.version));
+      }
+    } else {
+      this.categorias = [];
+    }
   }
 
   public agregarEncabezado(): void {
@@ -103,21 +156,21 @@ export class MapeoExcelComponent implements OnInit {
     }
   }
 
-  public confirmarEliminacion(
-    modal: any,
-    indice: number,
-    encabezado: IEncabezadoExcel
-  ): void {
-    this.encabezadoAEliminar = { indice, nombre: encabezado.nombre };
+  public confirmarEliminacion(modal: any, encabezado: IEncabezadoExcel): void {
+    this.encabezadoAEliminar = encabezado;
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' });
   }
 
   public eliminarEncabezado(): void {
     if (this.encabezadoAEliminar !== null) {
       const nombreEncabezado =
-        this.encabezados[this.encabezadoAEliminar.indice].nombre;
+        this.encabezados[this.encabezados.indexOf(this.encabezadoAEliminar)]
+          .nombre;
 
-      this.encabezados.splice(this.encabezadoAEliminar.indice, 1);
+      this.encabezados.splice(
+        this.encabezados.indexOf(this.encabezadoAEliminar),
+        1
+      );
 
       this.plantillaMapeada.columnasExcel =
         this.plantillaMapeada.columnasExcel.filter(c => c !== nombreEncabezado);
@@ -130,7 +183,7 @@ export class MapeoExcelComponent implements OnInit {
   public editarEncabezado(indice: number): void {
     this.encabezadoEditando = {
       indice,
-      nombre: this.encabezados[indice].nombre
+      valorOriginal: this.encabezados[indice].nombre
     };
     this.valorEditando = this.encabezados[indice].nombre;
     setTimeout(() => {
@@ -216,5 +269,26 @@ export class MapeoExcelComponent implements OnInit {
     XLSX.utils.book_append_sheet(libroExcel, hojaExcel, 'Encabezados');
     XLSX.writeFile(libroExcel, 'encabezados.xlsx');
     this.toastr.success('Archivo Excel generado correctamente', 'Éxito');
+  }
+
+  public onCategoriaSeleccionada(event: Event, indice: number): void {
+    const select = event.target as HTMLSelectElement;
+    const categoriaId = parseInt(select.value, 10);
+    this.encabezados[indice].categoriaId = categoriaId;
+    this.encabezados[indice].preguntaId = undefined;
+  }
+
+  public onPreguntaSeleccionada(event: Event, indice: number): void {
+    const select = event.target as HTMLSelectElement;
+    const preguntaId = parseInt(select.value, 10);
+    this.encabezados[indice].preguntaId = preguntaId;
+  }
+
+  public getPreguntasPorCategoria(
+    categoriaId: number | undefined
+  ): IPreguntaFicha[] {
+    if (!categoriaId) return [];
+    const categoria = this.categorias.find(c => c.id === categoriaId);
+    return [];
   }
 }

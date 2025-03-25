@@ -91,7 +91,7 @@
                 </button>
                 <button
                   class="btn btn-danger btn-sm"
-                  (click)="confirmarEliminacion(modalEliminar, i, encabezado)"
+                  (click)="confirmarEliminacion(modalEliminar, encabezado)"
                   [disabled]="encabezadoEditando !== null"
                 >
                   <i class="bi bi-trash"></i>
@@ -124,7 +124,41 @@
               </ng-container>
             </td>
             <td>
-              <!-- Aquí irán las preguntas -->
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <select
+                    class="form-select form-select-sm"
+                    (change)="onCategoriaSeleccionada($event, i)"
+                  >
+                    <option value="">Seleccione categoría</option>
+                    <option
+                      *ngFor="let categoria of categorias"
+                      [value]="categoria.id"
+                    >
+                      {{ categoria.title }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <select
+                    class="form-select form-select-sm"
+                    (change)="onPreguntaSeleccionada($event, i)"
+                    [disabled]="!encabezado.categoriaId"
+                  >
+                    <option value="">Seleccione pregunta</option>
+                    <option
+                      *ngFor="
+                        let pregunta of getPreguntasPorCategoria(
+                          encabezado.categoriaId
+                        )
+                      "
+                      [value]="pregunta.id"
+                    >
+                      {{ pregunta.nombre }}
+                    </option>
+                  </select>
+                </div>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -141,57 +175,68 @@
         <i class="bi bi-save"></i> Guardar Encabezados
       </button>
     </div>
+
+    <!-- Modal de confirmación de eliminación -->
+    <ng-template #modalEliminar let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">
+          Confirmar eliminación
+        </h4>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="modal.dismiss()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          ¿Está seguro que desea eliminar el encabezado "{{
+            encabezadoAEliminar?.nombre
+          }}"?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="modal.dismiss()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="eliminarEncabezado()"
+        >
+          Eliminar
+        </button>
+      </div>
+    </ng-template>
+
+    <!-- Modal de advertencia de búsqueda -->
+    <ng-template #modalBusqueda let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-busqueda-title">Atención</h4>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="modal.dismiss()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Debe seleccionar un campo para la búsqueda antes de generar el archivo
+          Excel. Este campo será utilizado para buscar personas en la aplicación
+          móvil.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="modal.dismiss()">
+          Entendido
+        </button>
+      </div>
+    </ng-template>
   </div>
 </div>
-
-<!-- Modal de confirmación de eliminación -->
-<ng-template #modalEliminar let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Confirmar eliminación</h4>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="modal.dismiss()"
-    ></button>
-  </div>
-  <div class="modal-body">
-    <p>
-      ¿Está seguro que desea eliminar el encabezado "{{
-        encabezadoAEliminar?.nombre
-      }}"?
-    </p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">
-      Cancelar
-    </button>
-    <button type="button" class="btn btn-danger" (click)="eliminarEncabezado()">
-      Eliminar
-    </button>
-  </div>
-</ng-template>
-
-<ng-template #modalBusqueda let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-busqueda-title">Atención</h4>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="modal.dismiss()"
-    ></button>
-  </div>
-  <div class="modal-body">
-    <p>
-      Debe seleccionar un campo para la búsqueda antes de generar el archivo
-      Excel. Este campo será utilizado para buscar personas en la aplicación
-      móvil.
-    </p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="modal.dismiss()">
-      Entendido
-    </button>
-  </div>
-</ng-template>
