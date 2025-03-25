@@ -10,6 +10,7 @@
     >
       <div class="input-group">
         <input
+          #inputNuevoEncabezado
           type="text"
           class="form-control"
           formControlName="nuevoEncabezado"
@@ -139,6 +140,30 @@
     </button>
     <button type="button" class="btn btn-danger" (click)="eliminarEncabezado()">
       Eliminar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalBusqueda let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-busqueda-title">Atención</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <p>
+      Debe seleccionar un campo para la búsqueda antes de generar el archivo
+      Excel. Este campo será utilizado para buscar personas en la aplicación
+      móvil.
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modal.dismiss()">
+      Entendido
     </button>
   </div>
 </ng-template>

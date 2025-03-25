@@ -17,6 +17,8 @@ interface IEncabezadoExcel {
 })
 export class MapeoExcelComponent implements OnInit {
   @ViewChild('editInput') editInput!: ElementRef;
+  @ViewChild('modalBusqueda') modalBusqueda!: any;
+  @ViewChild('inputNuevoEncabezado') inputNuevoEncabezado!: ElementRef;
 
   public encabezados: IEncabezadoExcel[] = [];
   public formularioEncabezado: FormGroup;
@@ -123,12 +125,20 @@ export class MapeoExcelComponent implements OnInit {
 
       this.encabezadoEditando = null;
       this.valorEditando = '';
+
+      setTimeout(() => {
+        this.inputNuevoEncabezado.nativeElement.focus();
+      });
     }
   }
 
   public cancelarEdicion(): void {
     this.encabezadoEditando = null;
     this.valorEditando = '';
+
+    setTimeout(() => {
+      this.inputNuevoEncabezado.nativeElement.focus();
+    });
   }
 
   public alternarBusqueda(indice: number): void {
@@ -156,16 +166,20 @@ export class MapeoExcelComponent implements OnInit {
       return;
     }
 
+    const tieneCampoBusqueda = this.encabezados.some(e => e.esBusqueda);
+    if (!tieneCampoBusqueda) {
+      this.modalService.open(this.modalBusqueda, {
+        ariaLabelledBy: 'modal-busqueda-title',
+        centered: true
+      });
+      return;
+    }
+
     const datos = [this.encabezados.map(e => e.nombre)];
-
     const libroExcel: XLSX.WorkBook = XLSX.utils.book_new();
-
     const hojaExcel: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(datos);
-
     XLSX.utils.book_append_sheet(libroExcel, hojaExcel, 'Encabezados');
-
     XLSX.writeFile(libroExcel, 'encabezados.xlsx');
-
     this.toastr.success('Archivo Excel generado correctamente', 'Éxito');
   }
 }
