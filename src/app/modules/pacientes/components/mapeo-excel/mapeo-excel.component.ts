@@ -22,15 +22,6 @@ interface IEncabezadoExcel {
   preguntaTouched?: boolean;
 }
 
-interface IPreguntaFicha {
-  id: string;
-  nombre: string;
-}
-
-interface ICategoriaLocal extends ICategoria {
-  preguntas: IPreguntaFicha[];
-}
-
 @Component({
   selector: 'app-mapeo-excel',
   templateUrl: './mapeo-excel.component.html',
@@ -49,12 +40,8 @@ export class MapeoExcelComponent implements OnInit {
     null;
   public valorEditando: string = '';
   public versiones: IVersiones[] = [];
-  public categorias: ICategoriaLocal[] = [];
-  public plantillaMapeada: IExcelMappingTemplate = {
-    fichaJsonId: 0,
-    columnasExcel: [],
-    mapeo: {}
-  };
+  public categorias: ICategoria[] = [];
+  public plantillaMapeada: FormGroup;
   public mostrarErrores: boolean = false;
 
   constructor(
@@ -72,10 +59,20 @@ export class MapeoExcelComponent implements OnInit {
     this.encabezadosForm = this.fb.group({
       encabezados: this.fb.array([])
     });
+
+    this.plantillaMapeada = this.fb.group({
+      fichaJsonId: [0],
+      columnasExcel: [[]],
+      mapeo: this.fb.array([])
+    });
   }
 
   get listaEncabezados() {
     return this.encabezadosForm.get('encabezados') as FormArray;
+  }
+
+  get mapeoArray() {
+    return this.plantillaMapeada.get('mapeo') as FormArray;
   }
 
   private crearEncabezadoFormGroup(encabezado: IEncabezadoExcel): FormGroup {
@@ -84,6 +81,15 @@ export class MapeoExcelComponent implements OnInit {
       esBusqueda: [encabezado.esBusqueda],
       categoriaId: [encabezado.categoriaId || null, Validators.required],
       preguntaId: [encabezado.preguntaId || null, Validators.required]
+    });
+  }
+
+  private crearMapeoFormGroup(encabezado: IEncabezadoExcel): FormGroup {
+    return this.fb.group({
+      columnaExcel: [encabezado.nombre],
+      categoriaId: [''],
+      preguntaId: [''],
+      esBusqueda: [false]
     });
   }
 
@@ -131,7 +137,7 @@ export class MapeoExcelComponent implements OnInit {
   public onVersionSeleccionada(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const fichaId = Number(selectElement.value);
-    this.plantillaMapeada.fichaJsonId = fichaId;
+    this.plantillaMapeada.get('fichaJsonId')?.setValue(fichaId);
 
     if (fichaId) {
       const versionSeleccionada = this.versiones.find(v => v.id === fichaId);
@@ -172,12 +178,12 @@ export class MapeoExcelComponent implements OnInit {
           this.crearEncabezadoFormGroup(nuevoEncabezado)
         );
 
-        this.plantillaMapeada.columnasExcel.push(nuevoNombre);
-        this.plantillaMapeada.mapeo[nuevoNombre] = {
-          categoriaId: '',
-          preguntaId: '',
-          esBusqueda: false
-        };
+        const columnasExcel =
+          this.plantillaMapeada.get('columnasExcel')?.value || [];
+        columnasExcel.push(nuevoNombre);
+        this.plantillaMapeada.patchValue({ columnasExcel });
+
+        this.mapeoArray.push(this.crearMapeoFormGroup(nuevoEncabezado));
         this.formularioEncabezado.patchValue({ nuevoEncabezado: '' });
       }
     }
@@ -199,9 +205,21 @@ export class MapeoExcelComponent implements OnInit {
         1
       );
 
-      this.plantillaMapeada.columnasExcel =
-        this.plantillaMapeada.columnasExcel.filter(c => c !== nombreEncabezado);
-      delete this.plantillaMapeada.mapeo[nombreEncabezado];
+      const columnasExcel =
+        this.plantillaMapeada.get('columnasExcel')?.value || [];
+      this.plantillaMapeada.patchValue({
+        columnasExcel: columnasExcel.filter(
+          (c: string) => c !== nombreEncabezado
+        )
+      });
+
+      const mapeoIndex = this.mapeoArray.controls.findIndex(
+        control => control.get('columnaExcel')?.value === nombreEncabezado
+      );
+      if (mapeoIndex !== -1) {
+        this.mapeoArray.removeAt(mapeoIndex);
+      }
+
       this.modalService.dismissAll();
       this.encabezadoAEliminar = null;
     }
@@ -227,16 +245,24 @@ export class MapeoExcelComponent implements OnInit {
     if (this.encabezadoEditando !== null && valorTrimmed) {
       const nombreAntiguo =
         this.encabezados[this.encabezadoEditando.indice].nombre;
-      const mapeoAntiguo = this.plantillaMapeada.mapeo[nombreAntiguo];
 
       this.encabezados[this.encabezadoEditando.indice].nombre = valorTrimmed;
 
-      this.plantillaMapeada.columnasExcel =
-        this.plantillaMapeada.columnasExcel.map(c =>
+      const columnasExcel =
+        this.plantillaMapeada.get('columnasExcel')?.value || [];
+      this.plantillaMapeada.patchValue({
+        columnasExcel: columnasExcel.map((c: string) =>
           c === nombreAntiguo ? valorTrimmed : c
-        );
-      delete this.plantillaMapeada.mapeo[nombreAntiguo];
-      this.plantillaMapeada.mapeo[valorTrimmed] = mapeoAntiguo;
+        )
+      });
+
+      const mapeoIndex = this.mapeoArray.controls.findIndex(
+        control => control.get('columnaExcel')?.value === nombreAntiguo
+      );
+      if (mapeoIndex !== -1) {
+        const mapeoControl = this.mapeoArray.at(mapeoIndex);
+        mapeoControl.patchValue({ columnaExcel: valorTrimmed });
+      }
 
       this.encabezadoEditando = null;
       this.valorEditando = '';
@@ -265,7 +291,13 @@ export class MapeoExcelComponent implements OnInit {
 
     this.encabezados.forEach((encabezado, i) => {
       encabezado.esBusqueda = i === indice;
-      this.plantillaMapeada.mapeo[encabezado.nombre].esBusqueda = i === indice;
+    });
+
+    this.mapeoArray.controls.forEach(control => {
+      control.patchValue({
+        esBusqueda:
+          control.get('columnaExcel')?.value === encabezadoSeleccionado.nombre
+      });
     });
 
     this.toastr.info(
@@ -306,12 +338,14 @@ export class MapeoExcelComponent implements OnInit {
     XLSX.utils.book_append_sheet(libroExcel, hojaExcel, 'Encabezados');
     XLSX.writeFile(libroExcel, 'encabezados.xlsx');
     this.toastr.success('Archivo Excel generado correctamente', 'Éxito');
+    console.log({ formulario: this.encabezadosForm.value });
   }
 
   public onCategoriaSeleccionada(evento: Event, indice: number): void {
     const select = evento.target as HTMLSelectElement;
     const categoriaId = select.value ? parseInt(select.value, 10) : null;
     const encabezadoForm = this.listaEncabezados.at(indice) as FormGroup;
+    const nombreEncabezado = this.encabezados[indice].nombre;
 
     encabezadoForm.patchValue({
       categoriaId: categoriaId,
@@ -320,6 +354,17 @@ export class MapeoExcelComponent implements OnInit {
 
     this.encabezados[indice].categoriaId = categoriaId || undefined;
     this.encabezados[indice].preguntaId = undefined;
+
+    const mapeoIndex = this.mapeoArray.controls.findIndex(
+      control => control.get('columnaExcel')?.value === nombreEncabezado
+    );
+    if (mapeoIndex !== -1) {
+      const mapeoControl = this.mapeoArray.at(mapeoIndex);
+      mapeoControl.patchValue({
+        categoriaId: categoriaId?.toString() || '',
+        preguntaId: ''
+      });
+    }
 
     if (categoriaId) {
       this.toastr.info(
@@ -333,12 +378,22 @@ export class MapeoExcelComponent implements OnInit {
     const select = evento.target as HTMLSelectElement;
     const preguntaId = select.value || null;
     const encabezadoForm = this.listaEncabezados.at(indice) as FormGroup;
+    const nombreEncabezado = this.encabezados[indice].nombre;
 
     encabezadoForm.patchValue({
       preguntaId: preguntaId
     });
 
     this.encabezados[indice].preguntaId = preguntaId || undefined;
+
+    const mapeoIndex = this.mapeoArray.controls.findIndex(
+      control => control.get('columnaExcel')?.value === nombreEncabezado
+    );
+    if (mapeoIndex !== -1) {
+      this.mapeoArray.at(mapeoIndex).patchValue({
+        preguntaId: preguntaId || ''
+      });
+    }
 
     if (preguntaId) {
       this.toastr.success('Relación establecida correctamente', 'Éxito');
@@ -347,9 +402,9 @@ export class MapeoExcelComponent implements OnInit {
 
   public obtenerPreguntasPorCategoria(
     categoriaId: number | undefined
-  ): IPreguntaFicha[] {
+  ): IPregunta[] {
     if (!categoriaId) return [];
     const categoria = this.categorias.find(c => c.id === categoriaId);
-    return categoria?.preguntas || [];
+    return categoria?.values || [];
   }
 }

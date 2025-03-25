@@ -143,10 +143,10 @@
                         (encabezado.get('categoriaId')?.touched || encabezadosForm.get('encabezados')?.touched)
                       "
                     >
-                      <option [ngValue]="null">Seleccione categoría</option>
+                      <option [value]="null">Seleccione categoría</option>
                       <option
                         *ngFor="let categoria of categorias"
-                        [ngValue]="categoria.id"
+                        [value]="categoria.id"
                       >
                         {{ categoria.title }}
                       </option>
@@ -172,16 +172,16 @@
                         (encabezado.get('preguntaId')?.touched || encabezadosForm.get('encabezados')?.touched)
                       "
                     >
-                      <option [ngValue]="null">Seleccione pregunta</option>
+                      <option [value]="null">Seleccione pregunta</option>
                       <option
                         *ngFor="
                           let pregunta of obtenerPreguntasPorCategoria(
                             encabezado.get('categoriaId')?.value
                           )
                         "
-                        [ngValue]="pregunta.id"
+                        [value]="pregunta.columnName"
                       >
-                        {{ pregunta.nombre }}
+                        {{ pregunta.label }}
                       </option>
                     </select>
                     <div
