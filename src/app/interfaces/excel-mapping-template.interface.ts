@@ -1,11 +1,15 @@
+export interface IMapeoColumna {
+  categoriaId: string;
+  preguntaId: string;
+  esBusqueda: boolean;
+}
+
+export interface IMapeoColumnas {
+  [columnaExcel: string]: IMapeoColumna;
+}
+
 export interface IExcelMappingTemplate {
   fichaJsonId: number;
   columnasExcel: string[];
-  mapeo: {
-    [columnaExcel: string]: {
-      categoriaId: string;
-      preguntaId: string;
-      esBusqueda: boolean;
-    };
-  };
+  mapeo: IMapeoColumnas;
 }

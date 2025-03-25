@@ -11,12 +11,6 @@ interface IEncabezadoExcel {
   esBusqueda: boolean;
 }
 
-interface IVersion {
-  id: number;
-  version: string;
-  nombre: string;
-}
-
 @Component({
   selector: 'app-mapeo-excel',
   templateUrl: './mapeo-excel.component.html',
