@@ -19,6 +19,19 @@
                 <option [value]="100">100</option>
               </select>
             </div>
+            <div class="col-auto">
+              <label class="me-2">Versión de la ficha:</label>
+              <select
+                class="form-select form-select-sm d-inline-block w-auto"
+                [(ngModel)]="versionSeleccionada"
+                (change)="cargarRegistros()"
+              >
+                <option value="">Seleccione</option>
+                <option [value]="version.id" *ngFor="let version of versiones">
+                  {{ version.nombre }}
+                </option>
+              </select>
+            </div>
           </div>
 
           <table class="table table-striped">

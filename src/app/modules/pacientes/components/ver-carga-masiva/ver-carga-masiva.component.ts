@@ -4,6 +4,8 @@ import {
   ICargaResponse,
   IRegistroCarga
 } from '../../services/cargas/cargas.service';
+import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
+import { IVersiones } from 'src/app/helpers/interface/interface';
 
 @Component({
   selector: 'app-ver-carga-masiva',
@@ -17,20 +19,40 @@ export class VerCargaMasivaComponent implements OnInit {
   public totalRegistros: number = 0;
   public totalPaginas: number = 0;
   public cargando: boolean = false;
+  public versiones: IVersiones[] = [];
+  public versionSeleccionada: string = '';
 
   // Campos a excluir de la tabla
   private camposExcluidos: string[] = ['id', 'ficha_id'];
 
-  constructor(private cargasService: CargasService) {}
+  constructor(
+    private cargasService: CargasService,
+    private formulariosService: FormulariosService
+  ) {}
 
   ngOnInit(): void {
+    this.cargarVersiones();
     this.cargarRegistros();
   }
 
+  private cargarVersiones(): void {
+    this.formulariosService
+      .obtenerVersiones(false)
+      .subscribe((resultado: IVersiones[]) => {
+        this.versiones = resultado;
+      });
+  }
+
   public cargarRegistros(): void {
+    if (!this.versionSeleccionada) return;
+
     this.cargando = true;
     this.cargasService
-      .listarRegistrosCargados(8, this.paginaActual, this.registrosPorPagina)
+      .listarRegistrosCargados(
+        Number(this.versionSeleccionada),
+        this.paginaActual,
+        this.registrosPorPagina
+      )
       .subscribe({
         next: response => {
           this.registros = response.data.rows;
