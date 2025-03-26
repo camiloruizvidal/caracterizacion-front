@@ -45,6 +45,19 @@ export class CargasService {
     return this.http.get<ICargaResponse>(`${this.apiUrl}/${cargaId}`);
   }
 
+  public listarRegistrosCargados(
+    fichaId: number,
+    page: number = 1,
+    limit: number = 10
+  ): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${fichaId}/registros`, {
+      params: {
+        page: page.toString(),
+        limit: limit.toString()
+      }
+    });
+  }
+
   public guardarCargaEnLocalStorage(carga: ICargaResponse): void {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(carga));
   }
