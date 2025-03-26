@@ -5,7 +5,7 @@ export interface IMapeoColumna {
   esBusqueda: boolean;
 }
 
-export interface IExcelMappingTemplate {
+export interface IFormatoMapeoExcel {
   fichaJsonId: number;
   columnasExcel: string[];
   mapeo: IMapeoColumna[];

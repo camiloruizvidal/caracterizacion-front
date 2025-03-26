@@ -14,7 +14,7 @@ import {
   IFiltrosBusqueda,
   ITarjetaRespondidas
 } from '../../generador/interfaces/interface';
-import { IExcelMappingTemplate as IFormatoMapeoExcel } from 'src/app/interfaces/excel-mapping-template.interface';
+import { IFormatoMapeoExcel } from 'src/app/interfaces/excel-mapping-template.interface';
 
 @Injectable({
   providedIn: 'root'

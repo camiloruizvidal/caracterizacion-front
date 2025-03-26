@@ -1,3 +1,4 @@
+import { IFormatoMapeoExcel } from './../../../../../../../caracterizacion-back/src/modules/ficha/interfaces/mapeo-excel.interface';
 import {
   ICategoria,
   IFormulario,
@@ -15,7 +16,6 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
-import { IExcelMappingTemplate } from 'src/app/interfaces/excel-mapping-template.interface';
 import { IVersiones } from 'src/app/helpers/interface/interface';
 import { InputsService } from '../../../generador/services/inputs.service';
 import {
@@ -190,10 +190,64 @@ export class MapeoExcelComponent implements OnInit {
       if (versionSeleccionada) {
         console.log({ fichaId: versionSeleccionada.version });
         this.cargarCategorias(Number(versionSeleccionada.version));
+        this.cargarMapeoExcel(fichaId);
       }
     } else {
       this.categorias = [];
     }
+  }
+
+  private cargarMapeoExcel(fichaId: number): void {
+    this.formulariosService.obtenerMapeoExcel(fichaId).subscribe({
+      next: (mapeo: IFormatoMapeoExcel) => {
+        this.plantillaMapeada.patchValue({
+          fichaJsonId: mapeo.fichaJsonId,
+          columnasExcel: mapeo.columnasExcel
+        });
+
+        this.encabezados = [];
+        this.listaEncabezados.clear();
+        const mapeoFormArray = this.plantillaMapeada.get('mapeo') as FormArray;
+        mapeoFormArray.clear();
+
+        mapeo.mapeo.forEach(
+          (item: {
+            categoriaId: string;
+            preguntaId: string;
+            columnaExcel: string;
+            esBusqueda: boolean;
+          }) => {
+            // Crear el encabezado
+            const nuevoEncabezado: IEncabezadoExcel = {
+              nombre: item.columnaExcel,
+              esBusqueda: item.esBusqueda,
+              categoriaId: Number(item.categoriaId),
+              preguntaId: item.preguntaId
+            };
+            this.encabezados.push(nuevoEncabezado);
+
+            // Agregar al FormArray de encabezados
+            this.listaEncabezados.push(
+              this.crearEncabezadoFormGroup(nuevoEncabezado)
+            );
+
+            // Agregar al FormArray de mapeo
+            mapeoFormArray.push(
+              this.fb.group({
+                categoriaId: [item.categoriaId],
+                preguntaId: [item.preguntaId],
+                columnaExcel: [item.columnaExcel],
+                esBusqueda: [item.esBusqueda]
+              })
+            );
+          }
+        );
+      },
+      error: error => {
+        console.error('Error al obtener el mapeo:', error);
+        this.toastr.error('Error al cargar el mapeo de Excel', 'Error');
+      }
+    });
   }
 
   public onFileSelected(event: any): void {
