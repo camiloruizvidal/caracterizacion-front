@@ -11,6 +11,26 @@ export enum EEstadoCargaEnum {
 }
 
 export interface ICargaResponse {
+  id: number;
+  estado: string;
+  cantidad_registros: number;
+  mensaje_error?: string;
+}
+
+export interface IRegistroCarga {
+  id: number;
+  carga_id: number;
+  ficha_id: number;
+  [key: string]: any;
+}
+
+export interface IRegistrosCargaResponse {
+  count: number;
+  totalPages: number;
+  rows: IRegistroCarga[];
+}
+
+export interface ICargaResponse {
   code: number;
   msj: string;
   data: {
@@ -19,6 +39,12 @@ export interface ICargaResponse {
     cantidad_registros: number;
     mensaje_error: string;
   };
+}
+
+export interface IApiResponse<T> {
+  code: number;
+  msj: string;
+  data: T;
 }
 
 @Injectable({
@@ -49,13 +75,16 @@ export class CargasService {
     fichaId: number,
     page: number = 1,
     limit: number = 10
-  ): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${fichaId}/registros`, {
-      params: {
-        page: page.toString(),
-        limit: limit.toString()
+  ): Observable<IApiResponse<IRegistrosCargaResponse>> {
+    return this.http.get<IApiResponse<IRegistrosCargaResponse>>(
+      `${this.apiUrl}/${fichaId}/registros`,
+      {
+        params: {
+          page: page.toString(),
+          limit: limit.toString()
+        }
       }
-    });
+    );
   }
 
   public guardarCargaEnLocalStorage(carga: ICargaResponse): void {
