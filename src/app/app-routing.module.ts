@@ -23,7 +23,7 @@ const routes: Routes = [
     canActivate: [loginGuard]
   },
   {
-    path: 'pacientes',
+    path: 'cargas',
     loadChildren: () =>
       import('../app/modules/pacientes/pacientes.module').then(
         m => m.PacientesModule
