@@ -33,7 +33,6 @@ export class VerCargaMasivaComponent implements OnInit {
       .listarRegistrosCargados(8, this.paginaActual, this.registrosPorPagina)
       .subscribe({
         next: response => {
-          console.log({ response });
           this.registros = response.data.rows;
           this.totalRegistros = response.data.count;
           this.totalPaginas = response.data.totalPages;
@@ -86,5 +85,10 @@ export class VerCargaMasivaComponent implements OnInit {
       this.paginaActual = pagina;
       this.cargarRegistros();
     }
+  }
+
+  public cambiarLimite(): void {
+    this.paginaActual = 1;
+    this.cargarRegistros();
   }
 }
