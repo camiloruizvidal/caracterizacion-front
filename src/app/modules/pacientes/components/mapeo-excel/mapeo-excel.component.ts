@@ -160,12 +160,28 @@ export class MapeoExcelComponent implements OnInit {
 
   private verificarEstadoCarga(): void {
     if (this.cargaActual?.data?.id) {
-      this.cargasService
-        .verificarEstadoCarga(this.cargaActual.data.id)
-        .subscribe(response => {
-          this.cargaActual = response;
-          this.cargasService.guardarCargaEnLocalStorage(response);
-        });
+      const intervalId = setInterval(() => {
+        this.cargasService
+          .verificarEstadoCarga(this.cargaActual!.data.id)
+          .subscribe({
+            next: response => {
+              this.cargaActual = response;
+              this.cargasService.guardarCargaEnLocalStorage(response);
+
+              if (
+                [EEstadoCargaEnum.CARGADO, EEstadoCargaEnum.ERROR].includes(
+                  response.data.estado
+                )
+              ) {
+                clearInterval(intervalId);
+              }
+            },
+            error: error => {
+              console.error('Error al verificar estado de carga:', error);
+              clearInterval(intervalId);
+            }
+          });
+      }, 5000);
     }
   }
 
