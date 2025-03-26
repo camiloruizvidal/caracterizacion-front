@@ -69,34 +69,37 @@
             </button>
           </div>
           <div class="form-text">Formatos permitidos: XLS, XLSX, CSV</div>
-          {{ cargaActual?.data?.estado | json }}
           <!-- Estado de la carga -->
           <div *ngIf="cargaActual" class="mt-2">
             <div
               [class]="
                 'alert alert-' +
-                (cargaActual.data.estado === EEstadoCargaEnum.INGRESADO
-                  ? 'info'
+                (cargaActual.data.estado === EEstadoCargaEnum.CARGADO
+                  ? 'success'
                   : cargaActual.data.estado === EEstadoCargaEnum.ERROR
                   ? 'danger'
+                  : cargaActual.data.estado === EEstadoCargaEnum.INGRESADO
+                  ? 'info'
                   : 'warning')
               "
             >
               <i
                 class="bi"
                 [class]="
-                  cargaActual.data.estado === EEstadoCargaEnum.INGRESADO
-                    ? 'bi-info-circle'
+                  cargaActual.data.estado === EEstadoCargaEnum.CARGADO
+                    ? 'bi-check-circle'
                     : cargaActual.data.estado === EEstadoCargaEnum.ERROR
                     ? 'bi-x-circle'
+                    : cargaActual.data.estado === EEstadoCargaEnum.INGRESADO
+                    ? 'bi-info-circle'
                     : 'bi-exclamation-circle'
                 "
               ></i>
               {{ cargaActual.data.id }} -
-              {{ cargaActual.msj }}
+              {{ cargaActual.data.estado }}
               <br />
               <i class="bi bi-arrow-90deg-up"></i> Registros:
-              {{ cargaActual.data.cantidad_registros }}
+              {{ cargaActual.data.cantidad_registros | number }}
             </div>
           </div>
         </div>
