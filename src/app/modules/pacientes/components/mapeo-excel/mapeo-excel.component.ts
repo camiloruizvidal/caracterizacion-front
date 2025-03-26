@@ -20,7 +20,8 @@ import { IVersiones } from 'src/app/helpers/interface/interface';
 import { InputsService } from '../../../generador/services/inputs.service';
 import {
   CargasService,
-  ICargaResponse
+  ICargaResponse,
+  EEstadoCargaEnum
 } from '../../services/cargas/cargas.service';
 
 interface IEncabezadoExcel {
@@ -56,6 +57,7 @@ export class MapeoExcelComponent implements OnInit {
   public mostrarErrores: boolean = false;
   public archivoSeleccionado: File | null = null;
   public cargaActual: ICargaResponse | null = null;
+  public EEstadoCargaEnum = EEstadoCargaEnum;
 
   constructor(
     private fb: FormBuilder,
@@ -165,9 +167,12 @@ export class MapeoExcelComponent implements OnInit {
           this.cargasService.guardarCargaEnLocalStorage(response);
 
           if (
-            response.estado === 'rechazado' ||
-            response.estado === 'cancelado'
+            response.estado === EEstadoCargaEnum.ERROR ||
+            response.estado === EEstadoCargaEnum.CANCELADO
           ) {
+            this.cargasService.limpiarCargaDelLocalStorage();
+            this.cargaActual = null;
+          } else if (response.estado === EEstadoCargaEnum.CARGADO) {
             this.cargasService.limpiarCargaDelLocalStorage();
             this.cargaActual = null;
           } else {

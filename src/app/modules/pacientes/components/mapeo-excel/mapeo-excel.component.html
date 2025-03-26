@@ -74,9 +74,9 @@
             <div
               [class]="
                 'alert alert-' +
-                (cargaActual.estado === 'registrado'
+                (cargaActual.estado === EEstadoCargaEnum.INGRESADO
                   ? 'info'
-                  : cargaActual.estado === 'rechazado'
+                  : cargaActual.estado === EEstadoCargaEnum.ERROR
                   ? 'danger'
                   : 'warning')
               "
@@ -84,9 +84,9 @@
               <i
                 class="bi"
                 [class]="
-                  cargaActual.estado === 'registrado'
+                  cargaActual.estado === EEstadoCargaEnum.INGRESADO
                     ? 'bi-info-circle'
-                    : cargaActual.estado === 'rechazado'
+                    : cargaActual.estado === EEstadoCargaEnum.ERROR
                     ? 'bi-x-circle'
                     : 'bi-exclamation-circle'
                 "
