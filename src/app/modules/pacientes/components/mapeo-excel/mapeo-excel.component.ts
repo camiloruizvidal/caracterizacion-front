@@ -38,17 +38,17 @@ interface IEncabezadoExcel {
   styleUrls: ['./mapeo-excel.component.scss']
 })
 export class MapeoExcelComponent implements OnInit {
-  @ViewChild('editInput') editInput!: ElementRef;
+  @ViewChild('inputEdicion') inputEdicion!: ElementRef;
   @ViewChild('modalBusqueda') modalBusqueda!: any;
   @ViewChild('inputNuevoEncabezado') inputNuevoEncabezado!: ElementRef;
 
   public encabezados: IEncabezadoExcel[] = [];
   public formularioEncabezado: FormGroup;
-  public encabezadosForm: FormGroup;
-  public encabezadoAEliminar: IEncabezadoExcel | null = null;
-  public encabezadoEditando: { indice: number; valorOriginal: string } | null =
+  public formularioEncabezados: FormGroup;
+  public encabezadoSeleccionado: IEncabezadoExcel | null = null;
+  public encabezadoEnEdicion: { indice: number; valorOriginal: string } | null =
     null;
-  public valorEditando: string = '';
+  public valorEnEdicion: string = '';
   public versiones: IVersiones[] = [];
   public versionSeleccionada: number | null = null;
   public categorias: ICategoria[] = [];
@@ -70,7 +70,7 @@ export class MapeoExcelComponent implements OnInit {
       versionId: [null, [Validators.required]]
     });
 
-    this.encabezadosForm = this.fb.group({
+    this.formularioEncabezados = this.fb.group({
       encabezados: this.fb.array([])
     });
 
@@ -82,14 +82,14 @@ export class MapeoExcelComponent implements OnInit {
   }
 
   get listaEncabezados() {
-    return this.encabezadosForm.get('encabezados') as FormArray;
+    return this.formularioEncabezados.get('encabezados') as FormArray;
   }
 
   get mapeoArray() {
     return this.plantillaMapeada.get('mapeo') as FormArray;
   }
 
-  private crearEncabezadoFormGroup(encabezado: IEncabezadoExcel): FormGroup {
+  private crearFormularioEncabezado(encabezado: IEncabezadoExcel): FormGroup {
     return this.fb.group({
       nombre: [encabezado.nombre],
       esBusqueda: [encabezado.esBusqueda],
@@ -98,7 +98,7 @@ export class MapeoExcelComponent implements OnInit {
     });
   }
 
-  private crearMapeoFormGroup(encabezado: IEncabezadoExcel): FormGroup {
+  private crearFormularioMapeo(encabezado: IEncabezadoExcel): FormGroup {
     return this.fb.group({
       columnaExcel: [encabezado.nombre],
       categoriaId: [''],
@@ -171,15 +171,14 @@ export class MapeoExcelComponent implements OnInit {
             this.cargasService.limpiarCargaDelLocalStorage();
             this.cargaActual = null;
           } else {
-            // Si sigue en proceso, verificamos de nuevo en 5 segundos
             setTimeout(() => this.verificarEstadoCarga(), 5000);
           }
         });
     }
   }
 
-  public onVersionSeleccionada(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement;
+  public seleccionarVersion(evento: Event): void {
+    const selectElement = evento.target as HTMLSelectElement;
     const fichaId = Number(selectElement.value);
     this.versionSeleccionada = fichaId;
     this.plantillaMapeada.get('fichaJsonId')?.setValue(fichaId);
@@ -188,7 +187,6 @@ export class MapeoExcelComponent implements OnInit {
         (version: IVersiones) => version.id === fichaId
       );
       if (versionSeleccionada) {
-        console.log({ fichaId: versionSeleccionada.version });
         this.cargarCategorias(Number(versionSeleccionada.version));
         this.cargarMapeoExcel(fichaId);
       }
@@ -211,33 +209,30 @@ export class MapeoExcelComponent implements OnInit {
         mapeoFormArray.clear();
 
         mapeo.mapeo.forEach(
-          (item: {
+          (mapeoItem: {
             categoriaId: string;
             preguntaId: string;
             columnaExcel: string;
             esBusqueda: boolean;
           }) => {
-            // Crear el encabezado
             const nuevoEncabezado: IEncabezadoExcel = {
-              nombre: item.columnaExcel,
-              esBusqueda: item.esBusqueda,
-              categoriaId: Number(item.categoriaId),
-              preguntaId: item.preguntaId
+              nombre: mapeoItem.columnaExcel,
+              esBusqueda: mapeoItem.esBusqueda,
+              categoriaId: Number(mapeoItem.categoriaId),
+              preguntaId: mapeoItem.preguntaId
             };
             this.encabezados.push(nuevoEncabezado);
 
-            // Agregar al FormArray de encabezados
             this.listaEncabezados.push(
-              this.crearEncabezadoFormGroup(nuevoEncabezado)
+              this.crearFormularioEncabezado(nuevoEncabezado)
             );
 
-            // Agregar al FormArray de mapeo
             mapeoFormArray.push(
               this.fb.group({
-                categoriaId: [item.categoriaId],
-                preguntaId: [item.preguntaId],
-                columnaExcel: [item.columnaExcel],
-                esBusqueda: [item.esBusqueda]
+                categoriaId: [mapeoItem.categoriaId],
+                preguntaId: [mapeoItem.preguntaId],
+                columnaExcel: [mapeoItem.columnaExcel],
+                esBusqueda: [mapeoItem.esBusqueda]
               })
             );
           }
@@ -250,10 +245,10 @@ export class MapeoExcelComponent implements OnInit {
     });
   }
 
-  public onFileSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.archivoSeleccionado = file;
+  public seleccionarArchivo(evento: any): void {
+    const archivo = evento.target.files[0];
+    if (archivo) {
+      this.archivoSeleccionado = archivo;
     }
   }
 
@@ -292,7 +287,7 @@ export class MapeoExcelComponent implements OnInit {
 
       if (
         nuevoNombre &&
-        !this.encabezados.some(e => e.nombre === nuevoNombre)
+        !this.encabezados.some(encabezado => encabezado.nombre === nuevoNombre)
       ) {
         const nuevoEncabezado: IEncabezadoExcel = {
           nombre: nuevoNombre,
@@ -301,7 +296,7 @@ export class MapeoExcelComponent implements OnInit {
 
         this.encabezados.push(nuevoEncabezado);
         this.listaEncabezados.push(
-          this.crearEncabezadoFormGroup(nuevoEncabezado)
+          this.crearFormularioEncabezado(nuevoEncabezado)
         );
 
         const columnasExcel =
@@ -309,25 +304,25 @@ export class MapeoExcelComponent implements OnInit {
         columnasExcel.push(nuevoNombre);
         this.plantillaMapeada.patchValue({ columnasExcel });
 
-        this.mapeoArray.push(this.crearMapeoFormGroup(nuevoEncabezado));
+        this.mapeoArray.push(this.crearFormularioMapeo(nuevoEncabezado));
         this.formularioEncabezado.patchValue({ nuevoEncabezado: '' });
       }
     }
   }
 
   public confirmarEliminacion(modal: any, encabezado: IEncabezadoExcel): void {
-    this.encabezadoAEliminar = encabezado;
+    this.encabezadoSeleccionado = encabezado;
     this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' });
   }
 
   public eliminarEncabezado(): void {
-    if (this.encabezadoAEliminar !== null) {
+    if (this.encabezadoSeleccionado !== null) {
       const nombreEncabezado =
-        this.encabezados[this.encabezados.indexOf(this.encabezadoAEliminar)]
+        this.encabezados[this.encabezados.indexOf(this.encabezadoSeleccionado)]
           .nombre;
 
       this.encabezados.splice(
-        this.encabezados.indexOf(this.encabezadoAEliminar),
+        this.encabezados.indexOf(this.encabezadoSeleccionado),
         1
       );
 
@@ -335,7 +330,7 @@ export class MapeoExcelComponent implements OnInit {
         this.plantillaMapeada.get('columnasExcel')?.value || [];
       this.plantillaMapeada.patchValue({
         columnasExcel: columnasExcel.filter(
-          (c: string) => c !== nombreEncabezado
+          (columna: string) => columna !== nombreEncabezado
         )
       });
 
@@ -348,38 +343,38 @@ export class MapeoExcelComponent implements OnInit {
       }
 
       this.modalService.dismissAll();
-      this.encabezadoAEliminar = null;
+      this.encabezadoSeleccionado = null;
     }
   }
 
   public editarEncabezado(indice: number): void {
-    this.encabezadoEditando = {
+    this.encabezadoEnEdicion = {
       indice,
       valorOriginal: this.encabezados[indice].nombre
     };
-    this.valorEditando = this.encabezados[indice].nombre;
+    this.valorEnEdicion = this.encabezados[indice].nombre;
     setTimeout(() => {
-      this.editInput.nativeElement.focus();
+      this.inputEdicion.nativeElement.focus();
     });
   }
 
-  public actualizarValorEditando(evento: Event): void {
-    this.valorEditando = (evento.target as HTMLInputElement).value;
+  public actualizarValorEdicion(evento: Event): void {
+    this.valorEnEdicion = (evento.target as HTMLInputElement).value;
   }
 
   public guardarEdicion(): void {
-    const valorTrimmed = this.valorEditando.trim();
-    if (this.encabezadoEditando !== null && valorTrimmed) {
+    const valorTrimmed = this.valorEnEdicion.trim();
+    if (this.encabezadoEnEdicion !== null && valorTrimmed) {
       const nombreAntiguo =
-        this.encabezados[this.encabezadoEditando.indice].nombre;
+        this.encabezados[this.encabezadoEnEdicion.indice].nombre;
 
-      this.encabezados[this.encabezadoEditando.indice].nombre = valorTrimmed;
+      this.encabezados[this.encabezadoEnEdicion.indice].nombre = valorTrimmed;
 
       const columnasExcel =
         this.plantillaMapeada.get('columnasExcel')?.value || [];
       this.plantillaMapeada.patchValue({
-        columnasExcel: columnasExcel.map((c: string) =>
-          c === nombreAntiguo ? valorTrimmed : c
+        columnasExcel: columnasExcel.map((columna: string) =>
+          columna === nombreAntiguo ? valorTrimmed : columna
         )
       });
 
@@ -392,8 +387,8 @@ export class MapeoExcelComponent implements OnInit {
         mapeoControl.patchValue({ columnaExcel: valorTrimmed });
       }
 
-      this.encabezadoEditando = null;
-      this.valorEditando = '';
+      this.encabezadoEnEdicion = null;
+      this.valorEnEdicion = '';
 
       setTimeout(() => {
         this.inputNuevoEncabezado.nativeElement.focus();
@@ -402,8 +397,8 @@ export class MapeoExcelComponent implements OnInit {
   }
 
   public cancelarEdicion(): void {
-    this.encabezadoEditando = null;
-    this.valorEditando = '';
+    this.encabezadoEnEdicion = null;
+    this.valorEnEdicion = '';
 
     setTimeout(() => {
       this.inputNuevoEncabezado.nativeElement.focus();
@@ -437,9 +432,9 @@ export class MapeoExcelComponent implements OnInit {
   }
 
   public guardarEncabezados(): void {
-    this.encabezadosForm.markAllAsTouched();
+    this.formularioEncabezados.markAllAsTouched();
 
-    if (this.encabezadosForm.invalid) {
+    if (this.formularioEncabezados.invalid) {
       this.toastr.warning(
         'Debe completar la categoría y pregunta para todos los encabezados',
         'Advertencia'
@@ -452,7 +447,9 @@ export class MapeoExcelComponent implements OnInit {
       return;
     }
 
-    const tieneCampoBusqueda = this.encabezados.some(e => e.esBusqueda);
+    const tieneCampoBusqueda = this.encabezados.some(
+      encabezado => encabezado.esBusqueda
+    );
     if (!tieneCampoBusqueda) {
       this.modalService.open(this.modalBusqueda, {
         ariaLabelledBy: 'modal-busqueda-title',
@@ -467,7 +464,7 @@ export class MapeoExcelComponent implements OnInit {
         next: () => {
           this.toastr.success('Mapeo guardado correctamente', 'Éxito');
 
-          const datos = [this.encabezados.map(e => e.nombre)];
+          const datos = [this.encabezados.map(encabezado => encabezado.nombre)];
           const libroExcel: XLSX.WorkBook = XLSX.utils.book_new();
           const hojaExcel: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(datos);
           XLSX.utils.book_append_sheet(libroExcel, hojaExcel, 'Encabezados');
@@ -481,7 +478,7 @@ export class MapeoExcelComponent implements OnInit {
       });
   }
 
-  public onCategoriaSeleccionada(evento: Event, indice: number): void {
+  public seleccionarCategoria(evento: Event, indice: number): void {
     const select = evento.target as HTMLSelectElement;
     const categoriaId = select.value ? parseInt(select.value, 10) : null;
     const encabezadoForm = this.listaEncabezados.at(indice) as FormGroup;
@@ -508,7 +505,7 @@ export class MapeoExcelComponent implements OnInit {
     }
   }
 
-  public onPreguntaSeleccionada(evento: Event, indice: number): void {
+  public seleccionarPregunta(evento: Event, indice: number): void {
     const select = evento.target as HTMLSelectElement;
     const preguntaId = select.value || null;
     const encabezadoForm = this.listaEncabezados.at(indice) as FormGroup;
@@ -535,7 +532,9 @@ export class MapeoExcelComponent implements OnInit {
     categoriaId: number | undefined
   ): IPregunta[] {
     if (!categoriaId) return [];
-    const categoria = this.categorias.find(c => c.id === categoriaId);
+    const categoria = this.categorias.find(
+      categoria => categoria.id === categoriaId
+    );
     return categoria?.values || [];
   }
 }

@@ -15,7 +15,7 @@
             id="versionId"
             class="form-select"
             formControlName="versionId"
-            (change)="onVersionSeleccionada($event)"
+            (change)="seleccionarVersion($event)"
           >
             <option *ngFor="let version of versiones" [value]="version.id">
               {{ version.nombre }}
@@ -56,7 +56,7 @@
               class="form-control"
               id="excelFile"
               accept=".xls,.xlsx,.csv"
-              (change)="onFileSelected($event)"
+              (change)="seleccionarArchivo($event)"
               [disabled]="!versionSeleccionada"
             />
             <button
@@ -106,7 +106,7 @@
 
     <!-- Tabla de encabezados -->
     <div class="table-responsive" *ngIf="encabezados.length > 0">
-      <form [formGroup]="encabezadosForm">
+      <form [formGroup]="formularioEncabezados">
         <table class="table table-bordered table-hover">
           <thead>
             <tr>
@@ -126,17 +126,17 @@
               <td class="text-center">
                 <div class="btn-group">
                   <button
-                    *ngIf="encabezadoEditando?.indice === i"
+                    *ngIf="encabezadoEnEdicion?.indice === i"
                     class="btn btn-success btn-sm"
                     (click)="guardarEdicion()"
                   >
                     <i class="bi bi-check-lg"></i>
                   </button>
                   <button
-                    *ngIf="encabezadoEditando?.indice !== i"
+                    *ngIf="encabezadoEnEdicion?.indice !== i"
                     class="btn btn-warning btn-sm"
                     (click)="editarEncabezado(i)"
-                    [disabled]="encabezadoEditando !== null"
+                    [disabled]="encabezadoEnEdicion !== null"
                   >
                     <i class="bi bi-pencil"></i>
                   </button>
@@ -145,7 +145,7 @@
                     (click)="
                       confirmarEliminacion(modalEliminar, encabezados[i])
                     "
-                    [disabled]="encabezadoEditando !== null"
+                    [disabled]="encabezadoEnEdicion !== null"
                   >
                     <i class="bi bi-trash"></i>
                   </button>
@@ -154,25 +154,25 @@
                     [class.btn-primary]="!encabezados[i].esBusqueda"
                     [class.btn-success]="encabezados[i].esBusqueda"
                     (click)="alternarBusqueda(i)"
-                    [disabled]="encabezadoEditando !== null"
+                    [disabled]="encabezadoEnEdicion !== null"
                   >
                     <i class="bi bi-search"></i>
                   </button>
                 </div>
               </td>
               <td>
-                <ng-container *ngIf="encabezadoEditando?.indice === i">
+                <ng-container *ngIf="encabezadoEnEdicion?.indice === i">
                   <input
-                    #editInput
+                    #inputEdicion
                     type="text"
                     class="form-control"
                     [value]="encabezados[i].nombre"
-                    (input)="actualizarValorEditando($event)"
+                    (input)="actualizarValorEdicion($event)"
                     (keyup.enter)="guardarEdicion()"
                     (keyup.escape)="cancelarEdicion()"
                   />
                 </ng-container>
-                <ng-container *ngIf="encabezadoEditando?.indice !== i">
+                <ng-container *ngIf="encabezadoEnEdicion?.indice !== i">
                   {{ encabezados[i].nombre }}
                 </ng-container>
               </td>
@@ -182,7 +182,7 @@
                     <select
                       class="form-select form-select-sm"
                       formControlName="categoriaId"
-                      (change)="onCategoriaSeleccionada($event, i)"
+                      (change)="seleccionarCategoria($event, i)"
                       [class.is-invalid]="
                         encabezado.get('categoriaId')?.errors?.['required']
                       "
@@ -208,7 +208,7 @@
                     <select
                       class="form-select form-select-sm"
                       formControlName="preguntaId"
-                      (change)="onPreguntaSeleccionada($event, i)"
+                      (change)="seleccionarPregunta($event, i)"
                       [disabled]="!encabezado.get('categoriaId')?.value"
                       [class.is-invalid]="
                         encabezado.get('preguntaId')?.errors?.['required']
@@ -247,7 +247,7 @@
       <button
         class="btn btn-success"
         (click)="guardarEncabezados()"
-        [disabled]="encabezadoEditando !== null"
+        [disabled]="encabezadoEnEdicion !== null"
       >
         <i class="bi bi-save"></i> Guardar Encabezados
       </button>
@@ -269,7 +269,7 @@
       <div class="modal-body">
         <p>
           ¿Está seguro que desea eliminar el encabezado "{{
-            encabezadoAEliminar?.nombre
+            encabezadoSeleccionado?.nombre
           }}"?
         </p>
       </div>
