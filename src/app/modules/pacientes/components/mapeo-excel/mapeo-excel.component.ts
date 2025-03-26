@@ -159,25 +159,12 @@ export class MapeoExcelComponent implements OnInit {
   }
 
   private verificarEstadoCarga(): void {
-    if (this.cargaActual) {
+    if (this.cargaActual?.data?.id) {
       this.cargasService
-        .verificarEstadoCarga(this.cargaActual.carga_id)
+        .verificarEstadoCarga(this.cargaActual.data.id)
         .subscribe(response => {
           this.cargaActual = response;
           this.cargasService.guardarCargaEnLocalStorage(response);
-
-          if (
-            response.estado === EEstadoCargaEnum.ERROR ||
-            response.estado === EEstadoCargaEnum.CANCELADO
-          ) {
-            this.cargasService.limpiarCargaDelLocalStorage();
-            this.cargaActual = null;
-          } else if (response.estado === EEstadoCargaEnum.CARGADO) {
-            this.cargasService.limpiarCargaDelLocalStorage();
-            this.cargaActual = null;
-          } else {
-            setTimeout(() => this.verificarEstadoCarga(), 5000);
-          }
         });
     }
   }

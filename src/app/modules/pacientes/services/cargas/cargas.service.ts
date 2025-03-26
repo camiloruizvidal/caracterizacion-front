@@ -7,14 +7,18 @@ export enum EEstadoCargaEnum {
   INGRESADO = 'ingresado',
   PROCESANDO = 'procesando',
   CARGADO = 'cargado',
-  CANCELADO = 'cancelado',
   ERROR = 'error'
 }
 
 export interface ICargaResponse {
-  carga_id: number;
-  message: string;
-  estado: EEstadoCargaEnum;
+  code: number;
+  msj: string;
+  data: {
+    id: number;
+    estado: EEstadoCargaEnum;
+    cantidad_registros: number;
+    mensaje_error: string;
+  };
 }
 
 @Injectable({
