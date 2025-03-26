@@ -6,20 +6,6 @@
         <div class="table-responsive">
           <div class="row mb-3 align-items-center">
             <div class="col-auto">
-              <label class="me-2">Registros por página:</label>
-              <select
-                class="form-select form-select-sm d-inline-block w-auto"
-                [(ngModel)]="registrosPorPagina"
-                (change)="cambiarLimite()"
-              >
-                <option [value]="5">5</option>
-                <option [value]="10">10</option>
-                <option [value]="25">25</option>
-                <option [value]="50">50</option>
-                <option [value]="100">100</option>
-              </select>
-            </div>
-            <div class="col-auto">
               <label class="me-2">Versión de la ficha:</label>
               <select
                 class="form-select form-select-sm d-inline-block w-auto"
@@ -50,12 +36,6 @@
               </tr>
             </tbody>
           </table>
-          <div class="col-md-12">
-            <span class="text-muted">
-              Página {{ paginaActual }} de {{ totalPaginas }} | Total:
-              {{ totalRegistros }} registros
-            </span>
-          </div>
 
           <nav aria-label="Navegación de páginas">
             <ul class="pagination">
@@ -94,6 +74,26 @@
               </li>
             </ul>
           </nav>
+          <div class="col-auto">
+            <label class="me-2">Registros por página:</label>
+            <select
+              class="form-select form-select-sm d-inline-block w-auto"
+              [(ngModel)]="registrosPorPagina"
+              (change)="cambiarLimite()"
+            >
+              <option [value]="5">5</option>
+              <option [value]="10">10</option>
+              <option [value]="25">25</option>
+              <option [value]="50">50</option>
+              <option [value]="100">100</option>
+            </select>
+          </div>
+          <div class="col-md-12">
+            <span class="text-muted">
+              Página {{ paginaActual }} de {{ totalPaginas }} | Total:
+              {{ totalRegistros }} registros
+            </span>
+          </div>
         </div>
       </div>
     </div>
