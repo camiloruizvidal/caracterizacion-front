@@ -407,31 +407,36 @@ export class InputsGeneratorComponent implements OnInit {
     indexCard: number,
     tarjeta: TipoForm
   ) {
-    // const ordenAnterior = Number(value.orden);
-    // const items = this.formularioGenerado[tarjeta][indexCard]?.values;
-    // if (items && Array.isArray(items)) {
-    //   const item = items[ordenAnterior];
-    //   items.splice(ordenAnterior, 1);
-    //   items.splice(Number(nuevoOrden.target.value), 0, item);
-    //   this.actualizarOrden();
-    // } else {
-    // }
+    const ordenAnterior = Number(value.orden);
+    const tipoData = this.tipoData[tarjeta];
+    const items = this.formularioGenerado[tipoData][indexCard]?.values;
+    if (items && Array.isArray(items)) {
+      const item = items[ordenAnterior];
+      items.splice(ordenAnterior, 1);
+      items.splice(Number(nuevoOrden.target.value), 0, item);
+      this.actualizarOrden();
+    }
   }
 
   public actualizarOrden() {
     const tipos: TipoForm[] = ['grupalNombre', 'individualNombre'];
-    // tipos.forEach((tipo: TipoForm) => {
-    //   this.formularioGenerado[tipo].map((item: ICategoria, index: number) => {
-    //     let orden = 0;
-    //     item.orden = index;
-    //     return item.values?.map(items => {
-    //       items.orden = orden;
-    //       orden = orden + 1;
-    //       return items;
-    //     });
-    //   });
-    // });
-    // this.guardarFormulario();
+    tipos.forEach((tipo: TipoForm) => {
+      const tipoData = this.tipoData[tipo];
+      const categorias = this.formularioGenerado[tipoData];
+      if (Array.isArray(categorias)) {
+        categorias.forEach((item: ICategoria, index: number) => {
+          let orden = 0;
+          item.orden = index;
+          if (item.values && Array.isArray(item.values)) {
+            item.values.forEach(items => {
+              items.orden = orden;
+              orden = orden + 1;
+            });
+          }
+        });
+      }
+    });
+    this.guardarFormulario();
   }
 
   public getKeys(value: any): string[] {
