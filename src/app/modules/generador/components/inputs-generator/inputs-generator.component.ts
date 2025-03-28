@@ -581,6 +581,17 @@ export class InputsGeneratorComponent implements OnInit {
       indexValue,
       1
     );
+
+    const categorias = this.formularioGenerado[tipoKey] as any[];
+    categorias.forEach(categoria => {
+      if (categoria.values && Array.isArray(categoria.values)) {
+        categoria.values.forEach((pregunta: IPregunta, i: number) => {
+          pregunta.orden = i;
+        });
+      }
+    });
+
+    this.guardarFormulario();
   }
 
   public getValue(key: any, value: any): any {
