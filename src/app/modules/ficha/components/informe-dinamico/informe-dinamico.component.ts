@@ -7,6 +7,25 @@ import {
   ITarjetaRespondidas
 } from 'src/app/modules/generador/interfaces/interface';
 import { InputsService } from 'src/app/modules/generador/services/inputs.service';
+import { IRespuesta } from 'src/app/core/interfaces/global.interface';
+import { DataService } from 'src/app/modules/filtro-maps/services/data/data.service';
+import { IUserDetail } from 'src/app/modules/user/interface/user';
+import { UsersService } from 'src/app/modules/user/services/user/users.service';
+
+interface IEstadisticaCaracterizador {
+  caracterizador_id: number;
+  caracterizador_nombre: string;
+  ficha_nombre: string;
+  ficha_version: number;
+  mes: string;
+  total_fichas: number;
+}
+
+interface IRespuestaEstadisticas {
+  count: number;
+  totalPages: number;
+  rows: IEstadisticaCaracterizador[];
+}
 
 @Component({
   selector: 'app-informe-dinamico',
@@ -23,13 +42,29 @@ export class InformeDinamicoComponent implements OnInit {
   public totalRegistros: number = 0;
   public totalPaginas: number = 0;
 
+  // Propiedades para la tabla de caracterizadores
+  public versionSeleccionadaCaracterizadores: string = '';
+  public caracterizadorSeleccionado: number = 0;
+  public caracterizadores: IUserDetail[] = [];
+  public estadisticasCaracterizadores: IRespuestaEstadisticas = {
+    count: 0,
+    totalPages: 0,
+    rows: []
+  };
+  public paginaActualCaracterizadores: number = 1;
+  public registrosPorPaginaCaracterizadores: number = 10;
+  public totalRegistrosCaracterizadores: number = 0;
+  public totalPaginasCaracterizadores: number = 0;
+
   constructor(
     private formulariosService: FormulariosService,
-    private inputsService: InputsService
+    private inputsService: InputsService,
+    private usersService: UsersService
   ) {}
 
   ngOnInit(): void {
     this.cargarFichasVersiones();
+    this.cargarCaracterizadores();
   }
 
   private cargarFichasVersiones(): void {
@@ -38,6 +73,12 @@ export class InformeDinamicoComponent implements OnInit {
       .subscribe((resultado: IVersiones[]) => {
         this.versiones = resultado;
       });
+  }
+
+  private cargarCaracterizadores(): void {
+    this.usersService.getUsers(1, 1000000, 2, '').subscribe(response => {
+      this.caracterizadores = response.data;
+    });
   }
 
   public cargarTipoFichas(): void {
@@ -85,5 +126,64 @@ export class InformeDinamicoComponent implements OnInit {
   public cambiarLimite(): void {
     this.paginaActual = 1;
     this.filtrar([]);
+  }
+
+  // Métodos para la tabla de caracterizadores
+  public cargarTipoFichasCaracterizadores(): void {
+    this.cargarEstadisticasCaracterizadores();
+  }
+
+  public cargarEstadisticasCaracterizadores(): void {
+    const fichaVersion = this.versionSeleccionadaCaracterizadores
+      ? Number(this.versionSeleccionadaCaracterizadores)
+      : undefined;
+    const caracterizadorId = this.caracterizadorSeleccionado;
+
+    this.formulariosService
+      .obtenerEstadisticasCaracterizadores(
+        fichaVersion,
+        this.paginaActualCaracterizadores,
+        this.registrosPorPaginaCaracterizadores,
+        caracterizadorId
+      )
+      .subscribe((response: IRespuesta<IRespuestaEstadisticas>) => {
+        this.estadisticasCaracterizadores = response.data;
+        this.totalRegistrosCaracterizadores = response.data.count;
+        this.totalPaginasCaracterizadores = response.data.totalPages;
+      });
+  }
+
+  public obtenerPaginasCaracterizadores(): number[] {
+    const paginas: number[] = [];
+    const maxPaginas = 5;
+
+    let inicio = Math.max(
+      1,
+      this.paginaActualCaracterizadores - Math.floor(maxPaginas / 2)
+    );
+    let fin = Math.min(
+      this.totalPaginasCaracterizadores,
+      inicio + maxPaginas - 1
+    );
+
+    if (fin - inicio + 1 < maxPaginas) {
+      inicio = Math.max(1, fin - maxPaginas + 1);
+    }
+
+    for (let i = inicio; i <= fin; i++) {
+      paginas.push(i);
+    }
+
+    return paginas;
+  }
+
+  public cambiarPaginaCaracterizadores(pagina: number): void {
+    this.paginaActualCaracterizadores = pagina;
+    this.cargarEstadisticasCaracterizadores();
+  }
+
+  public cambiarLimiteCaracterizadores(): void {
+    this.paginaActualCaracterizadores = 1;
+    this.cargarEstadisticasCaracterizadores();
   }
 }

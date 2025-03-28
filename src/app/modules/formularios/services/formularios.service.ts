@@ -16,6 +16,21 @@ import {
 } from '../../generador/interfaces/interface';
 import { IFormatoMapeoExcel } from 'src/app/interfaces/excel-mapping-template.interface';
 
+interface IEstadisticaCaracterizador {
+  caracterizador_id: number;
+  caracterizador_nombre: string;
+  ficha_nombre: string;
+  ficha_version: number;
+  mes: string;
+  total_fichas: number;
+}
+
+interface IRespuestaEstadisticas {
+  count: number;
+  totalPages: number;
+  rows: IEstadisticaCaracterizador[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -138,8 +153,11 @@ export class FormulariosService {
   > {
     let params = new HttpParams()
       .set('page', pagina.toString())
-      .set('limit', registrosPorPagina.toString())
-      .set('filtros', JSON.stringify(filtros));
+      .set('limit', registrosPorPagina.toString());
+
+    if (filtros.length > 0) {
+      params = params.set('filtros', JSON.stringify(filtros));
+    }
 
     return this.http.get<
       IRespuesta<{
@@ -147,7 +165,31 @@ export class FormulariosService {
         totalPages: number;
         rows: ITarjetaRespondidas[];
       }>
-    >(this.apiUrl + '/busqueda_dinamica', { params });
+    >(`${this.apiUrl}/ficha/buscar-dinamicamente`, { params });
+  }
+
+  public obtenerEstadisticasCaracterizadores(
+    fichaVersion?: number,
+    page: number = 1,
+    pageSize: number = 10,
+    caracterizadorId?: number
+  ): Observable<IRespuesta<IRespuestaEstadisticas>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+
+    if (fichaVersion) {
+      params = params.set('fichaVersion', fichaVersion.toString());
+    }
+
+    if (caracterizadorId) {
+      params = params.set('caracterizadorId', caracterizadorId.toString());
+    }
+
+    return this.http.get<IRespuesta<IRespuestaEstadisticas>>(
+      `${this.apiUrl}/estadisticas-caracterizador`,
+      { params }
+    );
   }
 
   public guardarMapeoExcel(mapeo: IFormatoMapeoExcel): Observable<void> {
