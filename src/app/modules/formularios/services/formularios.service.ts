@@ -156,7 +156,7 @@ export class FormulariosService {
       .set('page', pagina.toString())
       .set('limit', registrosPorPagina.toString());
 
-    if (filtros.length > 0) {
+    if (filtros && filtros.length > 0) {
       params = params.set('filtros', JSON.stringify(filtros));
     }
 
