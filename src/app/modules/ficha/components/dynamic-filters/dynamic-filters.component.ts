@@ -62,7 +62,40 @@ export class DynamicFiltersComponent implements OnInit {
       });
       return;
     }
-    this.filtros.push(this.filtrosForm.value);
+
+    const filtro = { ...this.filtrosForm.value };
+    const tipoPregunta = this.obtenerTipoPregunta(
+      filtro.grupo,
+      filtro.pregunta
+    );
+
+    // Si es tipo select, buscamos el option correspondiente al value
+    if (tipoPregunta === 'select') {
+      const opciones = this.obtenerOpcionesSelect(
+        filtro.grupo,
+        filtro.pregunta
+      );
+      const opcionSeleccionada = opciones.find(
+        opt => opt.value === filtro.valor
+      );
+      if (opcionSeleccionada) {
+        // Guardamos el value en una propiedad separada para la búsqueda
+        filtro.valorBusqueda = filtro.valor;
+        // Y usamos el option para mostrar
+        filtro.valor = opcionSeleccionada.option;
+      }
+    } else if (tipoPregunta === 'check') {
+      const opciones = this.obtenerOpcionesCheck(filtro.grupo, filtro.pregunta);
+      const opcionSeleccionada = opciones.find(
+        opt => opt.value === filtro.valor
+      );
+      if (opcionSeleccionada) {
+        filtro.valorBusqueda = filtro.valor;
+        filtro.valor = opcionSeleccionada.option;
+      }
+    }
+
+    this.filtros.push(filtro);
     this.filtrosForm.reset();
     this.filtrosForm = this.formBuilder.group({
       tipoTarjeta: ['', Validators.required],
@@ -174,6 +207,11 @@ export class DynamicFiltersComponent implements OnInit {
   }
 
   public buscar() {
-    this.filtrosEmitidos.emit(this.filtros);
+    // Convertimos los filtros para usar valorBusqueda cuando existe
+    const filtrosParaBusqueda = this.filtros.map(filtro => ({
+      ...filtro,
+      valor: filtro.valorBusqueda || filtro.valor
+    }));
+    this.filtrosEmitidos.emit(filtrosParaBusqueda);
   }
 }

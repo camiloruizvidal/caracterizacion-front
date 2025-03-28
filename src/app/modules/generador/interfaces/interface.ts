@@ -205,6 +205,7 @@ export interface IFiltrosBusqueda {
   pregunta: string;
   condicion: EConditions;
   valor: string;
+  valorBusqueda?: string;
 }
 
 export interface ICondition {
