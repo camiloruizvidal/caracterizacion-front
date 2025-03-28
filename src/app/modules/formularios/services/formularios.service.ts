@@ -166,7 +166,7 @@ export class FormulariosService {
         totalPages: number;
         rows: ITarjetaRespondidas[];
       }>
-    >(`${this.apiUrl}/ficha/buscar-dinamicamente`, { params });
+    >(`${this.apiUrl}/busqueda_dinamica`, { params });
   }
 
   public obtenerEstadisticasCaracterizadores(
