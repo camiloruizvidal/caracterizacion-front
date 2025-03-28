@@ -18,6 +18,10 @@ export class InformeDinamicoComponent implements OnInit {
   public versiones: IVersiones[] = [];
   public versionSeleccionada: string = '';
   public tarjetasRespondidas: ITarjetaRespondidas[] = [];
+  public paginaActual: number = 1;
+  public registrosPorPagina: number = 10;
+  public totalRegistros: number = 0;
+  public totalPaginas: number = 0;
 
   constructor(
     private formulariosService: FormulariosService,
@@ -45,8 +49,41 @@ export class InformeDinamicoComponent implements OnInit {
   }
 
   public filtrar(filtros: IFiltrosBusqueda[]): void {
-    this.formulariosService.obtenerInformes(filtros).subscribe(resultado => {
-      this.tarjetasRespondidas = resultado;
-    });
+    this.formulariosService
+      .obtenerInformes(filtros, this.paginaActual, this.registrosPorPagina)
+      .subscribe(response => {
+        this.tarjetasRespondidas = response.data.rows;
+        this.totalRegistros = response.data.count;
+        this.totalPaginas = response.data.totalPages;
+      });
+  }
+
+  public obtenerPaginas(): number[] {
+    const paginas: number[] = [];
+    const maxPaginas = 5; // Número máximo de páginas a mostrar
+
+    let inicio = Math.max(1, this.paginaActual - Math.floor(maxPaginas / 2));
+    let fin = Math.min(this.totalPaginas, inicio + maxPaginas - 1);
+
+    // Ajustar el inicio si estamos cerca del final
+    if (fin - inicio + 1 < maxPaginas) {
+      inicio = Math.max(1, fin - maxPaginas + 1);
+    }
+
+    for (let i = inicio; i <= fin; i++) {
+      paginas.push(i);
+    }
+
+    return paginas;
+  }
+
+  public cambiarPagina(pagina: number): void {
+    this.paginaActual = pagina;
+    this.filtrar([]);
+  }
+
+  public cambiarLimite(): void {
+    this.paginaActual = 1;
+    this.filtrar([]);
   }
 }

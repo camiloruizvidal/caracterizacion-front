@@ -125,22 +125,29 @@ export class FormulariosService {
     });
   }
 
-  public obtenerInformes(filtros: IFiltrosBusqueda[]): Observable<any[]> {
-    let params = new HttpParams();
+  public obtenerInformes(
+    filtros: IFiltrosBusqueda[],
+    pagina: number = 1,
+    registrosPorPagina: number = 10
+  ): Observable<
+    IRespuesta<{
+      count: number;
+      totalPages: number;
+      rows: ITarjetaRespondidas[];
+    }>
+  > {
+    let params = new HttpParams()
+      .set('page', pagina.toString())
+      .set('limit', registrosPorPagina.toString())
+      .set('filtros', JSON.stringify(filtros));
 
-    filtros.forEach((filtro, index) => {
-      params = params
-        .set(`filtros[${index}][tipoTarjeta]`, filtro.tipoTarjeta)
-        .set(`filtros[${index}][grupo]`, filtro.grupo)
-        .set(`filtros[${index}][pregunta]`, filtro.pregunta)
-        .set(`filtros[${index}][condicion]`, filtro.condicion)
-        .set(`filtros[${index}][valor]`, filtro.valor);
-    });
-
-    return this.http.get<ITarjetaRespondidas[]>(
-      this.apiUrl + '/busqueda_dinamica',
-      { params }
-    );
+    return this.http.get<
+      IRespuesta<{
+        count: number;
+        totalPages: number;
+        rows: ITarjetaRespondidas[];
+      }>
+    >(this.apiUrl + '/busqueda_dinamica', { params });
   }
 
   public guardarMapeoExcel(mapeo: IFormatoMapeoExcel): Observable<void> {
