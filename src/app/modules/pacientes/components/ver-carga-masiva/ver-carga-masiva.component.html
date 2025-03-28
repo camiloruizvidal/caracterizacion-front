@@ -23,13 +23,15 @@
           <table class="table table-striped">
             <thead>
               <tr>
+                <th>#</th>
                 <th *ngFor="let columna of obtenerColumnas()">
                   {{ columna | titlecase }}
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let registro of registros">
+              <tr *ngFor="let registro of registros; let i = index">
+                <td>{{ (paginaActual - 1) * registrosPorPagina + i + 1 }}</td>
                 <td *ngFor="let columna of obtenerColumnas()">
                   {{ registro[columna] }}
                 </td>

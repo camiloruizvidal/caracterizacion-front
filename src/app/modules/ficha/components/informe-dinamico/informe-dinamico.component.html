@@ -27,6 +27,7 @@
     <table class="table table-striped" *ngIf="fichaJson">
       <thead>
         <tr>
+          <th>#</th>
           <th>Opciones</th>
           <th>Codigo</th>
           <th>Fecha de registro</th>
@@ -36,7 +37,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let tarjeta of tarjetasRespondidas">
+        <tr *ngFor="let tarjeta of tarjetasRespondidas; let i = index">
+          <td>{{ (paginaActual - 1) * registrosPorPagina + i + 1 }}</td>
           <td>{{ tarjeta.id }}</td>
           <td>{{ tarjeta.codigo }}</td>
           <td>{{ tarjeta.date_register | moment }}</td>
