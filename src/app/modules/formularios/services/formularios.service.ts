@@ -19,6 +19,7 @@ import { IFormatoMapeoExcel } from 'src/app/interfaces/excel-mapping-template.in
 interface IEstadisticaCaracterizador {
   caracterizador_id: number;
   caracterizador_nombre: string;
+  caracterizador_documento: string;
   ficha_nombre: string;
   ficha_version: number;
   mes: string;
