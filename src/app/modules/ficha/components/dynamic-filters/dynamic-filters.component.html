@@ -4,7 +4,7 @@
   <form [formGroup]="filtrosForm" (ngSubmit)="agregarFiltro()">
     <div class="form-group row">
       <div class="col-md-2">
-        <label for="tipoTarjeta">Nombre de la tarjeta</label>
+        <label for="tipoTarjeta">Tarjeta</label>
         <select
           id="tipoTarjeta"
           formControlName="tipoTarjeta"
@@ -23,6 +23,15 @@
             {{ tarjetaJson.individualNombre }}
           </option>
         </select>
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            filtrosForm.get('tipoTarjeta')?.invalid &&
+            filtrosForm.get('tipoTarjeta')?.touched
+          "
+        >
+          Debe seleccionar un tipo de tarjeta
+        </div>
       </div>
 
       <div class="col-md-3">
@@ -42,6 +51,15 @@
             {{ grupo.title }}
           </option>
         </select>
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            filtrosForm.get('grupo')?.invalid &&
+            filtrosForm.get('grupo')?.touched
+          "
+        >
+          Debe seleccionar una categoría
+        </div>
       </div>
 
       <div class="col-md-2">
@@ -56,7 +74,6 @@
               filtrosForm.get('pregunta')?.touched
           }"
         >
-          >
           <option value="">Seleccione</option>
           <option
             *ngFor="
@@ -67,6 +84,24 @@
             {{ value.label }}
           </option>
         </select>
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            filtrosForm.get('pregunta')?.invalid &&
+            filtrosForm.get('pregunta')?.touched
+          "
+        >
+          Debe seleccionar una pregunta
+        </div>
+        <small class="text-muted" *ngIf="filtrosForm.get('pregunta')?.value">
+          Tipo:
+          {{
+            obtenerTipoPregunta(
+              filtrosForm.get('grupo')?.value,
+              filtrosForm.get('pregunta')?.value
+            )
+          }}
+        </small>
       </div>
 
       <div class="col-md-2">
@@ -81,37 +116,131 @@
               filtrosForm.get('condicion')?.touched
           }"
         >
-          >
           <option value="">Seleccione</option>
           <option
-            *ngFor="let condicion of condiciones"
+            *ngFor="let condicion of obtenerCondicionesFiltradas()"
             [value]="condicion.condition"
           >
             {{ condicion.text }}
           </option>
         </select>
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            filtrosForm.get('condicion')?.invalid &&
+            filtrosForm.get('condicion')?.touched
+          "
+        >
+          Debe seleccionar una condición
+        </div>
       </div>
 
       <div class="col-md-3">
         <label for="valor">Valor</label>
-        <input
-          class="form form-control"
-          id="valor"
-          type="text"
-          formControlName="valor"
-          [ngClass]="{
-            'is-invalid':
-              filtrosForm.get('valor')?.invalid &&
-              filtrosForm.get('valor')?.touched
-          }"
-        />
+        <ng-container
+          *ngIf="
+            obtenerTipoPregunta(
+              filtrosForm.get('grupo')?.value,
+              filtrosForm.get('pregunta')?.value
+            ) === 'select'
+          "
+        >
+          <select
+            class="form form-control"
+            id="valor"
+            formControlName="valor"
+            [ngClass]="{
+              'is-invalid':
+                filtrosForm.get('valor')?.invalid &&
+                filtrosForm.get('valor')?.touched
+            }"
+          >
+            <option value="">Seleccione</option>
+            <option
+              *ngFor="
+                let opcion of obtenerOpcionesSelect(
+                  filtrosForm.get('grupo')?.value,
+                  filtrosForm.get('pregunta')?.value
+                )
+              "
+              [value]="opcion.value"
+            >
+              {{ opcion.option }}
+            </option>
+          </select>
+        </ng-container>
+        <ng-container
+          *ngIf="
+            obtenerTipoPregunta(
+              filtrosForm.get('grupo')?.value,
+              filtrosForm.get('pregunta')?.value
+            ) === 'check'
+          "
+        >
+          <select
+            class="form form-control"
+            id="valor"
+            formControlName="valor"
+            [ngClass]="{
+              'is-invalid':
+                filtrosForm.get('valor')?.invalid &&
+                filtrosForm.get('valor')?.touched
+            }"
+          >
+            <option value="">Seleccione</option>
+            <option
+              *ngFor="
+                let opcion of obtenerOpcionesCheck(
+                  filtrosForm.get('grupo')?.value,
+                  filtrosForm.get('pregunta')?.value
+                )
+              "
+              [value]="opcion.value"
+            >
+              {{ opcion.option }}
+            </option>
+          </select>
+        </ng-container>
+        <ng-container
+          *ngIf="
+            obtenerTipoPregunta(
+              filtrosForm.get('grupo')?.value,
+              filtrosForm.get('pregunta')?.value
+            ) !== 'select' &&
+            obtenerTipoPregunta(
+              filtrosForm.get('grupo')?.value,
+              filtrosForm.get('pregunta')?.value
+            ) !== 'check'
+          "
+        >
+          <input
+            class="form form-control"
+            id="valor"
+            type="text"
+            formControlName="valor"
+            [ngClass]="{
+              'is-invalid':
+                filtrosForm.get('valor')?.invalid &&
+                filtrosForm.get('valor')?.touched
+            }"
+          />
+        </ng-container>
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            filtrosForm.get('valor')?.invalid &&
+            filtrosForm.get('valor')?.touched
+          "
+        >
+          Debe ingresar un valor
+        </div>
       </div>
 
       <div class="col-md-3 mt-4">
         <div class="btn-group" role="group" aria-label="Basic example">
           <button type="submit" class="btn btn-primary">
             <i class="bi bi-database-add"></i>
-            Agregar Filtro
+            Filtro
           </button>
           <button type="button" (click)="buscar()" class="btn btn-success">
             <i class="bi bi-search"></i>

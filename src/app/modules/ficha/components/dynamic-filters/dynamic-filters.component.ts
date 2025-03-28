@@ -2,7 +2,9 @@ import {
   condiciones,
   ICategoria,
   TipoDataForm,
-  IFormulario
+  IFormulario,
+  ETipoPregunta,
+  IOptionsSelect
 } from './../../../generador/interfaces/interface';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -53,6 +55,11 @@ export class DynamicFiltersComponent implements OnInit {
 
   public agregarFiltro(): void {
     if (!this.filtrosForm.valid) {
+      // Marcar todos los campos como touched para mostrar los errores
+      Object.keys(this.filtrosForm.controls).forEach(key => {
+        const control = this.filtrosForm.get(key);
+        control?.markAsTouched();
+      });
       return;
     }
     this.filtros.push(this.filtrosForm.value);
@@ -98,6 +105,72 @@ export class DynamicFiltersComponent implements OnInit {
     ];
     const grupo = grupos.find(g => g.title === seccion);
     return grupo?.values || [];
+  }
+
+  public obtenerTipoPregunta(seccion: string, pregunta: string): string {
+    const grupos = [
+      ...this.tarjetaJson.grupalData,
+      ...this.tarjetaJson.individualData
+    ];
+    const grupo = grupos.find(g => g.title === seccion);
+    const preguntaObj = grupo?.values?.find(v => v.label === pregunta);
+    return preguntaObj?.type || '';
+  }
+
+  public obtenerOpcionesSelect(
+    seccion: string,
+    pregunta: string
+  ): IOptionsSelect[] {
+    const grupos = [
+      ...this.tarjetaJson.grupalData,
+      ...this.tarjetaJson.individualData
+    ];
+    const grupo = grupos.find(g => g.title === seccion);
+    const preguntaObj = grupo?.values?.find(v => v.label === pregunta);
+    if (preguntaObj?.type === 'select' && Array.isArray(preguntaObj.options)) {
+      return preguntaObj.options as IOptionsSelect[];
+    }
+    return [];
+  }
+
+  public obtenerOpcionesCheck(
+    seccion: string,
+    pregunta: string
+  ): { value: string; option: string }[] {
+    const grupos = [
+      ...this.tarjetaJson.grupalData,
+      ...this.tarjetaJson.individualData
+    ];
+    const grupo = grupos.find(g => g.title === seccion);
+    const preguntaObj = grupo?.values?.find(v => v.label === pregunta);
+    if (preguntaObj?.type === 'check' && preguntaObj.options) {
+      const options = preguntaObj.options as {
+        valueTrue: string;
+        valueFalse: string;
+      };
+      return [
+        { value: options.valueTrue, option: 'Sí' },
+        { value: options.valueFalse, option: 'No' }
+      ];
+    }
+    return [];
+  }
+
+  public obtenerCondicionesFiltradas(): ICondiciones[] {
+    const tipoPregunta = this.obtenerTipoPregunta(
+      this.filtrosForm.get('grupo')?.value,
+      this.filtrosForm.get('pregunta')?.value
+    );
+
+    if (tipoPregunta === 'select' || tipoPregunta === 'check') {
+      return this.condiciones.filter(
+        condicion =>
+          condicion.condition === EConditions.IGUAL_QUE ||
+          condicion.condition === EConditions.DIFERENTE_QUE
+      );
+    }
+
+    return this.condiciones;
   }
 
   public buscar() {
