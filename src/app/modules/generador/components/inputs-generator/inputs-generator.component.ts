@@ -2,19 +2,17 @@ import { IVersiones } from './../../../../helpers/interface/interface';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import {
   IOptionsVisibility,
-  IOptionsVisibilityExtended,
   IPregunta,
   TipoDataForm,
   TipoForm,
   IFormulario,
   ETipoPregunta,
   ICategoria,
-  IAlertaConfig,
-  IAlertas
-  //IPlanCuidado
+  IAlertas,
+  IAlertaConfig
 } from './../../interfaces/interface';
 import { InputsService } from './../../services/inputs.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 import { ToastrService } from 'ngx-toastr';
 import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
@@ -66,6 +64,8 @@ export class InputsGeneratorComponent implements OnInit {
 
   public esFormatoExcel: boolean = false;
   public contenidoExcel: string = '';
+
+  @ViewChild('contentTipoFicha') contentTipoFicha: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -473,7 +473,6 @@ export class InputsGeneratorComponent implements OnInit {
       esRequerido: value.required
     });
 
-    // Manejar las opciones JSON
     try {
       this.formulario.patchValue({
         optionsJSON: JSON.stringify(value.options, null, 2)
@@ -484,12 +483,10 @@ export class InputsGeneratorComponent implements OnInit {
       });
     }
 
-    // Cargar alertas de la categoría
     if (grupo.id) {
       this.cargarAlertasDeCategoria(grupo.id);
     }
 
-    // Si hay configuración de alerta, guardarla temporalmente
     if (value.alerta) {
       this.alertaConfiguracionTemporal = {
         genera_alerta: true,
@@ -538,7 +535,6 @@ export class InputsGeneratorComponent implements OnInit {
       values.required = this.formulario.value.esRequerido;
       values.default = this.formulario.value.default;
 
-      // Actualizar la configuración de alertas
       if (this.alertaConfiguracionTemporal) {
         values.alerta = this.alertaConfiguracionTemporal;
       }
@@ -624,7 +620,7 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public agregarNuevaVersion(content: any) {
-    this.modalForm.reset(); // Limpiar el formulario al abrir
+    this.modalForm.reset();
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-title' })
       .result.then(
@@ -640,6 +636,7 @@ export class InputsGeneratorComponent implements OnInit {
   public agregarNuevoGrupo(content: any): void {
     this.modalFormTipoFicha.reset();
     this.modalFormTipoFicha.value.tipoFicha = this.formulario.value.fichaTipo;
+    this.indexEditar = -1;
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-title' })
       .result.then(
@@ -957,7 +954,6 @@ export class InputsGeneratorComponent implements OnInit {
       return;
     }
 
-    // Asegurarse de que la estructura sea correcta
     const valores_alerta = Object.keys(config.valores_alerta).reduce(
       (acc: any, key) => {
         const valor = config.valores_alerta[key];
@@ -965,7 +961,6 @@ export class InputsGeneratorComponent implements OnInit {
           valor: valor.valor
         };
 
-        // Solo agregar planes de cuidado si existen y no están vacíos
         if (valor.planes_cuidado?.length > 0) {
           acc[key].planes_cuidado = valor.planes_cuidado;
         }
@@ -1010,7 +1005,11 @@ export class InputsGeneratorComponent implements OnInit {
       return;
     }
 
-    planesCuidado.push('');
+    planesCuidado.push(
+      this.formBuilder.group({
+        descripcion: ['']
+      })
+    );
   }
 
   eliminarPlanCuidadoAlerta(clasificacionIndex: number, planIndex: number) {
@@ -1044,11 +1043,9 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   detectarFormatoExcel(contenido: string): boolean {
-    // Dividir el contenido en líneas
     const lineas = contenido.trim().split('\n');
     if (lineas.length < 2) return false;
 
-    // Verificar si cada línea tiene exactamente dos columnas separadas por tab o múltiples espacios
     return lineas.every(linea => {
       const columnas = linea.trim().split(/\t|\s{2,}/);
       return columnas.length === 2;
@@ -1068,7 +1065,6 @@ export class InputsGeneratorComponent implements OnInit {
       this.esFormatoExcel = false;
       this.contenidoExcel = '';
 
-      // Actualizar las opciones
       this.onOptionsJSONChange();
     } catch (error) {
       console.error('Error al transformar Excel a JSON:', error);
@@ -1084,11 +1080,9 @@ export class InputsGeneratorComponent implements OnInit {
       }
 
       try {
-        // Intentar parsear como JSON
         JSON.parse(contenido);
         this.esFormatoExcel = false;
       } catch {
-        // Si no es JSON válido, verificar si es formato Excel
         this.esFormatoExcel = this.detectarFormatoExcel(contenido);
         if (this.esFormatoExcel) {
           this.contenidoExcel = contenido;
@@ -1097,5 +1091,131 @@ export class InputsGeneratorComponent implements OnInit {
     } catch (error) {
       console.error('Error al procesar el contenido:', error);
     }
+  }
+
+  public editarCategoriaSeleccionada() {
+    const categoriaSeleccionada = this.formulario.get('grupo')?.value;
+    if (!categoriaSeleccionada) {
+      this.toastr.warning('Por favor seleccione una categoría para editar');
+      return;
+    }
+
+    const categoriaEncontrada = this.grupos.find(
+      g => g.id === Number(categoriaSeleccionada)
+    );
+    if (!categoriaEncontrada) {
+      this.toastr.error('No se encontró la categoría seleccionada');
+      return;
+    }
+
+    this.indexEditar = 1;
+    this.modalFormTipoFicha.patchValue({
+      nombre: categoriaEncontrada.title,
+      alerta: categoriaEncontrada.alerta || {
+        genera_alerta: false,
+        clasificaciones: []
+      }
+    });
+
+    const clasificaciones = this.modalFormTipoFicha.get(
+      'alerta.clasificaciones'
+    ) as FormArray;
+    clasificaciones.clear();
+
+    if (categoriaEncontrada.alerta?.clasificaciones) {
+      categoriaEncontrada.alerta.clasificaciones.forEach(
+        (clasificacion: any) => {
+          clasificaciones.push(
+            this.formBuilder.group({
+              nombre: [clasificacion.nombre],
+              rango_minimo: [clasificacion.rango_minimo],
+              rango_maximo: [clasificacion.rango_maximo],
+              color: [clasificacion.color],
+              planes_cuidado: this.formBuilder.array(
+                (clasificacion.planes_cuidado || []).map((plan: string) =>
+                  this.formBuilder.group({ descripcion: [plan] })
+                )
+              )
+            })
+          );
+        }
+      );
+    }
+
+    this.modalService.open(this.contentTipoFicha, {
+      ariaLabelledBy: 'modal-title'
+    });
+  }
+
+  public guardarEdicionCategoria(modalTipoFicha: any) {
+    const categoriaSeleccionada = this.formulario.get('grupo')?.value;
+    if (!categoriaSeleccionada) {
+      this.toastr.error('No hay categoría seleccionada para editar');
+      return;
+    }
+
+    if (this.modalFormTipoFicha.valid) {
+      const clasificaciones = this.modalFormTipoFicha.get(
+        'alerta.clasificaciones'
+      ) as FormArray;
+      this.validarRangos(clasificaciones);
+
+      if (
+        clasificaciones.controls.some(
+          control =>
+            control.get('rango_minimo')?.errors ||
+            control.get('rango_maximo')?.errors
+        )
+      ) {
+        this.toastr.error('Hay errores en los rangos de las clasificaciones');
+        return;
+      }
+
+      const categoriaEncontrada = this.grupos.find(
+        g => g.id === Number(categoriaSeleccionada)
+      );
+      if (!categoriaEncontrada) {
+        this.toastr.error('No se encontró la categoría seleccionada');
+        return;
+      }
+
+      const tipo = this.tipoCards.find(
+        tipo => tipo.nombre === this.formulario.value.fichaTipo
+      );
+      if (!tipo?.tipo) {
+        this.toastr.error('No se encontró el tipo de ficha');
+        return;
+      }
+
+      const tipoData = this.tipoData[tipo.nombre];
+      const categorias = this.formularioGenerado[tipoData];
+      const categoriaIndex = categorias.findIndex(
+        cat => cat.id === Number(categoriaSeleccionada)
+      );
+
+      if (categoriaIndex !== -1) {
+        categorias[categoriaIndex] = {
+          ...categorias[categoriaIndex],
+          title: this.modalFormTipoFicha.value.nombre,
+          alerta: this.modalFormTipoFicha.value.alerta.genera_alerta
+            ? {
+                genera_alerta: true,
+                clasificaciones:
+                  this.modalFormTipoFicha.value.alerta.clasificaciones
+              }
+            : undefined
+        };
+
+        this.guardarFormulario();
+        modalTipoFicha.close('Guardado');
+        this.toastr.success('Categoría actualizada correctamente');
+      } else {
+        this.toastr.error('No se encontró la categoría en el formulario');
+      }
+    }
+  }
+
+  public obtenerCategoria(steper: ICategoria): ICategoria {
+    return steper;
   }
 }

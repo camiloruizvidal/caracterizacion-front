@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -8,8 +8,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class AppComponent {
   public title = 'Sistema de caracterización ESE Popayán';
+  public isSidebarCollapsed = window.innerWidth <= 768;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.isSidebarCollapsed = window.innerWidth <= 768;
+  }
 
   getActiveClass(name: string) {
     const path = this.activatedRoute.firstChild?.snapshot?.routeConfig?.path;
@@ -28,5 +34,9 @@ export class AppComponent {
 
   public get isShow(): boolean {
     return location.pathname !== '/login';
+  }
+
+  toggleSidebar() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 }

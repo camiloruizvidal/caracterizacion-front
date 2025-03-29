@@ -1,18 +1,26 @@
 <main>
   <div
     *ngIf="isShow"
-    class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark"
-    style="width: 280px"
+    class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar"
+    [class.collapsed]="isSidebarCollapsed"
   >
-    <a
-      href="/"
-      class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
-    >
-      <svg class="bi me-2" width="40" height="32">
-        <use xlink:href="#bootstrap"></use>
-      </svg>
-      <span class="fs-4">Caracterización</span>
-    </a>
+    <div class="sidebar-header d-flex align-items-center">
+      <a
+        href="/"
+        class="d-flex align-items-center mb-md-0 me-md-auto text-white text-decoration-none"
+      >
+        <span class="fs-4" [class.d-none]="isSidebarCollapsed"
+          >Caracterización</span
+        >
+      </a>
+      <button class="btn btn-link text-white ms-auto" (click)="toggleSidebar()">
+        <i
+          class="bi"
+          [class.bi-chevron-left]="!isSidebarCollapsed"
+          [class.bi-chevron-right]="isSidebarCollapsed"
+        ></i>
+      </button>
+    </div>
     <hr />
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
@@ -23,7 +31,7 @@
           aria-current="page"
         >
           <i class="bi bi-person-lines-fill"></i>
-          Usuarios
+          <span [class.d-none]="isSidebarCollapsed">Usuarios</span>
         </a>
       </li>
       <li>
@@ -34,7 +42,7 @@
           aria-current="page"
         >
           <i class="bi bi-newspaper"></i>
-          Formularios
+          <span [class.d-none]="isSidebarCollapsed">Formularios</span>
         </a>
       </li>
       <li>
@@ -44,7 +52,7 @@
           class="nav-link text-white"
         >
           <i class="bi bi-person-lines-fill"></i>
-          Carga Masiva
+          <span [class.d-none]="isSidebarCollapsed">Carga Masiva</span>
         </a>
       </li>
       <li>
@@ -54,7 +62,9 @@
           class="nav-link text-white"
         >
           <i class="bi bi-window-stack"></i>
-          Generador de formularios
+          <span [class.d-none]="isSidebarCollapsed"
+            >Generador de formularios</span
+          >
         </a>
       </li>
       <li>
@@ -64,18 +74,18 @@
           class="nav-link text-white"
         >
           <i class="bi bi-list-columns-reverse"></i>
-          Informes
+          <span [class.d-none]="isSidebarCollapsed">Informes</span>
         </a>
       </li>
     </ul>
     <hr />
     <div class="dropdown">
       <i class="bi bi-person"></i>
-      <strong>{{ nombres }}</strong>
+      <strong [class.d-none]="isSidebarCollapsed">{{ nombres }}</strong>
     </div>
-    <div class="dropdown" (click)="cerrarSesion()" class="pointer-clic">
+    <div class="dropdown pointer-clic" (click)="cerrarSesion()">
       <i class="bi bi-person-fill-slash"></i>
-      <strong>Cerrar sesi&oacute;n</strong>
+      <strong [class.d-none]="isSidebarCollapsed">Cerrar sesi&oacute;n</strong>
     </div>
   </div>
   <div class="p-4 container-fluid scrollarea">

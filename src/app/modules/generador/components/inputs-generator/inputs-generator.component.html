@@ -60,6 +60,14 @@
                 >
                   +
                 </button>
+                <button
+                  type="button"
+                  class="btn btn-success"
+                  (click)="editarCategoriaSeleccionada()"
+                  [disabled]="!formulario.get('grupo')?.value"
+                >
+                  <i class="bi bi-pencil"></i>
+                </button>
                 <select
                   formControlName="grupo"
                   id="grupo"
@@ -312,6 +320,40 @@
                     </span>
                   </ng-template>
                   <ng-template ngbPanelContent>
+                    <div class="mb-4">
+                      <!-- Mostrar alertas y planes de cuidado de la categoría -->
+                      <div
+                        *ngIf="steper.alerta?.genera_alerta"
+                        class="alert alert-info"
+                      >
+                        <strong
+                          >Configuración de Alertas de la Categoría</strong
+                        >
+                        <div *ngIf="steper.alerta?.clasificaciones?.length">
+                          <div
+                            *ngFor="
+                              let clasificacion of steper.alerta
+                                ?.clasificaciones
+                            "
+                            class="mt-2"
+                          >
+                            <div class="p-2 rounded">
+                              <div class="d-flex align-items-center">
+                                <div
+                                  class="color-indicator me-2"
+                                  [style.background-color]="clasificacion.color"
+                                ></div>
+                                <strong>{{ clasificacion.nombre }}</strong>
+                              </div>
+                              <div>
+                                Rango: {{ clasificacion.rango_minimo }} -
+                                {{ clasificacion.rango_maximo }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <div class="scrollable">
                       <table class="table">
                         <tr
@@ -375,7 +417,7 @@
                               </select>
                             </div>
                           </td>
-                          <td *ngIf="false">
+                          <td *ngIf="true">
                             <ul>
                               <li *ngFor="let item of getKeys(value)">
                                 <strong>{{ item }}</strong
@@ -795,14 +837,19 @@
     <button
       type="button"
       class="btn btn-secondary"
-      (click)="modalGrupo.dismiss('Cancelado')"
+      (click)="modalGrupo.dismiss()"
     >
       Cancelar
     </button>
     <button
       type="button"
       class="btn btn-primary"
-      (click)="guardarNuevoGrupo(modalGrupo)"
+      [disabled]="!modalFormTipoFicha.valid"
+      (click)="
+        indexEditar === -1
+          ? guardarNuevoGrupo(modalGrupo)
+          : guardarEdicionCategoria(modalGrupo)
+      "
     >
       Guardar
     </button>
