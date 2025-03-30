@@ -45,6 +45,21 @@ export class ListadoMasivoComponent implements OnInit {
   }): void {
     this.loadForms(value.currentPage, value.itemsPerPage);
   }
+
+  public obtenerPaginas(): number[] {
+    const paginas: number[] = [];
+    const { totalPages, currentPage } = this.forms;
+
+    for (
+      let i = Math.max(1, currentPage - 5);
+      i <= Math.min(currentPage + 5, totalPages);
+      i++
+    ) {
+      paginas.push(i);
+    }
+    return paginas;
+  }
+
   public sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
