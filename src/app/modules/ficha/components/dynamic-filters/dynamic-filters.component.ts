@@ -176,4 +176,8 @@ export class DynamicFiltersComponent implements OnInit {
   public buscar() {
     this.filtrosEmitidos.emit(this.filtros);
   }
+
+  public exportar() {
+    console.log({ filtros: this.filtros });
+  }
 }
