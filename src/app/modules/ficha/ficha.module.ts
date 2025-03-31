@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { FichaRoutingModule } from './ficha-routing.module';
 import { DetalleComponent } from './components/detalle/detalle.component';
 import { InformeDinamicoComponent } from './components/informe-dinamico/informe-dinamico.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DynamicFiltersComponent } from './components/dynamic-filters/dynamic-filters.component';
 import { MomentPipe } from 'src/app/pipes/moment.pipe';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,13 @@ import { MomentPipe } from 'src/app/pipes/moment.pipe';
     DynamicFiltersComponent,
     MomentPipe
   ],
-  imports: [CommonModule, FichaRoutingModule, FormsModule, ReactiveFormsModule]
+  imports: [
+    CommonModule,
+    FichaRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgxSpinnerModule,
+    HttpClientModule
+  ]
 })
 export class FichaModule {}

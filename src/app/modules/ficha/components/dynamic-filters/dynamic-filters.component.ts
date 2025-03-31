@@ -13,6 +13,8 @@ import {
   ICondiciones,
   IFiltrosBusqueda
 } from 'src/app/modules/generador/interfaces/interface';
+import { ExportarService } from '../../services/exportar.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-dynamic-filters',
@@ -25,8 +27,13 @@ export class DynamicFiltersComponent implements OnInit {
   public condiciones: ICondiciones[] = condiciones;
   public filtrosForm: FormGroup;
   public filtros: IFiltrosBusqueda[] = [];
+  public urlDescarga: string | null = null;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private exportarService: ExportarService,
+    private spinner: NgxSpinnerService
+  ) {
     this.filtrosForm = this.formBuilder.group({
       tipoTarjeta: ['', Validators.required],
       grupo: ['', Validators.required],
@@ -55,7 +62,6 @@ export class DynamicFiltersComponent implements OnInit {
 
   public agregarFiltro(): void {
     if (!this.filtrosForm.valid) {
-      // Marcar todos los campos como touched para mostrar los errores
       Object.keys(this.filtrosForm.controls).forEach(key => {
         const control = this.filtrosForm.get(key);
         control?.markAsTouched();
@@ -178,6 +184,36 @@ export class DynamicFiltersComponent implements OnInit {
   }
 
   public exportar() {
-    console.log({ filtros: this.filtros });
+    if (!this.tarjetaJson?.version) {
+      alert('Por favor seleccione una versión de la ficha');
+      return;
+    }
+
+    this.spinner.show('loading');
+
+    this.exportarService
+      .exportarFicha(this.tarjetaJson.version.toString())
+      .subscribe({
+        next: response => {
+          setTimeout(() => {
+            this.spinner.hide('loading');
+            if (response.code === 200) {
+              const link = document.createElement('a');
+              link.href = response.data.url;
+              link.download = 'caracterizacion.xlsx';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            } else {
+              alert(response.msj);
+            }
+          }, 5000);
+        },
+        error: error => {
+          this.spinner.hide('loading');
+          alert('Error al exportar la ficha');
+          console.error(error);
+        }
+      });
   }
 }
