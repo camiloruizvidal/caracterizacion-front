@@ -254,7 +254,6 @@ export class InputsGeneratorComponent implements OnInit {
             alertaIndividual: [],
             version: '0'
           };
-          console.log('Formulario cargado:', this.formularioGenerado);
         }
         const navbarItems = document.querySelectorAll(
           '.navbar-items'
@@ -691,6 +690,15 @@ export class InputsGeneratorComponent implements OnInit {
         return;
       }
 
+      const clasificacionesTransformadas = clasificaciones.value.map(
+        (clasificacion: any) => ({
+          ...clasificacion,
+          planes_cuidado: clasificacion.planes_cuidado.map(
+            (plan: any) => plan.descripcion
+          )
+        })
+      );
+
       const grupoData = {
         nombre: this.modalFormTipoFicha.value.nombre,
         tipoFicha: tipo.tipo,
@@ -698,8 +706,7 @@ export class InputsGeneratorComponent implements OnInit {
         alerta: this.modalFormTipoFicha.value.alerta.genera_alerta
           ? {
               genera_alerta: true,
-              clasificaciones:
-                this.modalFormTipoFicha.value.alerta.clasificaciones
+              clasificaciones: clasificacionesTransformadas
             }
           : undefined
       };
@@ -928,7 +935,6 @@ export class InputsGeneratorComponent implements OnInit {
             valor: clasificacionesOrdenadas.length - index
           })
         );
-        console.log('Alertas disponibles cargadas:', this.alertasDisponibles);
       } else {
         console.warn('La categoría no tiene alertas configuradas');
         this.alertasDisponibles = [];
@@ -947,8 +953,6 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public onAlertasConfiguracion(config: any) {
-    console.log('Configuración de alertas recibida:', config);
-
     if (!config || !config.valores_alerta) {
       console.warn('Configuración de alertas inválida');
       return;
@@ -975,11 +979,6 @@ export class InputsGeneratorComponent implements OnInit {
       valores_alerta,
       peso: 1
     };
-
-    console.log(
-      'Configuración temporal guardada:',
-      this.alertaConfiguracionTemporal
-    );
   }
 
   private initClasificacionForm(): FormGroup {
@@ -1109,22 +1108,35 @@ export class InputsGeneratorComponent implements OnInit {
     }
 
     this.indexEditar = 1;
-    this.modalFormTipoFicha.patchValue({
-      nombre: categoriaEncontrada.title,
-      alerta: categoriaEncontrada.alerta || {
-        genera_alerta: false,
-        clasificaciones: []
-      }
-    });
+    this.modalFormTipoFicha.reset();
+
+    const tipo = this.tipoCards.find(
+      tipo => tipo.nombre === this.formulario.value.fichaTipo
+    );
+    const tipoData = this.tipoData[tipo?.nombre || 'grupalNombre'];
+    const categorias = this.formularioGenerado[tipoData];
+    const categoriaFormulario = categorias.find(
+      cat => cat.id === Number(categoriaSeleccionada)
+    );
 
     const clasificaciones = this.modalFormTipoFicha.get(
       'alerta.clasificaciones'
     ) as FormArray;
     clasificaciones.clear();
 
-    if (categoriaEncontrada.alerta?.clasificaciones) {
-      categoriaEncontrada.alerta.clasificaciones.forEach(
+    if (categoriaFormulario?.alerta?.clasificaciones) {
+      categoriaFormulario.alerta.clasificaciones.forEach(
         (clasificacion: any) => {
+          // Transformar planes de cuidado de objetos a strings si es necesario
+          const planesCuidado = (clasificacion.planes_cuidado || []).map(
+            (plan: any) => {
+              if (typeof plan === 'object' && plan.descripcion) {
+                return plan.descripcion;
+              }
+              return plan;
+            }
+          );
+
           clasificaciones.push(
             this.formBuilder.group({
               nombre: [clasificacion.nombre],
@@ -1132,7 +1144,7 @@ export class InputsGeneratorComponent implements OnInit {
               rango_maximo: [clasificacion.rango_maximo],
               color: [clasificacion.color],
               planes_cuidado: this.formBuilder.array(
-                (clasificacion.planes_cuidado || []).map((plan: string) =>
+                planesCuidado.map((plan: string) =>
                   this.formBuilder.group({ descripcion: [plan] })
                 )
               )
@@ -1141,6 +1153,15 @@ export class InputsGeneratorComponent implements OnInit {
         }
       );
     }
+
+    this.modalFormTipoFicha.patchValue({
+      nombre: categoriaEncontrada.title,
+      tipoFicha: this.formulario.value.fichaTipo,
+      alerta: {
+        genera_alerta: categoriaFormulario?.alerta?.genera_alerta || false,
+        clasificaciones: clasificaciones.value
+      }
+    });
 
     this.modalService.open(this.contentTipoFicha, {
       ariaLabelledBy: 'modal-title'
@@ -1194,14 +1215,22 @@ export class InputsGeneratorComponent implements OnInit {
       );
 
       if (categoriaIndex !== -1) {
+        const clasificacionesTransformadas = clasificaciones.value.map(
+          (clasificacion: any) => ({
+            ...clasificacion,
+            planes_cuidado: clasificacion.planes_cuidado.map(
+              (plan: any) => plan.descripcion
+            )
+          })
+        );
+
         categorias[categoriaIndex] = {
           ...categorias[categoriaIndex],
           title: this.modalFormTipoFicha.value.nombre,
           alerta: this.modalFormTipoFicha.value.alerta.genera_alerta
             ? {
                 genera_alerta: true,
-                clasificaciones:
-                  this.modalFormTipoFicha.value.alerta.clasificaciones
+                clasificaciones: clasificacionesTransformadas
               }
             : undefined
         };
