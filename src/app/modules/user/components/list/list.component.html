@@ -5,7 +5,7 @@
       <form [formGroup]="searchForm">
         <div class="row">
           <div class="col-md-2">
-            <a routerLink="/users/create" class="btn btn-primary">
+            <a routerLink="/usuarios/create" class="btn btn-primary">
               <i class="bi bi-person-add"></i>
               Nuevo usuario
             </a>
@@ -57,7 +57,7 @@
           <tr *ngFor="let user of usersPagination.data">
             <td>
               <a
-                [routerLink]="'/users/' + user.id + 'update/'"
+                [routerLink]="'/usuarios/' + user.id + 'update/'"
                 class="btn btn-success"
               >
                 <i class="bi bi-pencil-square"></i>

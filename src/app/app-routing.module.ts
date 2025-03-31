@@ -9,13 +9,13 @@ const routes: Routes = [
       import('../app/modules/login/login.module').then(m => m.LoginModule)
   },
   {
-    path: 'users',
+    path: 'usuarios',
     loadChildren: () =>
       import('../app/modules/user/user.module').then(m => m.UserModule),
     canActivate: [loginGuard]
   },
   {
-    path: 'forms',
+    path: 'formularios',
     loadChildren: () =>
       import('../app/modules/formularios/formularios.module').then(
         m => m.FormulariosModule
@@ -54,8 +54,12 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/users',
+    redirectTo: '/formularios',
     pathMatch: 'full'
+  },
+  {
+    path: '**',
+    redirectTo: '/formularios'
   }
 ];
 
