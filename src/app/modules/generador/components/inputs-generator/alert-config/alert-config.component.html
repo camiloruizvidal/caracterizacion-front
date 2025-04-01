@@ -19,9 +19,11 @@
               <option
                 *ngFor="let alerta of alertasDisponibles"
                 [value]="alerta.rango_maximo"
-                [style.background-color]="alerta.color"
+                [style.color]="alerta.color"
               >
-                {{ alerta.nombre }} ({{ alerta.rango_maximo }})
+                {{ alerta.nombre }} - ({{ alerta.rango_minimo }}-{{
+                  alerta.rango_maximo
+                }})
               </option>
             </select>
             <button
@@ -46,9 +48,11 @@
               <option
                 *ngFor="let alerta of alertasDisponibles"
                 [value]="alerta.rango_maximo"
-                [style.background-color]="alerta.color"
+                [style.color]="alerta.color"
               >
-                {{ alerta.nombre }} ({{ alerta.rango_maximo }})
+                {{ alerta.nombre }} - ({{ alerta.rango_minimo }}-{{
+                  alerta.rango_maximo
+                }})
               </option>
             </select>
             <button
@@ -72,10 +76,12 @@
       >
         <div class="container-fluid" *ngFor="let opcion of opciones">
           <div class="row">
-            <div class="col-2 mt-2">
-              <label>{{ opcion.value }}</label>
+            <div class="col-4 mt-2">
+              <label>
+                {{ opcion.value }}) <strong> {{ opcion.option }}</strong>
+              </label>
             </div>
-            <div class="col-10">
+            <div class="col-8">
               <div class="d-flex align-items-center mb-2">
                 <select
                   [formControlName]="opcion.value"
@@ -86,9 +92,11 @@
                   <option
                     *ngFor="let alerta of alertasDisponibles"
                     [value]="alerta.rango_maximo"
-                    [style.background-color]="alerta.color"
+                    [style.color]="alerta.color"
                   >
-                    {{ alerta.nombre }} ({{ alerta.rango_maximo }})
+                    {{ alerta.nombre }} - ({{ alerta.rango_minimo }}-{{
+                      alerta.rango_maximo
+                    }})
                   </option>
                 </select>
                 <button
