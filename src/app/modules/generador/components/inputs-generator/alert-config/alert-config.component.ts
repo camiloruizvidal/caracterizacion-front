@@ -179,7 +179,7 @@ export class AlertConfigComponent implements OnInit, OnChanges {
       if (!key.startsWith('planesCuidado_') && formValue[key]) {
         // Configuración base con el valor de la alerta
         configuracion[key] = {
-          valor: parseInt(formValue[key])
+          valor: parseFloat(formValue[key])
         };
 
         // Solo agregar planes de cuidado si existen y no están vacíos
