@@ -657,179 +657,197 @@
   </div>
   <div class="modal-body">
     <form [formGroup]="modalFormTipoFicha">
-      <div class="mb-3">
-        <label for="nombre" class="form-label">Nombre</label>
-        <input
-          type="text"
-          id="nombre"
-          class="form-control"
-          formControlName="nombre"
-          placeholder="Ej: Alto Riesgo"
-          [class.is-invalid]="
-            modalFormTipoFicha.get('nombre')?.errors &&
-            modalFormTipoFicha.get('nombre')?.touched
-          "
-        />
-        <div
-          class="invalid-feedback"
-          *ngIf="modalFormTipoFicha.get('nombre')?.errors?.['required'] && modalFormTipoFicha.get('nombre')?.touched"
-        >
-          El nombre es requerido
-        </div>
-        <div
-          class="invalid-feedback"
-          *ngIf="modalFormTipoFicha.get('nombre')?.errors?.['minlength'] && modalFormTipoFicha.get('nombre')?.touched"
-        >
-          El nombre no puede estar vacío
-        </div>
-      </div>
-
-      <!-- Nueva sección de alertas -->
-      <div class="mb-3" formGroupName="alerta">
-        <div class="form-check mb-2">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="genera_alerta"
-            formControlName="genera_alerta"
-          />
-          <label class="form-check-label" for="genera_alerta">
-            ¿Esta categoría genera alertas?
-          </label>
-        </div>
-
-        <!-- Sección de clasificaciones -->
-        <div *ngIf="modalFormTipoFicha.get('alerta.genera_alerta')?.value">
-          <div formArrayName="clasificaciones">
-            <div
-              *ngFor="
-                let clasificacion of clasificacionesForm.controls;
-                let i = index
+      <div class="row">
+        <div [className]="indexEditar === -1 ? 'col-12' : 'col-8'">
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input
+              type="text"
+              id="nombre"
+              class="form-control"
+              formControlName="nombre"
+              placeholder="Ej: Alto Riesgo"
+              [class.is-invalid]="
+                modalFormTipoFicha.get('nombre')?.errors &&
+                modalFormTipoFicha.get('nombre')?.touched
               "
-              [formGroupName]="i"
-              class="border p-3 mb-2 rounded"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="modalFormTipoFicha.get('nombre')?.errors?.['required'] && modalFormTipoFicha.get('nombre')?.touched"
             >
-              <div class="row">
-                <div class="col-md-6">
-                  <label class="form-label">Color</label>
-                  <input
-                    type="color"
-                    class="form-control"
-                    formControlName="color"
-                  />
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">Nombre</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="nombre"
-                    placeholder="Ej: Alto Riesgo"
-                  />
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">M&iacute;nimo</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    formControlName="rango_minimo"
-                    min="0"
-                    max="100"
-                    [class.is-invalid]="
-                      clasificacionesForm.at(i).get('rango_minimo')?.errors
-                    "
-                  />
-                  <div
-                    class="invalid-feedback"
-                    *ngIf="clasificacionesForm.at(i).get('rango_minimo')?.errors?.['overlap']"
-                  >
-                    {{ clasificacionesForm.at(i).get('rango_minimo')?.errors?.['overlap'] }}
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">M&aacute;ximo</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    formControlName="rango_maximo"
-                    min="0"
-                    max="100"
-                    [class.is-invalid]="
-                      clasificacionesForm.at(i).get('rango_maximo')?.errors
-                    "
-                  />
-                  <div
-                    class="invalid-feedback"
-                    *ngIf="clasificacionesForm.at(i).get('rango_maximo')?.errors?.['invalidRange']"
-                  >
-                    {{ clasificacionesForm.at(i).get('rango_maximo')?.errors?.['invalidRange'] }}
-                  </div>
-                  <div
-                    class="invalid-feedback"
-                    *ngIf="clasificacionesForm.at(i).get('rango_maximo')?.errors?.['overlap']"
-                  >
-                    {{ clasificacionesForm.at(i).get('rango_maximo')?.errors?.['overlap'] }}
-                  </div>
-                </div>
-                <div
-                  class="col-12 d-flex justify-content-between align-items-center mt-3"
-                >
-                  <button
-                    type="button"
-                    class="btn btn-danger"
-                    (click)="eliminarClasificacion(i)"
-                  >
-                    <i class="bi bi-trash"></i> Eliminar
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-primary"
-                    (click)="agregarPlanCuidadoAlerta(i)"
-                  >
-                    +NPC
-                  </button>
-                </div>
-              </div>
-
-              <!-- Planes de cuidado de la alerta -->
-              <div formArrayName="planes_cuidado" class="mt-3">
-                <div
-                  *ngFor="
-                    let plan of getPlanesCuidado(i).controls;
-                    let j = index
-                  "
-                  [formGroupName]="j"
-                  class="mb-2"
-                >
-                  <div class="d-flex">
-                    <textarea
-                      class="form-control"
-                      formControlName="descripcion"
-                      placeholder="Descripción del plan de cuidado"
-                    ></textarea>
-                    <button
-                      type="button"
-                      class="btn btn-danger btn-sm ms-2"
-                      (click)="eliminarPlanCuidadoAlerta(i, j)"
-                    >
-                      ×
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <hr />
+              El nombre es requerido
+            </div>
+            <div
+              class="invalid-feedback"
+              *ngIf="modalFormTipoFicha.get('nombre')?.errors?.['minlength'] && modalFormTipoFicha.get('nombre')?.touched"
+            >
+              El nombre no puede estar vacío
             </div>
           </div>
-
-          <!-- Botón para agregar clasificación al final -->
-          <button
-            type="button"
-            class="btn btn-primary mt-3"
-            (click)="agregarClasificacion()"
-          >
-            + Agregar clasificación
-          </button>
         </div>
+        <div class="col-4" *ngIf="indexEditar !== -1">
+          <div class="mb-3">
+            <label for="ubicacion" class="form-label">Ubicación</label>
+            <select
+              id="ubicacion"
+              class="form-select"
+              formControlName="ubicacion"
+            >
+              <option
+                *ngFor="let posicion of posicionesDisponibles"
+                [value]="posicion"
+              >
+                Posición {{ posicion }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="mb-3">
+          <label class="form-label">Alerta</label>
+          <div class="form-check mb-2">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="genera_alerta"
+              formControlName="genera_alerta"
+            />
+            <label class="form-check-label" for="genera_alerta">
+              ¿Esta categoría genera alertas?
+            </label>
+          </div>
+        </div>
+      </div>
+      <!-- Nueva sección de alertas -->
+      <div *ngIf="modalFormTipoFicha.get('alerta.genera_alerta')?.value">
+        <div formArrayName="clasificaciones">
+          <div
+            *ngFor="
+              let clasificacion of clasificacionesForm.controls;
+              let i = index
+            "
+            [formGroupName]="i"
+            class="border p-3 mb-2 rounded"
+          >
+            <div class="row">
+              <div class="col-md-6">
+                <label class="form-label">Color</label>
+                <input
+                  type="color"
+                  class="form-control"
+                  formControlName="color"
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Nombre</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="nombre"
+                  placeholder="Ej: Alto Riesgo"
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">M&iacute;nimo</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="rango_minimo"
+                  min="0"
+                  max="100"
+                  [class.is-invalid]="
+                    clasificacionesForm.at(i).get('rango_minimo')?.errors
+                  "
+                />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="clasificacionesForm.at(i).get('rango_minimo')?.errors?.['overlap']"
+                >
+                  {{ clasificacionesForm.at(i).get('rango_minimo')?.errors?.['overlap'] }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">M&aacute;ximo</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="rango_maximo"
+                  min="0"
+                  max="100"
+                  [class.is-invalid]="
+                    clasificacionesForm.at(i).get('rango_maximo')?.errors
+                  "
+                />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="clasificacionesForm.at(i).get('rango_maximo')?.errors?.['invalidRange']"
+                >
+                  {{ clasificacionesForm.at(i).get('rango_maximo')?.errors?.['invalidRange'] }}
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="clasificacionesForm.at(i).get('rango_maximo')?.errors?.['overlap']"
+                >
+                  {{ clasificacionesForm.at(i).get('rango_maximo')?.errors?.['overlap'] }}
+                </div>
+              </div>
+              <div
+                class="col-12 d-flex justify-content-between align-items-center mt-3"
+              >
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  (click)="eliminarClasificacion(i)"
+                >
+                  <i class="bi bi-trash"></i> Eliminar
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="agregarPlanCuidadoAlerta(i)"
+                >
+                  +NPC
+                </button>
+              </div>
+            </div>
+
+            <!-- Planes de cuidado de la alerta -->
+            <div formArrayName="planes_cuidado" class="mt-3">
+              <div
+                *ngFor="let plan of getPlanesCuidado(i).controls; let j = index"
+                [formGroupName]="j"
+                class="mb-2"
+              >
+                <div class="d-flex">
+                  <textarea
+                    class="form-control"
+                    formControlName="descripcion"
+                    placeholder="Descripción del plan de cuidado"
+                  ></textarea>
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm ms-2"
+                    (click)="eliminarPlanCuidadoAlerta(i, j)"
+                  >
+                    ×
+                  </button>
+                </div>
+              </div>
+            </div>
+            <hr />
+          </div>
+        </div>
+
+        <!-- Botón para agregar clasificación al final -->
+        <button
+          type="button"
+          class="btn btn-primary mt-3"
+          (click)="agregarClasificacion()"
+        >
+          + Agregar clasificación
+        </button>
       </div>
     </form>
   </div>

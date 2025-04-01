@@ -111,6 +111,7 @@ export class InputsGeneratorComponent implements OnInit {
     this.modalFormTipoFicha = this.formBuilder.group({
       nombre: ['', Validators.required],
       tipoFicha: [''],
+      ubicacion: [1],
       alerta: this.formBuilder.group({
         genera_alerta: [false],
         clasificaciones: this.formBuilder.array([])
@@ -1116,8 +1117,13 @@ export class InputsGeneratorComponent implements OnInit {
     const tipoData = this.tipoData[tipo?.nombre || 'grupalNombre'];
     const categorias = this.formularioGenerado[tipoData];
     const categoriaFormulario = categorias.find(
-      cat => cat.id === Number(categoriaSeleccionada)
+      categoria => categoria.id === Number(categoriaSeleccionada)
     );
+
+    const ubicacionActual =
+      categorias.findIndex(
+        categoria => categoria.id === Number(categoriaSeleccionada)
+      ) + 1;
 
     const clasificaciones = this.modalFormTipoFicha.get(
       'alerta.clasificaciones'
@@ -1127,7 +1133,6 @@ export class InputsGeneratorComponent implements OnInit {
     if (categoriaFormulario?.alerta?.clasificaciones) {
       categoriaFormulario.alerta.clasificaciones.forEach(
         (clasificacion: any) => {
-          // Transformar planes de cuidado de objetos a strings si es necesario
           const planesCuidado = (clasificacion.planes_cuidado || []).map(
             (plan: any) => {
               if (typeof plan === 'object' && plan.descripcion) {
@@ -1157,6 +1162,7 @@ export class InputsGeneratorComponent implements OnInit {
     this.modalFormTipoFicha.patchValue({
       nombre: categoriaEncontrada.title,
       tipoFicha: this.formulario.value.fichaTipo,
+      ubicacion: ubicacionActual,
       alerta: {
         genera_alerta: categoriaFormulario?.alerta?.genera_alerta || false,
         clasificaciones: clasificaciones.value
@@ -1224,8 +1230,15 @@ export class InputsGeneratorComponent implements OnInit {
           })
         );
 
-        categorias[categoriaIndex] = {
-          ...categorias[categoriaIndex],
+        const nuevaUbicacion = this.modalFormTipoFicha.value.ubicacion - 1;
+
+        if (nuevaUbicacion !== categoriaIndex) {
+          const categoria = categorias.splice(categoriaIndex, 1)[0];
+          categorias.splice(nuevaUbicacion, 0, categoria);
+        }
+
+        categorias[nuevaUbicacion] = {
+          ...categorias[nuevaUbicacion],
           title: this.modalFormTipoFicha.value.nombre,
           alerta: this.modalFormTipoFicha.value.alerta.genera_alerta
             ? {
@@ -1246,5 +1259,16 @@ export class InputsGeneratorComponent implements OnInit {
 
   public obtenerCategoria(steper: ICategoria): ICategoria {
     return steper;
+  }
+
+  public get posicionesDisponibles(): number[] {
+    const tipo = this.tipoCards.find(
+      tipo => tipo.nombre === this.formulario.value.fichaTipo
+    );
+    if (!tipo?.tipo) return [];
+
+    const tipoData = this.tipoData[tipo.nombre];
+    const categorias = this.formularioGenerado[tipoData];
+    return Array.from({ length: categorias.length }, (_, indice) => indice + 1);
   }
 }
