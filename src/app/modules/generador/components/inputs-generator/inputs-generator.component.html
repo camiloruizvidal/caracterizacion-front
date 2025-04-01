@@ -326,28 +326,47 @@
                         *ngIf="steper.alerta?.genera_alerta"
                         class="alert alert-info"
                       >
-                        <strong
-                          >Configuración de Alertas de la Categoría</strong
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                          style="cursor: pointer"
+                          (click)="alternarVisibilidadAlerta(indexSteper)"
                         >
-                        <div *ngIf="steper.alerta?.clasificaciones?.length">
-                          <div
-                            *ngFor="
-                              let clasificacion of steper.alerta
-                                ?.clasificaciones
+                          <strong>
+                            Configuración de Alertas de la Categoría ({{
+                              steper.alerta?.clasificaciones?.length
+                            }})
+                          </strong>
+                          <i
+                            class="bi"
+                            [class.bi-chevron-down]="
+                              !alertasVisibles[indexSteper]
                             "
-                            class="mt-2"
-                          >
-                            <div class="p-2 rounded">
-                              <div class="d-flex align-items-center">
-                                <div
-                                  class="color-indicator me-2"
-                                  [style.background-color]="clasificacion.color"
-                                ></div>
-                                <strong>{{ clasificacion.nombre }}</strong>
-                              </div>
-                              <div>
-                                Rango: {{ clasificacion.rango_minimo }} -
-                                {{ clasificacion.rango_maximo }}
+                            [class.bi-chevron-up]="alertasVisibles[indexSteper]"
+                          ></i>
+                        </div>
+                        <div *ngIf="alertasVisibles[indexSteper]">
+                          <div *ngIf="steper.alerta?.clasificaciones?.length">
+                            <div
+                              *ngFor="
+                                let clasificacion of steper.alerta
+                                  ?.clasificaciones
+                              "
+                              class="mt-2"
+                            >
+                              <div class="p-2 rounded">
+                                <div class="d-flex align-items-center">
+                                  <div
+                                    class="color-indicator me-2"
+                                    [style.background-color]="
+                                      clasificacion.color
+                                    "
+                                  ></div>
+                                  <strong>{{ clasificacion.nombre }}</strong>
+                                </div>
+                                <div>
+                                  Rango: {{ clasificacion.rango_minimo }} -
+                                  {{ clasificacion.rango_maximo }}
+                                </div>
                               </div>
                             </div>
                           </div>

@@ -65,6 +65,8 @@ export class InputsGeneratorComponent implements OnInit {
   public esFormatoExcel: boolean = false;
   public contenidoExcel: string = '';
 
+  public alertasVisibles: { [key: number]: boolean } = {};
+
   @ViewChild('contentTipoFicha') contentTipoFicha: any;
 
   constructor(
@@ -1270,5 +1272,9 @@ export class InputsGeneratorComponent implements OnInit {
     const tipoData = this.tipoData[tipo.nombre];
     const categorias = this.formularioGenerado[tipoData];
     return Array.from({ length: categorias.length }, (_, indice) => indice + 1);
+  }
+
+  public alternarVisibilidadAlerta(indice: number): void {
+    this.alertasVisibles[indice] = !this.alertasVisibles[indice];
   }
 }
