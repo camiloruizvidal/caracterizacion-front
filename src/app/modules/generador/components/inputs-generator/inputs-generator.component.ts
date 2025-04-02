@@ -1280,4 +1280,14 @@ export class InputsGeneratorComponent implements OnInit {
   public alternarVisibilidadAlerta(indice: number): void {
     this.alertasVisibles[indice] = !this.alertasVisibles[indice];
   }
+
+  public obtenerPlanesDeCuidado(clasificacion: any): string[] {
+    if (!clasificacion?.planes_cuidado) return [];
+    return clasificacion.planes_cuidado.map((plan: any) => {
+      if (typeof plan === 'object' && plan.descripcion) {
+        return plan.descripcion;
+      }
+      return plan;
+    });
+  }
 }

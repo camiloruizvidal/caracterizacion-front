@@ -367,6 +367,27 @@
                                   Rango: {{ clasificacion.rango_minimo }} -
                                   {{ clasificacion.rango_maximo }}
                                 </div>
+                                <div
+                                  class="mt-2"
+                                  *ngIf="
+                                    obtenerPlanesDeCuidado(clasificacion)
+                                      .length > 0
+                                  "
+                                >
+                                  <strong>Planes de cuidado:</strong>
+                                  <ul class="list-unstyled ms-3">
+                                    <li
+                                      *ngFor="
+                                        let plan of obtenerPlanesDeCuidado(
+                                          clasificacion
+                                        )
+                                      "
+                                      class="text-muted"
+                                    >
+                                      {{ plan }}
+                                    </li>
+                                  </ul>
+                                </div>
                               </div>
                             </div>
                           </div>
