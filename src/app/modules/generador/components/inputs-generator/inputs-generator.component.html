@@ -168,43 +168,6 @@
                 [configuracion]="alertaConfiguracionTemporal"
               ></app-alert-config>
 
-              <div class="m-1" style="background-color: #f1f1f1">
-                &#91; &lbrace;
-                {{
-                  formulario.value.tipo === 'selectDependiente'
-                    ? '"valueDependiente": "19",'
-                    : ''
-                }}
-                "value": "CC", "option": "Cédula de Ciudadanía" &rbrace;,
-                &lbrace;
-                {{
-                  formulario.value.tipo === 'selectDependiente'
-                    ? '"valueDependiente": "19",'
-                    : ''
-                }}
-                "value": "TI", "option": "Tarjeta de Identidad" &rbrace;,
-                &lbrace;
-                {{
-                  formulario.value.tipo === 'selectDependiente'
-                    ? '"valueDependiente": "19",'
-                    : ''
-                }}
-                "value": "CE", "option": "Cédula de Extranjería" &rbrace;,
-                &lbrace;
-                {{
-                  formulario.value.tipo === 'selectDependiente'
-                    ? '"valueDependiente": "19",'
-                    : ''
-                }}
-                "value": "PAS", "option": "Pasaporte" &rbrace;, &lbrace;
-                {{
-                  formulario.value.tipo === 'selectDependiente'
-                    ? '"valueDependiente": "19",'
-                    : ''
-                }}
-                "value": "RC", "option": "Registro Civil" &rbrace; &#93;
-              </div>
-              <hr />
               <div class="col-md-12" *ngIf="isShowJson">
                 <button
                   *ngIf="esFormatoExcel"
@@ -220,6 +183,22 @@
                 </small>
               </div>
               <hr />
+            </ng-container>
+            <ng-container
+              *ngIf="
+                !isShowJson &&
+                [ETipoPregunta.Check, ETipoPregunta.CheckSiNo].includes(
+                  formulario.get('tipo')?.value
+                )
+              "
+            >
+              <app-alert-config
+                [tipoPregunta]="formulario.get('tipo')?.value"
+                [alertasDisponibles]="alertasDisponibles"
+                [opciones]="[]"
+                (alertasConfiguracion)="onAlertasConfiguracion($event)"
+                [configuracion]="alertaConfiguracionTemporal"
+              ></app-alert-config>
             </ng-container>
 
             <div class="col-md-12">

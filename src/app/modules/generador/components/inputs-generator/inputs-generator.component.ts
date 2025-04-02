@@ -30,6 +30,7 @@ export class InputsGeneratorComponent implements OnInit {
   public tipos: string[] = [];
   public formularioGenerado!: IFormulario;
   public esEditable: boolean = false;
+  protected ETipoPregunta = ETipoPregunta;
   public tipoCards: {
     tipo: TipoDataForm;
     nombre: TipoForm;
