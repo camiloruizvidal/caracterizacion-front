@@ -258,6 +258,7 @@ export class InputsGeneratorComponent implements OnInit {
             version: '0'
           };
         }
+        console.log({ formularioGenerado: this.formularioGenerado });
         const navbarItems = document.querySelectorAll(
           '.navbar-items'
         ) as NodeListOf<HTMLElement>;
