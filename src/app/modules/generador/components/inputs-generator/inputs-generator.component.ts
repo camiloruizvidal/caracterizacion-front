@@ -1097,6 +1097,7 @@ export class InputsGeneratorComponent implements OnInit {
 
   public editarCategoriaSeleccionada() {
     const categoriaSeleccionada = this.formulario.get('grupo')?.value;
+
     if (!categoriaSeleccionada) {
       this.toastr.warning('Por favor seleccione una categoría para editar');
       return;
@@ -1105,6 +1106,7 @@ export class InputsGeneratorComponent implements OnInit {
     const categoriaEncontrada = this.grupos.find(
       g => g.id === Number(categoriaSeleccionada)
     );
+
     if (!categoriaEncontrada) {
       this.toastr.error('No se encontró la categoría seleccionada');
       return;
