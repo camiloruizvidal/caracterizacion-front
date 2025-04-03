@@ -68,6 +68,9 @@ export class InputsGeneratorComponent implements OnInit {
 
   public alertasVisibles: { [key: number]: boolean } = {};
 
+  public valorMarcado: string = '';
+  public valorDesmarcado: string = '';
+
   @ViewChild('contentTipoFicha') contentTipoFicha: any;
 
   constructor(
@@ -160,6 +163,13 @@ export class InputsGeneratorComponent implements OnInit {
     this.cargarGrupos();
     this.cargarTipoPreguntas();
     this.cargarVersiones();
+
+    this.formulario.get('tipo')?.valueChanges.subscribe(tipo => {
+      if (tipo === ETipoPregunta.Check) {
+        this.valorMarcado = '';
+        this.valorDesmarcado = '';
+      }
+    });
   }
 
   private cargarTipoPreguntas() {
@@ -354,6 +364,12 @@ export class InputsGeneratorComponent implements OnInit {
         default: 'No'
       });
       return options;
+    } else if (this.formulario.value.tipo === ETipoPregunta.Check) {
+      options = {
+        valueTrue: this.valorMarcado,
+        valueFalse: this.valorDesmarcado
+      };
+      return options;
     } else {
       const esOptions = this.typesOptions.includes(this.formulario.value.tipo);
       let value;
@@ -476,6 +492,11 @@ export class InputsGeneratorComponent implements OnInit {
       default: value.default,
       esRequerido: value.required
     });
+
+    if (value.type === ETipoPregunta.Check && value.options) {
+      this.valorMarcado = value.options.valueTrue || '';
+      this.valorDesmarcado = value.options.valueFalse || '';
+    }
 
     try {
       this.formulario.patchValue({

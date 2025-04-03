@@ -192,6 +192,34 @@
                 )
               "
             >
+              <ng-container
+                *ngIf="formulario.get('tipo')?.value === ETipoPregunta.Check"
+              >
+                <div class="row">
+                  <div class="col-6 mt-3">
+                    <label for="valueTrue">Valor marcado</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="valueTrue"
+                      [(ngModel)]="valorMarcado"
+                      [ngModelOptions]="{ standalone: true }"
+                      placeholder="Ejemplo: encendida"
+                    />
+                  </div>
+                  <div class="col-6 mt-3">
+                    <label for="valueFalse">Valor NO marcado</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="valueFalse"
+                      [(ngModel)]="valorDesmarcado"
+                      [ngModelOptions]="{ standalone: true }"
+                      placeholder="Ejemplo: apagada"
+                    />
+                  </div>
+                </div>
+              </ng-container>
               <app-alert-config
                 [tipoPregunta]="formulario.get('tipo')?.value"
                 [alertasDisponibles]="alertasDisponibles"
