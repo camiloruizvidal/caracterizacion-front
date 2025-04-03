@@ -699,7 +699,7 @@ export class InputsGeneratorComponent implements OnInit {
         (clasificacion: any) => ({
           ...clasificacion,
           planes_cuidado: clasificacion.planes_cuidado.map(
-            (plan: any) => plan.descripcion
+            (plan: string) => plan
           )
         })
       );
@@ -1009,11 +1009,7 @@ export class InputsGeneratorComponent implements OnInit {
       return;
     }
 
-    planesCuidado.push(
-      this.formBuilder.group({
-        descripcion: ['']
-      })
-    );
+    planesCuidado.push(this.formBuilder.control(''));
   }
 
   eliminarPlanCuidadoAlerta(clasificacionIndex: number, planIndex: number) {
@@ -1156,7 +1152,7 @@ export class InputsGeneratorComponent implements OnInit {
               color: [clasificacion.color],
               planes_cuidado: this.formBuilder.array(
                 planesCuidado.map((plan: string) =>
-                  this.formBuilder.group({ descripcion: [plan] })
+                  this.formBuilder.control(plan)
                 )
               )
             })
@@ -1231,7 +1227,7 @@ export class InputsGeneratorComponent implements OnInit {
           (clasificacion: any) => ({
             ...clasificacion,
             planes_cuidado: clasificacion.planes_cuidado.map(
-              (plan: any) => plan.descripcion
+              (plan: string) => plan
             )
           })
         );
@@ -1284,11 +1280,6 @@ export class InputsGeneratorComponent implements OnInit {
 
   public obtenerPlanesDeCuidado(clasificacion: any): string[] {
     if (!clasificacion?.planes_cuidado) return [];
-    return clasificacion.planes_cuidado.map((plan: any) => {
-      if (typeof plan === 'object' && plan.descripcion) {
-        return plan.descripcion;
-      }
-      return plan;
-    });
+    return clasificacion.planes_cuidado;
   }
 }
