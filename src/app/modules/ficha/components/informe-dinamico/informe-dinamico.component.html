@@ -71,12 +71,12 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Opciones</th>
+                    <!--                    <th>Opciones</th>-->
                     <th>Codigo</th>
                     <th>Fecha de registro</th>
                     <th>Caracterizador</th>
                     <th>Documento</th>
-                    <th>Total registros {{ fichaJson.individualNombre }}</th>
+                    <th>Total registros</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -86,7 +86,7 @@
                     <td>
                       {{ (paginaActual - 1) * registrosPorPagina + i + 1 }}
                     </td>
-                    <td>{{ tarjeta.id }}</td>
+                    <!--<td>{{ tarjeta.id }}</td>-->
                     <td>{{ tarjeta.codigo }}</td>
                     <td>{{ tarjeta.date_register | moment }}</td>
                     <td>
