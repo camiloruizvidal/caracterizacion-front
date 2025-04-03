@@ -196,27 +196,35 @@
                 *ngIf="formulario.get('tipo')?.value === ETipoPregunta.Check"
               >
                 <div class="row">
-                  <div class="col-6 mt-3">
-                    <label for="valueTrue">Valor marcado</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="valueTrue"
-                      [(ngModel)]="valorMarcado"
-                      [ngModelOptions]="{ standalone: true }"
-                      placeholder="Ejemplo: encendida"
-                    />
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Valor marcado</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        [class.bg-light]="esEditable"
+                        [style.cursor]="esEditable ? 'not-allowed' : 'text'"
+                        placeholder="Ejemplo: encendida"
+                        [(ngModel)]="valorMarcado"
+                        [ngModelOptions]="{ standalone: true }"
+                        [readonly]="esEditable"
+                      />
+                    </div>
                   </div>
-                  <div class="col-6 mt-3">
-                    <label for="valueFalse">Valor NO marcado</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="valueFalse"
-                      [(ngModel)]="valorDesmarcado"
-                      [ngModelOptions]="{ standalone: true }"
-                      placeholder="Ejemplo: apagada"
-                    />
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Valor NO marcado</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        [class.bg-light]="esEditable"
+                        [style.cursor]="esEditable ? 'not-allowed' : 'text'"
+                        placeholder="Ejemplo: apagada"
+                        [(ngModel)]="valorDesmarcado"
+                        [ngModelOptions]="{ standalone: true }"
+                        [readonly]="esEditable"
+                      />
+                    </div>
                   </div>
                 </div>
               </ng-container>
@@ -224,6 +232,11 @@
                 [tipoPregunta]="formulario.get('tipo')?.value"
                 [alertasDisponibles]="alertasDisponibles"
                 [opciones]="[]"
+                [opcionesCheck]="
+                  formulario.get('tipo')?.value === ETipoPregunta.Check
+                    ? { valueTrue: valorMarcado, valueFalse: valorDesmarcado }
+                    : null
+                "
                 (alertasConfiguracion)="onAlertasConfiguracion($event)"
                 [configuracion]="alertaConfiguracionTemporal"
               ></app-alert-config>

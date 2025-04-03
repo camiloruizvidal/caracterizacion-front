@@ -1045,14 +1045,61 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   getAlertaValor(value: any, opcionValue: string): string {
+    if (value?.type === ETipoPregunta.Check && value?.options) {
+      const { valueTrue, valueFalse } = value.options;
+      if (opcionValue === valueTrue || opcionValue === 'Si') {
+        return (
+          value?.alerta?.valores_alerta?.[valueTrue]?.valor ||
+          value?.alerta?.valores_alerta?.['Si']?.valor ||
+          ''
+        );
+      } else if (opcionValue === valueFalse || opcionValue === 'No') {
+        return (
+          value?.alerta?.valores_alerta?.[valueFalse]?.valor ||
+          value?.alerta?.valores_alerta?.['No']?.valor ||
+          ''
+        );
+      }
+    }
     return value?.alerta?.valores_alerta?.[opcionValue]?.valor || '';
   }
 
   hasAlertaValor(value: any, opcionValue: string): boolean {
+    if (value?.type === ETipoPregunta.Check && value?.options) {
+      const { valueTrue, valueFalse } = value.options;
+      if (opcionValue === valueTrue || opcionValue === 'Si') {
+        return !!(
+          value?.alerta?.valores_alerta?.[valueTrue]?.valor ||
+          value?.alerta?.valores_alerta?.['Si']?.valor
+        );
+      } else if (opcionValue === valueFalse || opcionValue === 'No') {
+        return !!(
+          value?.alerta?.valores_alerta?.[valueFalse]?.valor ||
+          value?.alerta?.valores_alerta?.['No']?.valor
+        );
+      }
+    }
     return !!value?.alerta?.valores_alerta?.[opcionValue]?.valor;
   }
 
   hasPlanesCuidado(value: any, opcionValue: string): boolean {
+    if (value?.type === ETipoPregunta.Check && value?.options) {
+      const { valueTrue, valueFalse } = value.options;
+      if (opcionValue === valueTrue || opcionValue === 'Si') {
+        return (
+          (value?.alerta?.valores_alerta?.[valueTrue]?.planes_cuidado?.length ||
+            value?.alerta?.valores_alerta?.['Si']?.planes_cuidado?.length ||
+            0) > 0
+        );
+      } else if (opcionValue === valueFalse || opcionValue === 'No') {
+        return (
+          (value?.alerta?.valores_alerta?.[valueFalse]?.planes_cuidado
+            ?.length ||
+            value?.alerta?.valores_alerta?.['No']?.planes_cuidado?.length ||
+            0) > 0
+        );
+      }
+    }
     return (
       (value?.alerta?.valores_alerta?.[opcionValue]?.planes_cuidado?.length ||
         0) > 0
@@ -1060,6 +1107,22 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   getPlanesCuidadoList(value: any, opcionValue: string): string[] {
+    if (value?.type === ETipoPregunta.Check && value?.options) {
+      const { valueTrue, valueFalse } = value.options;
+      if (opcionValue === valueTrue || opcionValue === 'Si') {
+        return (
+          value?.alerta?.valores_alerta?.[valueTrue]?.planes_cuidado ||
+          value?.alerta?.valores_alerta?.['Si']?.planes_cuidado ||
+          []
+        );
+      } else if (opcionValue === valueFalse || opcionValue === 'No') {
+        return (
+          value?.alerta?.valores_alerta?.[valueFalse]?.planes_cuidado ||
+          value?.alerta?.valores_alerta?.['No']?.planes_cuidado ||
+          []
+        );
+      }
+    }
     return value?.alerta?.valores_alerta?.[opcionValue]?.planes_cuidado || [];
   }
 

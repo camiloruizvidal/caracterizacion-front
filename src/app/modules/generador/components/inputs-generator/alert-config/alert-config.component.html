@@ -9,12 +9,12 @@
       >
         <div class="option-group row mt-4">
           <div class="col-2">
-            <label>Sí</label>
+            <label>{{ opcionesCheck?.valueTrue || 'Si' }}</label>
           </div>
           <div class="col-10">
             <div class="d-flex align-items-center mb-2">
               <select
-                formControlName="Si"
+                [formControlName]="opcionesCheck?.valueTrue || 'Si'"
                 class="form-control"
                 (change)="onAlertaChange()"
               >
@@ -32,30 +32,45 @@
               <button
                 type="button"
                 class="btn btn-sm btn-primary ms-2"
-                (click)="agregarPlanCuidado('Si')"
-                *ngIf="form.get('Si')?.value"
+                (click)="agregarPlanCuidado(opcionesCheck?.valueTrue || 'Si')"
+                *ngIf="form.get(opcionesCheck?.valueTrue || 'Si')?.value"
               >
                 +NPC
               </button>
             </div>
             <!-- Planes de cuidado para Sí -->
-            <div *ngIf="form.get('Si')?.value" class="planes-cuidado">
+            <div
+              *ngIf="form.get(opcionesCheck?.valueTrue || 'Si')?.value"
+              class="planes-cuidado"
+            >
               <div
-                *ngFor="let plan of planesCuidado['Si']; let i = index"
+                *ngFor="
+                  let plan of planesCuidado[opcionesCheck?.valueTrue || 'Si'];
+                  let i = index
+                "
                 class="mt-2"
               >
                 <div class="d-flex align-items-start gap-2">
                   <textarea
-                    [formControlName]="'planesCuidado_Si_' + i"
+                    [formControlName]="
+                      'planesCuidado_' +
+                      (opcionesCheck?.valueTrue || 'Si') +
+                      '_' +
+                      i
+                    "
                     class="form-control"
                     rows="2"
-                    (blur)="onPlanCuidadoChange('Si', i)"
+                    (blur)="
+                      onPlanCuidadoChange(opcionesCheck?.valueTrue || 'Si', i)
+                    "
                     placeholder="Descripción del plan de cuidado"
                   ></textarea>
                   <button
                     type="button"
                     class="btn btn-danger btn-sm"
-                    (click)="eliminarPlanCuidado('Si', i)"
+                    (click)="
+                      eliminarPlanCuidado(opcionesCheck?.valueTrue || 'Si', i)
+                    "
                   >
                     <i class="bi bi-trash2"></i>
                   </button>
@@ -66,12 +81,12 @@
         </div>
         <div class="option-group row mt-4">
           <div class="col-2">
-            <label>No</label>
+            <label>{{ opcionesCheck?.valueFalse || 'No' }}</label>
           </div>
           <div class="col-10">
             <div class="d-flex align-items-center mb-2">
               <select
-                formControlName="No"
+                [formControlName]="opcionesCheck?.valueFalse || 'No'"
                 class="form-control"
                 (change)="onAlertaChange()"
               >
@@ -89,30 +104,45 @@
               <button
                 type="button"
                 class="btn btn-sm btn-primary ms-2"
-                (click)="agregarPlanCuidado('No')"
-                *ngIf="form.get('No')?.value"
+                (click)="agregarPlanCuidado(opcionesCheck?.valueFalse || 'No')"
+                *ngIf="form.get(opcionesCheck?.valueFalse || 'No')?.value"
               >
                 +NPC
               </button>
             </div>
             <!-- Planes de cuidado para No -->
-            <div *ngIf="form.get('No')?.value" class="planes-cuidado">
+            <div
+              *ngIf="form.get(opcionesCheck?.valueFalse || 'No')?.value"
+              class="planes-cuidado"
+            >
               <div
-                *ngFor="let plan of planesCuidado['No']; let i = index"
+                *ngFor="
+                  let plan of planesCuidado[opcionesCheck?.valueFalse || 'No'];
+                  let i = index
+                "
                 class="mt-2"
               >
                 <div class="d-flex align-items-start gap-2">
                   <textarea
-                    [formControlName]="'planesCuidado_No_' + i"
+                    [formControlName]="
+                      'planesCuidado_' +
+                      (opcionesCheck?.valueFalse || 'No') +
+                      '_' +
+                      i
+                    "
                     class="form-control"
                     rows="2"
-                    (blur)="onPlanCuidadoChange('No', i)"
+                    (blur)="
+                      onPlanCuidadoChange(opcionesCheck?.valueFalse || 'No', i)
+                    "
                     placeholder="Descripción del plan de cuidado"
                   ></textarea>
                   <button
                     type="button"
                     class="btn btn-danger btn-sm"
-                    (click)="eliminarPlanCuidado('No', i)"
+                    (click)="
+                      eliminarPlanCuidado(opcionesCheck?.valueFalse || 'No', i)
+                    "
                   >
                     <i class="bi bi-trash2"></i>
                   </button>

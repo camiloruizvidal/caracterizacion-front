@@ -26,6 +26,7 @@ export class AlertConfigComponent implements OnInit, OnChanges {
   @Input() alertasDisponibles: IAlertas[] = [];
   @Input() opciones: IOptionsSelect[] = [];
   @Input() configuracion: any;
+  @Input() opcionesCheck: IOptionsCheck | null = null;
   @Output() alertasConfiguracion = new EventEmitter<any>();
 
   public form: FormGroup;
@@ -58,8 +59,10 @@ export class AlertConfigComponent implements OnInit, OnChanges {
     switch (this.tipoPregunta) {
       case ETipoPregunta.Check:
       case ETipoPregunta.CheckSiNo:
-        this.form.addControl('Si', this.fb.control(''));
-        this.form.addControl('No', this.fb.control(''));
+        const valorTrue = this.opcionesCheck?.valueTrue || 'Si';
+        const valorFalse = this.opcionesCheck?.valueFalse || 'No';
+        this.form.addControl(valorTrue, this.fb.control(''));
+        this.form.addControl(valorFalse, this.fb.control(''));
         break;
       case ETipoPregunta.Select:
       case ETipoPregunta.SelectMultiple:
