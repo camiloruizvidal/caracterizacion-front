@@ -3,7 +3,6 @@ import {
   ICategoria,
   TipoDataForm,
   IFormulario,
-  ETipoPregunta,
   IOptionsSelect
 } from './../../../generador/interfaces/interface';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
@@ -31,8 +30,7 @@ export class DynamicFiltersComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private exportarService: ExportarService,
-    private spinner: NgxSpinnerService
+    private exportarService: ExportarService
   ) {
     this.filtrosForm = this.formBuilder.group({
       tipoTarjeta: ['', Validators.required],
@@ -189,29 +187,16 @@ export class DynamicFiltersComponent implements OnInit {
       return;
     }
 
-    this.spinner.show('loading');
-
     this.exportarService
       .exportarFicha(this.tarjetaJson.version.toString())
       .subscribe({
         next: response => {
-          setTimeout(() => {
-            this.spinner.hide('loading');
-            if (response.code === 200) {
-              const link = document.createElement('a');
-              link.href = response.data.url;
-              link.download = 'caracterizacion.xlsx';
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-            } else {
-              alert(response.msj);
-            }
-          }, 5000);
+          if (response.code === 200) {
+          } else {
+            alert(response.msj);
+          }
         },
         error: error => {
-          this.spinner.hide('loading');
-          alert('Error al exportar la ficha');
           console.error(error);
         }
       });
