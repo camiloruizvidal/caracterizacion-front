@@ -190,12 +190,8 @@ export class DynamicFiltersComponent implements OnInit {
     this.exportarService
       .exportarFicha(this.tarjetaJson.version.toString())
       .subscribe({
-        next: response => {
-          if (response.code === 200) {
-          } else {
-            alert(response.msj);
-          }
-        },
+        next: response => {},
+
         error: error => {
           console.error(error);
         }
