@@ -206,4 +206,56 @@ export class FormulariosService {
       )
       .pipe(map(response => response.data));
   }
+
+  public obtenerRegistrosExportacion(
+    version: number,
+    pagina: number = 1,
+    registrosPorPagina: number = 10
+  ): Observable<
+    IRespuesta<{
+      data: Array<{
+        id: number;
+        version: number;
+        estado: string;
+        totalRegistros: number;
+        registrosProcesados: number;
+        fechaInicio: string;
+        fechaFin: string | null;
+        rutaArchivo: string;
+        mensajeError: string | null;
+        createdAt: string;
+        updatedAt: string;
+      }>;
+      totalItems: number;
+      currentPage: number;
+      totalPages: number;
+      itemsPerPage: number;
+    }>
+  > {
+    const params = new HttpParams()
+      .set('page', pagina.toString())
+      .set('pageSize', registrosPorPagina.toString());
+
+    return this.http.get<
+      IRespuesta<{
+        data: Array<{
+          id: number;
+          version: number;
+          estado: string;
+          totalRegistros: number;
+          registrosProcesados: number;
+          fechaInicio: string;
+          fechaFin: string | null;
+          rutaArchivo: string;
+          mensajeError: string | null;
+          createdAt: string;
+          updatedAt: string;
+        }>;
+        totalItems: number;
+        currentPage: number;
+        totalPages: number;
+        itemsPerPage: number;
+      }>
+    >(`${this.apiUrl}/generacion-excel/${version}`, { params });
+  }
 }

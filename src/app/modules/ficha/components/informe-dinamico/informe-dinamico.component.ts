@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { IVersiones } from 'src/app/helpers/interface/interface';
+import {
+  IVersiones,
+  EEstadoGeneracionExcel
+} from 'src/app/helpers/interface/interface';
 import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
 import {
   IFormulario,
@@ -34,6 +37,7 @@ interface IRespuestaEstadisticas {
   styleUrls: ['./informe-dinamico.component.scss']
 })
 export class InformeDinamicoComponent implements OnInit {
+  public EEstadoGeneracionExcel = EEstadoGeneracionExcel;
   public fichaJson!: IFormulario;
   public versiones: IVersiones[] = [];
   public versionSeleccionada: string = '';
@@ -42,6 +46,13 @@ export class InformeDinamicoComponent implements OnInit {
   public registrosPorPagina: number = 10;
   public totalRegistros: number = 0;
   public totalPaginas: number = 0;
+
+  // Propiedades para la tabla de registros a exportar
+  public registrosExportacion: any[] = [];
+  public paginaActualExportacion: number = 1;
+  public registrosPorPaginaExportacion: number = 10;
+  public totalRegistrosExportacion: number = 0;
+  public totalPaginasExportacion: number = 0;
 
   // Propiedades para la tabla de caracterizadores
   public versionSeleccionadaCaracterizadores: string = '';
@@ -87,7 +98,48 @@ export class InformeDinamicoComponent implements OnInit {
       .obtenerFormularioJson(Number(this.versionSeleccionada))
       .subscribe(response => {
         this.fichaJson = response.data;
+        this.cargarRegistrosExportacion();
       });
+  }
+
+  public cargarRegistrosExportacion(): void {
+    if (this.versionSeleccionada) {
+      this.formulariosService
+        .obtenerRegistrosExportacion(
+          Number(this.versionSeleccionada),
+          this.paginaActualExportacion,
+          this.registrosPorPaginaExportacion
+        )
+        .subscribe(response => {
+          this.registrosExportacion = response.data.data;
+          this.totalRegistrosExportacion = response.data.totalItems;
+          this.totalPaginasExportacion = response.data.totalPages;
+        });
+    }
+  }
+
+  public cambiarPaginaExportacion(pagina: number): void {
+    this.paginaActualExportacion = pagina;
+    this.cargarRegistrosExportacion();
+  }
+
+  public cambiarLimiteExportacion(): void {
+    this.paginaActualExportacion = 1;
+    this.cargarRegistrosExportacion();
+  }
+
+  public obtenerPaginasExportacion(): number[] {
+    const paginas: number[] = [];
+    const { totalPaginasExportacion, paginaActualExportacion } = this;
+
+    for (
+      let i = Math.max(1, paginaActualExportacion - 5);
+      i <= Math.min(paginaActualExportacion + 5, totalPaginasExportacion);
+      i++
+    ) {
+      paginas.push(i);
+    }
+    return paginas;
   }
 
   public filtrar(filtros: IFiltrosBusqueda[]): void {

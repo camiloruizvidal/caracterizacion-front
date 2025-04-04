@@ -278,3 +278,9 @@ export interface IVersiones {
   individualNombre: string;
   nombre: string;
 }
+
+export enum EEstadoGeneracionExcel {
+  EN_PROCESO = 'EN_PROCESO',
+  COMPLETADO = 'COMPLETADO',
+  ERROR = 'ERROR'
+}
