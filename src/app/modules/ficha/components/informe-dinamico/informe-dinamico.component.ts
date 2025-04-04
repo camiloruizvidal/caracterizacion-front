@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   IVersiones,
   EEstadoGeneracionExcel
@@ -36,7 +36,8 @@ interface IRespuestaEstadisticas {
   templateUrl: './informe-dinamico.component.html',
   styleUrls: ['./informe-dinamico.component.scss']
 })
-export class InformeDinamicoComponent implements OnInit {
+export class InformeDinamicoComponent implements OnInit, OnDestroy {
+  private intervalId: any;
   public EEstadoGeneracionExcel = EEstadoGeneracionExcel;
   public fichaJson!: IFormulario;
   public versiones: IVersiones[] = [];
@@ -114,7 +115,25 @@ export class InformeDinamicoComponent implements OnInit {
           this.registrosExportacion = response.data.data;
           this.totalRegistrosExportacion = response.data.totalItems;
           this.totalPaginasExportacion = response.data.totalPages;
+          this.verificarYConfigurarRecarga();
         });
+    }
+  }
+
+  private verificarYConfigurarRecarga(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+
+    const hayRegistrosEnProceso = this.registrosExportacion.some(
+      registro => registro.estado === this.EEstadoGeneracionExcel.EN_PROCESO
+    );
+
+    if (hayRegistrosEnProceso) {
+      this.intervalId = setInterval(() => {
+        this.cargarRegistrosExportacion();
+      }, 1000);
     }
   }
 
@@ -238,5 +257,11 @@ export class InformeDinamicoComponent implements OnInit {
   public cambiarLimiteCaracterizadores(): void {
     this.paginaActualCaracterizadores = 1;
     this.cargarEstadisticasCaracterizadores();
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 }
