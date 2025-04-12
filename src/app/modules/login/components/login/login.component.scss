@@ -1,0 +1,108 @@
+/* Reset básico para eliminar márgenes y padding por defecto */
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.contenedor-login {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(45deg, #2c3e50, #3f4c6b);
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.tarjeta-login {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #48dbfb;
+  padding: 2px;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.titulo {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #48dbfb;
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.mensaje-error {
+  color: #ff6b6b;
+  font-size: 14px;
+  margin-top: 5px;
+  text-align: left;
+}
+
+.boton-iniciar {
+  width: 100%;
+  padding: 12px;
+  background: #48dbfb;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: #0abde3;
+  }
+
+  &:disabled {
+    background: #777;
+    cursor: not-allowed;
+  }
+}
