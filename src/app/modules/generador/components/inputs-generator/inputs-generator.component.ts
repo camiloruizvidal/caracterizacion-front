@@ -1366,4 +1366,17 @@ export class InputsGeneratorComponent implements OnInit {
     if (!clasificacion?.planes_cuidado) return [];
     return clasificacion.planes_cuidado;
   }
+
+  public confirmarGuardarFormulario(content: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-confirmacion-title',
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  public confirmarGuardado(modal: any) {
+    this.guardarFormulario();
+    modal.close('Guardado');
+  }
 }

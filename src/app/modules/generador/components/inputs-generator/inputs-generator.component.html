@@ -302,10 +302,11 @@
                 <button
                   type="button"
                   class="btn btn-danger"
-                  (click)="guardarFormulario()"
+                  (click)="confirmarGuardarFormulario(contentConfirmacion)"
+                  [disabled]="!formulario.get('version')?.value"
                 >
                   <i class="bi bi-floppy2"></i>
-                  Formulario
+                  Guardar definitivo
                 </button>
               </div>
             </div>
@@ -937,6 +938,43 @@
       "
     >
       Guardar
+    </button>
+  </div>
+</ng-template>
+
+<!-- Template para el modal de confirmación -->
+<ng-template #contentConfirmacion let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-confirmacion-title">
+      Confirmar guardado
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <p class="alert alert-warning">
+      Se va a guardar la ficha. De darle aceptar no podrá modificar esta ficha y
+      se publicará. ¿Desea continuar?
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="modal.dismiss('Cancelado')"
+    >
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="confirmarGuardado(modal)"
+    >
+      Aceptar
     </button>
   </div>
 </ng-template>
