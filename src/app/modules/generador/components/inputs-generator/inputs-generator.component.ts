@@ -1377,6 +1377,17 @@ export class InputsGeneratorComponent implements OnInit {
 
   public confirmarGuardado(modal: any) {
     this.guardarFormulario();
-    modal.close('Guardado');
+    this.inputsService
+      .publicarFicha(this.formulario.get('version')?.value)
+      .subscribe({
+        next: () => {
+          this.toastr.success('La ficha ha sido publicada exitosamente');
+          modal.close('Guardado');
+        },
+        error: error => {
+          this.toastr.error('Error al publicar la ficha');
+          console.error('Error:', error);
+        }
+      });
   }
 }

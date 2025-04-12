@@ -26,6 +26,10 @@ export class InputsService {
     return this.http.post(this.apiUrl + '/ficha/nueva', data);
   }
 
+  public publicarFicha(version: number): Observable<any> {
+    return this.http.post(this.apiUrl + '/ficha/publicar', { version });
+  }
+
   public obtenerFormularioJson(id: number): Observable<any> {
     return this.http.get(this.apiUrl + '/ficha/obtenerJson/' + id.toString());
   }
