@@ -102,8 +102,18 @@ export class FormulariosService {
       .catch(() => false);
   }
 
-  public obtenerVersiones(isFinish: boolean = false): Observable<IVersiones[]> {
-    const params = new HttpParams().set('isFinish', isFinish.toString());
+  public obtenerVersiones(
+    isFinish: boolean = false,
+    esPublicado: boolean | null = null
+  ): Observable<IVersiones[]> {
+    let params = new HttpParams();
+
+    params = params.set('isFinish', isFinish.toString());
+
+    if (esPublicado !== null) {
+      params = params.set('esPublicado', esPublicado.toString());
+    }
+
     return this.http.get<IVersiones[]>(`${this.apiUrl}/versiones`, { params });
   }
 

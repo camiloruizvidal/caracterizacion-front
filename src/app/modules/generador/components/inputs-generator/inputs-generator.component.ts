@@ -199,7 +199,7 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   private cargarVersiones() {
-    this.formulariosService.obtenerVersiones().subscribe({
+    this.formulariosService.obtenerVersiones(false, false).subscribe({
       next: (versiones: IVersiones[]) => {
         this.versiones = versiones;
       },
