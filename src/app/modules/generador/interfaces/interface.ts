@@ -146,7 +146,7 @@ export interface IOptionsVisibilityExtended extends IOptionsRule {
 export interface IOptionsRule {
   columnDepend: string;
   rule: EConditions;
-  value: string;
+  value: string | string[];
 }
 export interface ICodigos {
   id?: number;
