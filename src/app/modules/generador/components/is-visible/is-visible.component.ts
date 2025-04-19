@@ -14,6 +14,7 @@ import {
   TipoForm
 } from '../../interfaces/interface';
 import { InputsService } from '../../services/inputs.service';
+import { IDateCondition } from '../date-condition-selector/date-condition-selector.component';
 
 @Component({
   selector: 'app-is-visible',
@@ -28,6 +29,13 @@ export class IsVisibleComponent implements OnInit {
     columnDepend: '',
     rule: EConditions.IGUAL_QUE,
     value: ''
+  };
+
+  public calendarConditions: string[] = [];
+
+  public dateCondition: IDateCondition = {
+    type: 'relative',
+    condition: EConditions.MENOR_QUE
   };
 
   public typesOptions: string[] = [
@@ -57,10 +65,7 @@ export class IsVisibleComponent implements OnInit {
       campoVisible: ['', Validators.required],
       condicion: ['', Validators.required],
       valorCondicion: ['', Validators.required],
-      campo: ['', Validators.required],
-
-      rango_inicio: [''],
-      rango_fin: ['']
+      campo: ['', Validators.required]
     });
   }
 
@@ -83,19 +88,72 @@ export class IsVisibleComponent implements OnInit {
     if (campo) {
       campo.valueChanges.subscribe(value => {
         this.tipoCampo = this.validarTipoDato(value);
+        if (this.tipoCampo === ETipoPregunta.Calendar) {
+          this.calendarConditions = [];
+          this.actualizarReglaCalendario();
+        }
       });
     }
 
     this.formulario.valueChanges.subscribe(formulario => {
-      this.reglaUnitaria = {
-        columnDepend: formulario.campo.toString(),
-        rule: formulario.condicion as EConditions,
-        value: formulario.valorCondicion
-      };
+      if (this.tipoCampo !== ETipoPregunta.Calendar) {
+        this.reglaUnitaria = {
+          columnDepend: formulario.campo.toString(),
+          rule: formulario.condicion as EConditions,
+          value: formulario.valorCondicion
+        };
+      }
     });
   }
 
+  onDateConditionChange(condition: IDateCondition): void {
+    const value: any = {
+      type: condition.type
+    };
+
+    if (condition.type === 'relative') {
+      value.years = condition.years;
+      value.months = condition.months;
+      value.days = condition.days;
+
+      if (condition.condition === EConditions.RANGO_FECHA) {
+        value.endYears = condition.endYears;
+        value.endMonths = condition.endMonths;
+        value.endDays = condition.endDays;
+      }
+    } else {
+      value.date = condition.absoluteDate;
+    }
+
+    const conditionString = JSON.stringify(value);
+
+    this.reglaUnitaria = {
+      columnDepend: this.formulario.get('campo')?.value || '',
+      rule: EConditions.OR,
+      value: conditionString
+    };
+  }
+
   public agregarCondicion(): void {
+    if (this.tipoCampo === ETipoPregunta.Calendar) {
+      if (this.reglaUnitaria.value) {
+        this.calendarConditions.push(this.reglaUnitaria.value as string);
+        this.actualizarReglaCalendario();
+      }
+    } else {
+      if (!this.regla) {
+        this.regla = {
+          isDepent: true,
+          rules: [],
+          isShow: true
+        };
+      }
+      this.regla?.rules?.push(this.reglaUnitaria);
+    }
+    this.reglaEmitter.emit(this.regla);
+  }
+
+  private actualizarReglaCalendario(): void {
     if (!this.regla) {
       this.regla = {
         isDepent: true,
@@ -103,7 +161,26 @@ export class IsVisibleComponent implements OnInit {
         isShow: true
       };
     }
-    this.regla?.rules?.push(this.reglaUnitaria);
+
+    const calendarRule = this.regla.rules?.find(
+      rule => rule.columnDepend === this.formulario.get('campo')?.value
+    );
+
+    if (calendarRule) {
+      calendarRule.value = this.calendarConditions;
+      calendarRule.rule = EConditions.OR;
+    } else {
+      this.regla.rules?.push({
+        columnDepend: this.formulario.get('campo')?.value || '',
+        rule: EConditions.OR,
+        value: this.calendarConditions
+      });
+    }
+  }
+
+  public eliminarCondicionCalendario(index: number): void {
+    this.calendarConditions.splice(index, 1);
+    this.actualizarReglaCalendario();
     this.reglaEmitter.emit(this.regla);
   }
 

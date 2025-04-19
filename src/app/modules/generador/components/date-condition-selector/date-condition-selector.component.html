@@ -1,0 +1,137 @@
+<div class="date-condition-selector">
+  <div class="type-selector btn-group" role="group">
+    <input
+      type="radio"
+      class="btn-check"
+      name="type"
+      id="relative"
+      [value]="'relative'"
+      [(ngModel)]="condition.type"
+      (change)="onTypeChange('relative')"
+      autocomplete="off"
+    />
+    <label class="btn btn-outline-primary" for="relative">Fecha Relativa</label>
+
+    <input
+      type="radio"
+      class="btn-check"
+      name="type"
+      id="absolute"
+      [value]="'absolute'"
+      [(ngModel)]="condition.type"
+      (change)="onTypeChange('absolute')"
+      autocomplete="off"
+    />
+    <label class="btn btn-outline-primary" for="absolute">Fecha Absoluta</label>
+  </div>
+
+  <div class="condition-selector">
+    <select
+      class="form-select"
+      [(ngModel)]="condition.condition"
+      (change)="onConditionChange($event)"
+    >
+      <option *ngFor="let cond of conditions" [value]="cond.value">
+        {{ cond.label }}
+      </option>
+    </select>
+  </div>
+
+  <div *ngIf="condition.type === 'relative'" class="relative-date-selector">
+    <div class="time-inputs">
+      <div class="input-group">
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="condition.years"
+          (change)="onYearsChange($event)"
+          placeholder="Años"
+        />
+        <span class="input-group-text">años</span>
+      </div>
+
+      <div class="input-group">
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="condition.months"
+          (change)="onMonthsChange($event)"
+          placeholder="Meses"
+        />
+        <span class="input-group-text">meses</span>
+      </div>
+
+      <div class="input-group">
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="condition.days"
+          (change)="onDaysChange($event)"
+          placeholder="Días"
+        />
+        <span class="input-group-text">días</span>
+      </div>
+    </div>
+
+    <div
+      *ngIf="condition.condition === EConditions.RANGO_FECHA"
+      class="end-time-inputs"
+    >
+      <h5 class="mt-3 mb-2">Hasta</h5>
+      <div class="time-inputs">
+        <div class="input-group">
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="condition.endYears"
+            (change)="onEndYearsChange($event)"
+            placeholder="Años"
+          />
+          <span class="input-group-text">años</span>
+        </div>
+
+        <div class="input-group">
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="condition.endMonths"
+            (change)="onEndMonthsChange($event)"
+            placeholder="Meses"
+          />
+          <span class="input-group-text">meses</span>
+        </div>
+
+        <div class="input-group">
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="condition.endDays"
+            (change)="onEndDaysChange($event)"
+            placeholder="Días"
+          />
+          <span class="input-group-text">días</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="condition.type === 'absolute'" class="absolute-date-selector">
+    <div class="input-group">
+      <input
+        class="form-control"
+        placeholder="yyyy-mm-dd"
+        name="dp"
+        [(ngModel)]="condition.absoluteDate"
+        ngbDatepicker
+        #d="ngbDatepicker"
+      />
+      <button
+        class="btn btn-outline-secondary"
+        (click)="d.toggle()"
+        type="button"
+      >
+        <i class="bi bi-calendar"></i>
+      </button>
+    </div>
+  </div>
+</div>

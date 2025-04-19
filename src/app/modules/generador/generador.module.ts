@@ -7,12 +7,14 @@ import { HelpersModule } from 'src/app/helpers/helpers.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IsVisibleComponent } from './components/is-visible/is-visible.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DateConditionSelectorComponent } from './components/date-condition-selector/date-condition-selector.component';
 
 @NgModule({
   declarations: [
     InputsGeneratorComponent,
     AlertConfigComponent,
-    IsVisibleComponent
+    IsVisibleComponent,
+    DateConditionSelectorComponent
   ],
   imports: [
     CommonModule,
@@ -22,6 +24,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ReactiveFormsModule,
     FormsModule
   ],
-  exports: [InputsGeneratorComponent, AlertConfigComponent, IsVisibleComponent]
+  exports: [
+    InputsGeneratorComponent,
+    AlertConfigComponent,
+    IsVisibleComponent,
+    DateConditionSelectorComponent
+  ]
 })
 export class GeneradorModule {}

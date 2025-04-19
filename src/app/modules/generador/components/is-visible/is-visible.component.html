@@ -42,67 +42,79 @@
     </select>
   </div>
   <div>
-    <input
+    <app-date-condition-selector
       *ngIf="tipoCampo === 'calendar'"
-      type="text"
-      placeholder="En formato JSON"
-      class="form form-control"
-    />
-    <input
-      *ngIf="tipoCampo === 'calendar'"
-      type="number"
-      formControlName="rango_inicio"
-      class="form form-control"
-    />
-    <input
-      *ngIf="tipoCampo === 'calendar'"
-      type="number"
-      formControlName="rango_fin"
-      placeholder="Rango de fin"
-      class="form form-control"
-    />
-    <label for="condicion">Condicion incial</label>
-    <select
-      class="form form-control"
-      name="condicion"
-      id="condicion"
-      formControlName="condicion"
-    >
-      <option value="">Seleccione</option>
-      <option
-        *ngFor="let condicion of condiciones"
-        [value]="condicion.condition"
-      >
-        {{ condicion.text }}
-      </option>
-    </select>
-    <label for="valorCondicion">Valor de la condici&oacute;n</label>
-    <select
-      *ngIf="typesOptions.includes(tipoCampo)"
-      formControlName="valorCondicion"
-      placeholder="Condici&oacute;n"
-      class="form form-control"
-    >
-      <option value="">Seleccione</option>
-      <option *ngFor="let opcion of opciones" [value]="opcion.value">
-        {{ opcion.option }}
-      </option>
-    </select>
+      [condition]="dateCondition"
+      (conditionChange)="onDateConditionChange($event)"
+    ></app-date-condition-selector>
 
-    <input
-      *ngIf="!typesOptions.includes(tipoCampo)"
-      type="text"
-      name="valorCondicion"
-      id="valorCondicion"
-      class="form form-control"
-      formControlName="valorCondicion"
-      required
-    />
+    <div
+      *ngIf="tipoCampo === 'calendar' && calendarConditions.length > 0"
+      class="mt-3"
+    >
+      <h6>Condiciones agregadas (OR):</h6>
+      <div class="list-group">
+        <div
+          *ngFor="let condition of calendarConditions; let i = index"
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <span>{{ condition }}</span>
+          <button
+            type="button"
+            class="btn btn-danger btn-sm"
+            (click)="eliminarCondicionCalendario(i)"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="tipoCampo !== 'calendar'">
+      <label for="condicion">Condicion inicial</label>
+      <select
+        class="form form-control"
+        name="condicion"
+        id="condicion"
+        formControlName="condicion"
+      >
+        <option value="">Seleccione</option>
+        <option
+          *ngFor="let condicion of condiciones"
+          [value]="condicion.condition"
+        >
+          {{ condicion.text }}
+        </option>
+      </select>
+      <label for="valorCondicion">Valor de la condici&oacute;n</label>
+      <select
+        *ngIf="typesOptions.includes(tipoCampo)"
+        formControlName="valorCondicion"
+        placeholder="Condici&oacute;n"
+        class="form form-control"
+      >
+        <option value="">Seleccione</option>
+        <option *ngFor="let opcion of opciones" [value]="opcion.value">
+          {{ opcion.option }}
+        </option>
+      </select>
+
+      <input
+        *ngIf="!typesOptions.includes(tipoCampo)"
+        type="text"
+        name="valorCondicion"
+        id="valorCondicion"
+        class="form form-control"
+        formControlName="valorCondicion"
+        required
+      />
+    </ng-container>
+
     regla
     <pre><code>{{reglaUnitaria|json}}</code></pre>
   </div>
   <div class="col-md-12">
-    <button class="btn btn-success" (click)="agregarCondicion()">
+    <button type="button" class="btn btn-success" (click)="agregarCondicion()">
       Agregar condicion
     </button>
   </div>

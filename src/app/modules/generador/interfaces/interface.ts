@@ -181,7 +181,8 @@ export enum EConditions {
   IGUAL_QUE = '=',
   DIFERENTE_QUE = '!==',
   VACIO = 'null',
-  RANGO_FECHA = 'rangoFecha'
+  RANGO_FECHA = 'rangoFecha',
+  OR = 'OR'
 }
 export interface ICondiciones {
   text: string;
@@ -196,7 +197,8 @@ export const condiciones: ICondiciones[] = [
   { condition: EConditions.IGUAL_QUE, text: 'Igual que' },
   { condition: EConditions.DIFERENTE_QUE, text: 'Diferente que' },
   { condition: EConditions.VACIO, text: 'Vacio' },
-  { condition: EConditions.RANGO_FECHA, text: 'Rango de fechas' }
+  { condition: EConditions.RANGO_FECHA, text: 'Rango de fechas' },
+  { condition: EConditions.OR, text: 'OR' }
 ];
 
 export interface IFiltrosBusqueda {
