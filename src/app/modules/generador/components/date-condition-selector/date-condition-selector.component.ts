@@ -31,6 +31,9 @@ export class DateConditionSelectorComponent {
 
   conditions = [
     { value: EConditions.MENOR_QUE, label: 'Menor que' },
+    { value: EConditions.MENOR_O_IGUAL_QUE, label: 'Menor o igual que' },
+    { value: EConditions.MAYOR_QUE, label: 'Mayor que' },
+    { value: EConditions.MAYOR_O_IGUAL_QUE, label: 'Mayor o igual que' },
     { value: EConditions.IGUAL_QUE, label: 'Igual que' },
     { value: EConditions.RANGO_FECHA, label: 'Entre' }
   ];
