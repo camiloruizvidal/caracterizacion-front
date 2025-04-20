@@ -35,6 +35,13 @@ export class DateConditionSelectorComponent {
     { value: EConditions.RANGO_FECHA, label: 'Entre' }
   ];
 
+  onInputClick(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input) {
+      input.select();
+    }
+  }
+
   onTypeChange(type: 'relative' | 'absolute') {
     this.condition.type = type;
     this.conditionChange.emit(this.condition);

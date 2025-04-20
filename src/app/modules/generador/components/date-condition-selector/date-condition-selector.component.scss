@@ -13,12 +13,30 @@
 
   .time-inputs {
     display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
 
     .input-group {
       width: auto;
-      min-width: 150px;
+      flex: 1;
+      min-width: 120px;
+      max-width: 150px;
+
+      input.no-spinners {
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+
+        &[type='number'] {
+          -moz-appearance: textfield;
+        }
+      }
+
+      .input-group-text {
+        min-width: 45px;
+      }
     }
   }
 

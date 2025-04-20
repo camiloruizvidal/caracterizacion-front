@@ -42,10 +42,11 @@
       <div class="input-group">
         <input
           type="number"
-          class="form-control"
+          class="form-control no-spinners"
           [(ngModel)]="condition.years"
           (change)="onYearsChange($event)"
-          placeholder="Años"
+          (click)="onInputClick($event)"
+          placeholder="años"
         />
         <span class="input-group-text">años</span>
       </div>
@@ -53,10 +54,11 @@
       <div class="input-group">
         <input
           type="number"
-          class="form-control"
+          class="form-control no-spinners"
           [(ngModel)]="condition.months"
           (change)="onMonthsChange($event)"
-          placeholder="Meses"
+          (click)="onInputClick($event)"
+          placeholder="meses"
         />
         <span class="input-group-text">meses</span>
       </div>
@@ -64,10 +66,11 @@
       <div class="input-group">
         <input
           type="number"
-          class="form-control"
+          class="form-control no-spinners"
           [(ngModel)]="condition.days"
           (change)="onDaysChange($event)"
-          placeholder="Días"
+          (click)="onInputClick($event)"
+          placeholder="días"
         />
         <span class="input-group-text">días</span>
       </div>
@@ -82,10 +85,11 @@
         <div class="input-group">
           <input
             type="number"
-            class="form-control"
+            class="form-control no-spinners"
             [(ngModel)]="condition.endYears"
             (change)="onEndYearsChange($event)"
-            placeholder="Años"
+            (click)="onInputClick($event)"
+            placeholder="años"
           />
           <span class="input-group-text">años</span>
         </div>
@@ -93,10 +97,11 @@
         <div class="input-group">
           <input
             type="number"
-            class="form-control"
+            class="form-control no-spinners"
             [(ngModel)]="condition.endMonths"
             (change)="onEndMonthsChange($event)"
-            placeholder="Meses"
+            (click)="onInputClick($event)"
+            placeholder="meses"
           />
           <span class="input-group-text">meses</span>
         </div>
@@ -104,10 +109,11 @@
         <div class="input-group">
           <input
             type="number"
-            class="form-control"
+            class="form-control no-spinners"
             [(ngModel)]="condition.endDays"
             (change)="onEndDaysChange($event)"
-            placeholder="Días"
+            (click)="onInputClick($event)"
+            placeholder="días"
           />
           <span class="input-group-text">días</span>
         </div>
