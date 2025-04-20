@@ -172,6 +172,60 @@
                 <option [value]="true">Inactivo</option>
               </select>
             </div>
+            <div class="col-md-8" *ngIf="esCaracterizador">
+              <label for="perfilEvaluador"
+                >Perfil de quien realiza la evaluación</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="perfilEvaluador"
+                formControlName="perfilEvaluador"
+              />
+              <div
+                class="invalid-feedback"
+                *ngIf="isInvalidInput('perfilEvaluador')"
+              >
+                Este campo es obligatorio para caracterizadores.
+              </div>
+            </div>
+
+            <div class="col-md-6" *ngIf="esCaracterizador">
+              <label for="numeroIdentificacionEBS"
+                >Número de identificación del Equipo Básico de Salud</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="numeroIdentificacionEBS"
+                formControlName="numeroIdentificacionEBS"
+              />
+              <div
+                class="invalid-feedback"
+                *ngIf="isInvalidInput('numeroIdentificacionEBS')"
+              >
+                Este campo es obligatorio para caracterizadores.
+              </div>
+            </div>
+
+            <div class="col-md-6" *ngIf="esCaracterizador">
+              <label for="prestadorPrimarioEBS"
+                >Prestador primario del Equipo Básico de Salud</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="prestadorPrimarioEBS"
+                formControlName="prestadorPrimarioEBS"
+              />
+              <div
+                class="invalid-feedback"
+                *ngIf="isInvalidInput('prestadorPrimarioEBS')"
+              >
+                Este campo es obligatorio para caracterizadores.
+              </div>
+            </div>
+
             <div class="col-md-8 mt-4" *ngIf="siMostrarReiniciarContrasenna">
               <button
                 type="button"
@@ -243,7 +297,8 @@
 
           <div class="col-md-12">
             <h2>C&oacute;digos</h2>
-            <table class="table">
+            user: {{ user | json }}
+            <table class="table" *ngIf="user">
               <thead>
                 <tr>
                   <th>Inicio</th>

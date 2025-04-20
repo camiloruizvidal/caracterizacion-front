@@ -11,6 +11,9 @@ export interface IUser {
   rol: any;
   inactivo: boolean;
   codigos?: codigos[];
+  numeroIdentificacionEBS?: string;
+  prestadorPrimarioEBS?: string;
+  perfilEvaluador?: string;
 }
 
 export interface codigos {
@@ -21,7 +24,7 @@ export interface IUserDetail extends Omit<IUser, 'password'> {
   username?: string;
   codigoInicial?: string;
   codigoFinal?: string;
-  roles?: IRols
+  roles?: IRols;
 }
 
 export interface IRols {

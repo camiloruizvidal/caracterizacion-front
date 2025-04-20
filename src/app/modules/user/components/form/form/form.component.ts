@@ -22,22 +22,31 @@ export class FormComponent implements OnInit {
   public get esCaracterizador(): boolean {
     const controlInicio = this.userForm.get('codigoInicial');
     const controlFin = this.userForm.get('codigoFinal');
+    const controlNumeroEBS = this.userForm.get('numeroIdentificacionEBS');
+    const controlPrestadorEBS = this.userForm.get('prestadorPrimarioEBS');
+    const controlPerfilEvaluador = this.userForm.get('perfilEvaluador');
 
     const isRequired: boolean = Number(this.userForm.value['rolId']) === 2;
 
     if (isRequired) {
       controlInicio?.setValidators([Validators.required]);
       controlFin?.setValidators([Validators.required]);
+      controlNumeroEBS?.setValidators([Validators.required]);
+      controlPrestadorEBS?.setValidators([Validators.required]);
+      controlPerfilEvaluador?.setValidators([Validators.required]);
     } else {
       controlInicio?.clearValidators();
       controlFin?.clearValidators();
+      controlNumeroEBS?.clearValidators();
+      controlPrestadorEBS?.clearValidators();
+      controlPerfilEvaluador?.clearValidators();
     }
 
-    controlFin?.clearValidators();
     controlFin?.updateValueAndValidity();
-
-    controlInicio?.clearValidators();
     controlInicio?.updateValueAndValidity();
+    controlNumeroEBS?.updateValueAndValidity();
+    controlPrestadorEBS?.updateValueAndValidity();
+    controlPerfilEvaluador?.updateValueAndValidity();
 
     return isRequired;
   }
@@ -68,7 +77,10 @@ export class FormComponent implements OnInit {
       rolId: ['', Validators.required],
       codigoInicial: [''],
       codigoFinal: [''],
-      inactivo: [false, Validators.required]
+      inactivo: [false, Validators.required],
+      numeroIdentificacionEBS: [''],
+      prestadorPrimarioEBS: [''],
+      perfilEvaluador: ['']
     });
   }
 
@@ -121,11 +133,9 @@ export class FormComponent implements OnInit {
   }
 
   private loadDocumentsTypes(): void {
-    this.usersService
-      .getDocumentsTypes()
-      .subscribe((documentosTipos: IDocumentType[]) => {
-        this.documentosTipos = documentosTipos;
-      });
+    this.usersService.getDocumentsTypes().subscribe((documentosTipos: any) => {
+      this.documentosTipos = documentosTipos.data as IDocumentType[];
+    });
   }
 
   public onSubmit() {
