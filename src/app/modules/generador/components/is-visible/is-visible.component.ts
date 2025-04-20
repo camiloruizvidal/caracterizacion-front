@@ -36,7 +36,7 @@ export class IsVisibleComponent implements OnInit {
 
   public dateCondition: IDateCondition = {
     type: 'relative',
-    condition: EConditions.MENOR_QUE
+    condition: EConditions.MAYOR_O_IGUAL_QUE
   };
 
   public typesOptions: string[] = [
@@ -112,26 +112,43 @@ export class IsVisibleComponent implements OnInit {
     };
 
     if (condition.type === 'relative') {
-      value.years = condition.years;
-      value.months = condition.months;
-      value.days = condition.days;
+      const totalMesesInicio =
+        (condition.years || 0) * 12 + (condition.months || 0);
+      const totalMesesFin =
+        (condition.endYears || 0) * 12 + (condition.endMonths || 0);
 
-      if (condition.condition === EConditions.RANGO_FECHA) {
-        value.endYears = condition.endYears;
-        value.endMonths = condition.endMonths;
-        value.endDays = condition.endDays;
+      if (
+        totalMesesInicio <= totalMesesFin ||
+        condition.condition !== EConditions.RANGO_FECHA
+      ) {
+        value.years = condition.years;
+        value.months = condition.months;
+        value.days = condition.days;
+
+        if (condition.condition === EConditions.RANGO_FECHA) {
+          value.endYears = condition.endYears;
+          value.endMonths = condition.endMonths;
+          value.endDays = condition.endDays;
+        }
+
+        const conditionString = JSON.stringify(value);
+
+        this.reglaUnitaria = {
+          columnDepend: this.formulario.get('campo')?.value || '',
+          rule: condition.condition,
+          value: conditionString
+        };
       }
     } else {
       value.date = condition.absoluteDate;
+      const conditionString = JSON.stringify(value);
+
+      this.reglaUnitaria = {
+        columnDepend: this.formulario.get('campo')?.value || '',
+        rule: condition.condition,
+        value: conditionString
+      };
     }
-
-    const conditionString = JSON.stringify(value);
-
-    this.reglaUnitaria = {
-      columnDepend: this.formulario.get('campo')?.value || '',
-      rule: EConditions.OR,
-      value: conditionString
-    };
   }
 
   public agregarCondicion(): void {
@@ -320,29 +337,46 @@ export class IsVisibleComponent implements OnInit {
       let resultado = '';
 
       if (config.type === 'relative') {
-        if (config.years) {
-          resultado += `${config.years} ${
-            config.years === 1 ? 'año' : 'años'
-          } `;
-        }
-        if (config.months) {
-          resultado += `${config.months} ${
-            config.months === 1 ? 'mes' : 'meses'
-          } `;
-        }
-        if (config.days) {
-          resultado += `${config.days} ${config.days === 1 ? 'día' : 'días'}`;
-        }
+        if (
+          config.endYears !== undefined ||
+          config.endMonths !== undefined ||
+          config.endDays !== undefined
+        ) {
+          let inicio = '';
+          let fin = '';
 
-        if (config.endMonths) {
-          resultado = `Entre ${config.months} y ${config.endMonths} ${
-            config.endMonths === 1 ? 'mes' : 'meses'
-          }`;
-        }
-        if (config.endYears) {
-          resultado = `Entre ${config.years} y ${config.endYears} ${
-            config.endYears === 1 ? 'año' : 'años'
-          }`;
+          if (config.years)
+            inicio += `${config.years} ${config.years === 1 ? 'año' : 'años'} `;
+          if (config.months)
+            inicio += `${config.months} ${
+              config.months === 1 ? 'mes' : 'meses'
+            } `;
+          if (config.days)
+            inicio += `${config.days} ${config.days === 1 ? 'día' : 'días'}`;
+
+          if (config.endYears)
+            fin += `${config.endYears} ${
+              config.endYears === 1 ? 'año' : 'años'
+            } `;
+          if (config.endMonths)
+            fin += `${config.endMonths} ${
+              config.endMonths === 1 ? 'mes' : 'meses'
+            } `;
+          if (config.endDays)
+            fin += `${config.endDays} ${config.endDays === 1 ? 'día' : 'días'}`;
+
+          resultado = `Entre ${inicio.trim()} y ${fin.trim()}`;
+        } else {
+          if (config.years)
+            resultado += `${config.years} ${
+              config.years === 1 ? 'año' : 'años'
+            } `;
+          if (config.months)
+            resultado += `${config.months} ${
+              config.months === 1 ? 'mes' : 'meses'
+            } `;
+          if (config.days)
+            resultado += `${config.days} ${config.days === 1 ? 'día' : 'días'}`;
         }
       } else {
         resultado = `Fecha: ${config.date}`;
@@ -350,7 +384,7 @@ export class IsVisibleComponent implements OnInit {
 
       return resultado.trim() || 'Sin especificar';
     } catch {
-      return 'Formato inv&aacute;lido';
+      return 'Formato inválido';
     }
   }
 

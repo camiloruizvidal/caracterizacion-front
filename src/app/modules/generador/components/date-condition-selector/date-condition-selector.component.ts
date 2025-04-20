@@ -26,7 +26,6 @@ export class DateConditionSelectorComponent {
   };
   @Output() conditionChange = new EventEmitter<IDateCondition>();
 
-  // Hacemos EConditions disponible en el template
   EConditions = EConditions;
 
   conditions = [
