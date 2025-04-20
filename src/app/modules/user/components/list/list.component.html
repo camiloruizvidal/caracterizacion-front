@@ -51,13 +51,16 @@
             <th>Rol</th>
             <th>Nombre</th>
             <th>Documento</th>
+            <th>Número de Identificación EBS</th>
+            <th>Prestador Primario EBS</th>
+            <th>Perfil de Evaluador</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let user of usersPagination.data">
             <td>
               <a
-                [routerLink]="'/usuarios/' + user.id + 'update/'"
+                [routerLink]="'/usuarios/' + user.id + '/update'"
                 class="btn btn-success"
               >
                 <i class="bi bi-pencil-square"></i>
@@ -72,6 +75,9 @@
               {{ user.apellidoSegundo }}
             </td>
             <td>{{ user.documento }}</td>
+            <td>{{ user.numeroIdentificacionEBS }}</td>
+            <td>{{ user.prestadorPrimarioEBS }}</td>
+            <td>{{ user.perfilEvaluador }}</td>
           </tr>
         </tbody>
       </table>

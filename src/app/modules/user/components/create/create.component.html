@@ -1,1 +1,13 @@
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1050">
+  <div
+    class="alert alert-{{ alertType }} d-flex align-items-center"
+    role="alert"
+    *ngIf="showAlert"
+  >
+    <div>
+      {{ alertMessage }}
+    </div>
+  </div>
+</div>
+
 <app-form (userDataEmitter)="createNewUser($event)"></app-form>
