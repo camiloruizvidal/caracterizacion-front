@@ -15,6 +15,7 @@ import {
 } from '../../interfaces/interface';
 import { InputsService } from '../../services/inputs.service';
 import { IDateCondition } from '../date-condition-selector/date-condition-selector.component';
+import { IPregunta } from '../../interfaces/interface';
 
 @Component({
   selector: 'app-is-visible',
@@ -84,7 +85,6 @@ export class IsVisibleComponent implements OnInit {
       });
     }
     const campo = this.formulario.get('campo');
-    console.log({ campo });
     if (campo) {
       campo.valueChanges.subscribe(value => {
         this.tipoCampo = this.validarTipoDato(value);
@@ -312,5 +312,77 @@ export class IsVisibleComponent implements OnInit {
         campo => campo.columnName === this.formulario.value.campo
       )?.options || []
     );
+  }
+
+  public formatearCondicion(condicion: string): string {
+    try {
+      const config = JSON.parse(condicion);
+      let resultado = '';
+
+      if (config.type === 'relative') {
+        if (config.years) {
+          resultado += `${config.years} ${
+            config.years === 1 ? 'año' : 'años'
+          } `;
+        }
+        if (config.months) {
+          resultado += `${config.months} ${
+            config.months === 1 ? 'mes' : 'meses'
+          } `;
+        }
+        if (config.days) {
+          resultado += `${config.days} ${config.days === 1 ? 'día' : 'días'}`;
+        }
+
+        if (config.endMonths) {
+          resultado = `Entre ${config.months} y ${config.endMonths} ${
+            config.endMonths === 1 ? 'mes' : 'meses'
+          }`;
+        }
+        if (config.endYears) {
+          resultado = `Entre ${config.years} y ${config.endYears} ${
+            config.endYears === 1 ? 'año' : 'años'
+          }`;
+        }
+      } else {
+        resultado = `Fecha: ${config.date}`;
+      }
+
+      return resultado.trim() || 'Sin especificar';
+    } catch {
+      return 'Formato inv&aacute;lido';
+    }
+  }
+
+  private encontrarTipoFichaYGrupo(columnName: string): {
+    fichaTipo: string;
+    grupoId: number | string;
+  } {
+    // Buscar en datos individuales
+    for (const categoria of this.formularioGenerado.individualData) {
+      const pregunta = categoria.values?.find(p => p.columnName === columnName);
+      if (pregunta) {
+        return {
+          fichaTipo: 'individualNombre',
+          grupoId: categoria.id || ''
+        };
+      }
+    }
+
+    // Buscar en datos grupales
+    for (const categoria of this.formularioGenerado.grupalData) {
+      const pregunta = categoria.values?.find(p => p.columnName === columnName);
+      if (pregunta) {
+        return {
+          fichaTipo: 'grupalNombre',
+          grupoId: categoria.id || ''
+        };
+      }
+    }
+
+    return {
+      fichaTipo: '',
+      grupoId: ''
+    };
   }
 }
