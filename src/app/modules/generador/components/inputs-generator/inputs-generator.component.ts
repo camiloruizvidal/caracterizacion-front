@@ -324,7 +324,8 @@ export class InputsGeneratorComponent implements OnInit {
       const visibility =
         this.formulario.value.reglas === ''
           ? true
-          : this.formulario.value.reglas;
+          : JSON.parse(JSON.stringify(this.formulario.value.reglas));
+
       const steperValues: IPregunta = {
         label: this.formulario.value.label.trim(),
         type: this.getTipo(),
@@ -342,7 +343,13 @@ export class InputsGeneratorComponent implements OnInit {
           this.formulario.value.nombrePadreDependiente.trim();
       }
       this.formularioGenerado[campo][valueIndex]?.values?.push(steperValues);
-      this.formulario.value.label = '';
+
+      this.formulario.patchValue({
+        label: '',
+        reglas: '',
+        esVisibleSi: false
+      });
+
       this.formularioGenerado.version = this.formulario.value.version;
       this.formularioGenerado.grupalNombre = this.tipoCards[0].tituloTexto;
       this.formularioGenerado.individualNombre = this.tipoCards[1].tituloTexto;
@@ -581,7 +588,9 @@ export class InputsGeneratorComponent implements OnInit {
   }
 
   public guardarRegla(reglas: IOptionsVisibility) {
-    this.formulario.patchValue({ reglas });
+    // Crear una copia profunda de las reglas para evitar referencias compartidas
+    const reglasCopy = JSON.parse(JSON.stringify(reglas));
+    this.formulario.patchValue({ reglas: reglasCopy });
   }
 
   public desmarcarSiEsVisible(event: Event): void {
