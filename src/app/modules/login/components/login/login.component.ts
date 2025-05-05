@@ -19,11 +19,9 @@ export class LoginComponent {
     private toastr: ToastrService,
     private router: Router
   ) {
-    const username = environment.production ? '' : '123456';
-    const password = environment.production ? '' : '123456';
     this.loginForm = this.formBuilder.group({
-      username: [username, Validators.required],
-      password: [password, Validators.required]
+      username: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
 

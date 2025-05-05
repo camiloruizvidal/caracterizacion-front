@@ -9,6 +9,7 @@
           class="form-control"
           formControlName="username"
           placeholder="Email o nombre de usuario"
+          data-cy="username"
         />
         <div
           *ngIf="
@@ -16,6 +17,7 @@
             loginForm.get('username')?.touched
           "
           class="mensaje-error"
+          data-cy="username-error"
         >
           Usuario es requerido.
         </div>
@@ -27,6 +29,7 @@
           class="form-control"
           formControlName="password"
           placeholder="Contraseña"
+          data-cy="password"
         />
         <div
           *ngIf="
@@ -34,6 +37,7 @@
             loginForm.get('password')?.touched
           "
           class="mensaje-error"
+          data-cy="password-error"
         >
           Contraseña es requerida.
         </div>
@@ -43,6 +47,7 @@
         type="submit"
         [disabled]="loginForm.invalid"
         class="boton-iniciar"
+        data-cy="login-button"
       >
         Iniciar Sesión
       </button>
