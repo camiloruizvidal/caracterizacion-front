@@ -272,8 +272,6 @@ export class IsVisibleComponent implements OnInit {
     return item.type as ETipoPregunta;
   }
 
-  public filtrarGrupos(target: EventTarget | null) {}
-
   public filtrarCampos() {
     const columna = this.formulario.value.campo;
     this.tipoCampo = this.validarTipoDato(columna);
