@@ -1,0 +1,36 @@
+name: Deploy Frontend to qa Server.
+
+on:
+  push:
+    branches:
+      - qa
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to qa server.
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.QA_CREDENTIALS }} <<EOF
+            set -e  # Detener la ejecución si un comando falla
+            echo "Desplegando Frontend en qa..."
+
+            cd /var/www/caracterizacion/caracterizacion-front || { echo "Error: No se pudo acceder al directorio"; exit 1; }
+
+            git pull origin qa || { echo "Error: No se pudo hacer git pull"; exit 1; }
+
+            npm install || { echo "Error: Falló npm install"; exit 1; }
+            echo "Ejecutando npm run build -- --configuration=qa"
+            npm run build -- --configuration=qa || { echo "Error: Falló npm run build"; exit 1; }
+
+            echo "Frontend desplegado correctamente en qa."
+          EOF
