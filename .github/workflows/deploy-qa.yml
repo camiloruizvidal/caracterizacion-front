@@ -22,7 +22,6 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.QA_CREDENTIALS }} <<EOF
             set -e  # Detener la ejecución si un comando falla
-
             echo "Desplegando Frontend en qa..."
 
             cd /var/www/caracterizacion/caracterizacion-front || { echo "Error: No se pudo acceder al directorio"; exit 1; }
@@ -30,13 +29,8 @@ jobs:
             git pull origin qa || { echo "Error: No se pudo hacer git pull"; exit 1; }
 
             npm install || { echo "Error: Falló npm install"; exit 1; }
-
-            echo "Limpiando caché..."
-            rm -rf node_modules/.cache
-            rm -rf .angular/cache
-
-            echo "Ejecutando build optimizado..."
-            NODE_OPTIONS="--max_old_space_size=2048" npm run build -- --configuration=qa || { echo "Error: Falló npm run build"; exit 1; }
+            echo "Ejecutando npm run build -- --configuration=qa"
+            npm run build -- --configuration=qa || { echo "Error: Falló npm run build"; exit 1; }
 
             echo "Frontend desplegado correctamente en qa."
           EOF
