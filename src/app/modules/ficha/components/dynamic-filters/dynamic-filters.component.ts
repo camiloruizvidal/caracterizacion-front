@@ -27,6 +27,8 @@ export class DynamicFiltersComponent implements OnInit {
   public filtrosForm: FormGroup;
   public filtros: IFiltrosBusqueda[] = [];
   public urlDescarga: string | null = null;
+  public isGenerating: boolean = false;
+  public resultado: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -187,14 +189,49 @@ export class DynamicFiltersComponent implements OnInit {
       return;
     }
 
+    this.isGenerating = true;
     this.exportarService
       .exportarFicha(this.tarjetaJson.version.toString())
       .subscribe({
-        next: response => {},
-
+        next: response => {
+          if (response.code === 200 && response.data?.url) {
+            this.verificarEstadoArchivo(response.data.url);
+          }
+        },
         error: error => {
+          this.isGenerating = false;
           console.error(error);
         }
       });
+  }
+
+  private verificarEstadoArchivo(url: string) {
+    this.exportarService.verificarEstadoArchivo(url).subscribe({
+      next: response => {
+        if (response instanceof Blob) {
+          console.log('Archivo completado, guardando URL:', url);
+          this.resultado = { url };
+          this.isGenerating = false;
+          // Descargar automáticamente
+          window.open(url, '_blank');
+        } else {
+          console.log('Archivo en proceso (403)');
+          setTimeout(() => {
+            this.verificarEstadoArchivo(url);
+          }, 3000);
+        }
+      },
+      error: error => {
+        if (error.status === 403) {
+          console.log('Archivo en proceso (403)');
+          setTimeout(() => {
+            this.verificarEstadoArchivo(url);
+          }, 3000);
+        } else {
+          this.isGenerating = false;
+          console.error('Error:', error);
+        }
+      }
+    });
   }
 }

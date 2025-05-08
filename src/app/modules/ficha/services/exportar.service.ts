@@ -24,4 +24,8 @@ export class ExportarService {
       `${this.apiUrl}/v1/ficha/formato/${version}`
     );
   }
+
+  verificarEstadoArchivo(url: string): Observable<{ estado: string } | Blob> {
+    return this.http.get(url, { responseType: 'blob' });
+  }
 }

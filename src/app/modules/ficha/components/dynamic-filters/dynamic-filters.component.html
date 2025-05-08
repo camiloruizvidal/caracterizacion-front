@@ -251,6 +251,16 @@
             Exportar
           </button>
         </div>
+        <div *ngIf="isGenerating" class="alert alert-info mt-2">
+          <i class="bi bi-info-circle"></i> Procesando...
+        </div>
+        <div *ngIf="resultado?.url" class="alert alert-warning mt-2">
+          <i class="bi bi-exclamation-triangle"></i> Archivo generado
+          correctamente
+          <a [href]="resultado?.url" target="_blank" class="btn btn-link">
+            <i class="bi bi-download"></i> Descargar archivo
+          </a>
+        </div>
       </div>
     </div>
   </form>
