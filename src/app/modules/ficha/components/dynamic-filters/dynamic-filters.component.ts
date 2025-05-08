@@ -14,6 +14,11 @@ import {
 } from 'src/app/modules/generador/interfaces/interface';
 import { ExportarService } from '../../services/exportar.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
+import {
+  EFileStatus,
+  IResultadoGenerarArchivoExcel
+} from 'src/app/helpers/interface/interface';
 
 @Component({
   selector: 'app-dynamic-filters',
@@ -27,10 +32,13 @@ export class DynamicFiltersComponent implements OnInit {
   public filtrosForm: FormGroup;
   public filtros: IFiltrosBusqueda[] = [];
   public urlDescarga: string | null = null;
+  public isGenerating: boolean = false;
+  public currentFileName: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
-    private exportarService: ExportarService
+    private exportarService: ExportarService,
+    private formulariosService: FormulariosService
   ) {
     this.filtrosForm = this.formBuilder.group({
       tipoTarjeta: ['', Validators.required],
@@ -187,14 +195,43 @@ export class DynamicFiltersComponent implements OnInit {
       return;
     }
 
-    this.exportarService
-      .exportarFicha(this.tarjetaJson.version.toString())
-      .subscribe({
-        next: response => {},
+    this.isGenerating = true;
+    this.formulariosService.generarExcelTarjetasProcesadas().subscribe({
+      next: (resultado: IResultadoGenerarArchivoExcel) => {
+        this.currentFileName = resultado.fileName;
+        this.verificarEstadoExcel();
+      },
+      error: error => {
+        this.isGenerating = false;
+        console.error(error);
+      }
+    });
+  }
 
-        error: error => {
-          console.error(error);
+  private verificarEstadoExcel() {
+    if (!this.currentFileName) return;
+
+    this.formulariosService.validarEstadoExcel(this.currentFileName).subscribe(
+      (resultado: { estado: EFileStatus }) => {
+        if (resultado.estado === EFileStatus.COMPLETED) {
+          this.isGenerating = false;
+          this.currentFileName = '';
+        } else if (resultado.estado === EFileStatus.NOT_STARTED) {
+          this.isGenerating = false;
+          this.currentFileName = '';
+          console.error('Error al generar el archivo');
+        } else {
+          setTimeout(() => {
+            console.log(123);
+            this.verificarEstadoExcel();
+          }, 10000);
         }
-      });
+      },
+      error => {
+        this.isGenerating = false;
+        this.currentFileName = '';
+        console.error('Error al verificar estado:', error);
+      }
+    );
   }
 }
