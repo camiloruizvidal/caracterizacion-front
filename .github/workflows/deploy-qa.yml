@@ -29,8 +29,8 @@ jobs:
             git pull origin qa || { echo "Error: No se pudo hacer git pull"; exit 1; }
 
             npm install || { echo "Error: Falló npm install"; exit 1; }
-            echo "Ejecutando npm run build -- --configuration=qa"
-            npm run build -- --configuration=qa || { echo "Error: Falló npm run build"; exit 1; }
+            echo "Ejecutando npm run build -- --configuration=qa --watch"
+            npm run build -- --configuration=qa --watch || { echo "Error: Falló npm run build"; exit 1; }
 
             echo "Frontend desplegado correctamente en qa."
           EOF
