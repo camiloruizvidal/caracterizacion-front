@@ -33,7 +33,7 @@ jobs:
             npm run build -- --configuration=qa || { echo "Error: Falló npm run build"; exit 1; }
 
             echo "Copiando .htaccess al directorio de distribución..."
-            cp .htaccess dist/caracterizacion-front/browser/ || { echo "Error: No se pudo copiar .htaccess"; exit 1; }
+            cp .htaccess dist/caracterizacion-front/ || { echo "Error: No se pudo copiar .htaccess"; exit 1; }
 
             echo "Frontend desplegado correctamente en qa."
           EOF
