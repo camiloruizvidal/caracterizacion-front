@@ -66,6 +66,27 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "qa": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ],
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "enviroment/enviroment.ts",
+                  "with": "enviroment/enviroment.qa.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -78,6 +99,9 @@
             },
             "development": {
               "browserTarget": "caracterizacion-front:build:development"
+            },
+            "qa": {
+              "browserTarget": "caracterizacion-front:build:qa"
             }
           },
           "defaultConfiguration": "development"
