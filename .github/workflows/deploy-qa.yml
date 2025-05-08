@@ -18,49 +18,19 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Deploy to qa server
+      - name: Deploy to qa server.
         run: |
-          ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=3 ${{ secrets.QA_CREDENTIALS }} <<EOF
-            set -e  # Si un comando falla, el script se detendrá
-
+          ssh -o StrictHostKeyChecking=no ${{ secrets.QA_CREDENTIALS }} <<EOF
+            set -e  # Detener la ejecución si un comando falla
             echo "Desplegando Frontend en qa..."
 
             cd /var/www/caracterizacion/caracterizacion-front || { echo "Error: No se pudo acceder al directorio"; exit 1; }
 
             git pull origin qa || { echo "Error: No se pudo hacer git pull"; exit 1; }
 
-            echo "Instalando dependencias..."
             npm install || { echo "Error: Falló npm install"; exit 1; }
-
-            echo "Limpiando caché y archivos temporales..."
-            rm -rf node_modules/.cache
-            rm -rf .angular/cache
-
-            echo "Construyendo el proyecto..."
-            echo "Directorio actual: \$(pwd)"
-            echo "Contenido del directorio antes del build:"
-            ls -la
-
-            echo "Ejecutando build optimizado..."
-            NODE_OPTIONS="--max_old_space_size=4096" ng build --configuration=qa --aot --build-optimizer --vendor-chunk --named-chunks --progress=false || {
-              echo "Error: Falló el build"
-              echo "Contenido del directorio después del error:"
-              ls -la
-              exit 1
-            }
-
-            echo "Contenido del directorio después del build:"
-            ls -la
-
-            echo "Verificando la estructura de directorios..."
-            ls -la dist/ || { echo "Error: No se pudo listar el directorio dist"; exit 1; }
-
-            echo "Reiniciando el servicio caracterizacion-front..."
-            pm2 delete caracterizacion-front || echo "Advertencia: El servicio caracterizacion-front no estaba en ejecución"
-
-            echo "Iniciando caracterizacion-front..."
-            pm2 start dist/caracterizacion-front/browser/index.html --name "caracterizacion-front" || { echo "Error: Falló al iniciar PM2"; exit 1; }
-            pm2 save || { echo "Error: Falló pm2 save"; exit 1; }
+            echo "Ejecutando npm run build -- --configuration=qa"
+            npm run build -- --configuration=qa || { echo "Error: Falló npm run build"; exit 1; }
 
             echo "Frontend desplegado correctamente en qa."
           EOF
