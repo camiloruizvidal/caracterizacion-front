@@ -34,6 +34,7 @@ export class DynamicFiltersComponent implements OnInit {
   public urlDescarga: string | null = null;
   public isGenerating: boolean = false;
   public currentFileName: string = '';
+  public resultado: IResultadoGenerarArchivoExcel | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -199,6 +200,7 @@ export class DynamicFiltersComponent implements OnInit {
     this.formulariosService.generarExcelTarjetasProcesadas().subscribe({
       next: (resultado: IResultadoGenerarArchivoExcel) => {
         this.currentFileName = resultado.fileName;
+        this.resultado = resultado;
         this.verificarEstadoExcel();
       },
       error: error => {
@@ -222,9 +224,8 @@ export class DynamicFiltersComponent implements OnInit {
           console.error('Error al generar el archivo');
         } else {
           setTimeout(() => {
-            console.log(123);
             this.verificarEstadoExcel();
-          }, 10000);
+          }, 1000);
         }
       },
       error => {
