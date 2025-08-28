@@ -1,6 +1,13 @@
 <div class="contenedor-login">
+  <!-- Loading overlay temporal (comentado mientras se arregla el error) -->
+  <!-- <app-loading-overlay 
+    [isVisible]="isLoading"
+    mainText="Iniciando sesión..."
+    subText="Por favor espere, no cierre la página">
+  </app-loading-overlay> -->
+
   <div class="tarjeta-login">
-    <h2 class="titulo">Bienvenido DaniCodex</h2>
+    <h2 class="titulo">Bienvenido al sistema de caracterización</h2>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
@@ -45,12 +52,18 @@
 
       <button
         type="submit"
-        [disabled]="loginForm.invalid"
+        [disabled]="loginForm.invalid || isLoading"
         class="boton-iniciar"
         data-cy="login-button"
       >
-        Iniciar Sesión
+        <span *ngIf="!isLoading">Iniciar Sesión</span>
+        <span *ngIf="isLoading">Iniciando sesión...</span>
       </button>
+
+      <!-- Mensaje de error debajo del botón -->
+      <div *ngIf="errorMessage" class="error-message" data-cy="login-error">
+        {{ errorMessage }}
+      </div>
     </form>
   </div>
 </div>

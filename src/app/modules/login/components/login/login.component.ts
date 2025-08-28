@@ -12,6 +12,8 @@ import { environment } from 'enviroment/enviroment';
 })
 export class LoginComponent {
   public loginForm!: FormGroup;
+  public isLoading: boolean = false;
+  public errorMessage: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -27,14 +29,22 @@ export class LoginComponent {
 
   public onSubmit() {
     if (this.loginForm.valid) {
+      // Limpiar mensaje de error previo y activar loading
+      this.errorMessage = '';
+      this.isLoading = true;
+      
       this.loginService.loguearse(this.loginForm.value).subscribe(
         (response: any) => {
+          // En caso de éxito, mantener el loading hasta que se navegue
+          // (no desbloquear el botón)
           localStorage.setItem('token', response?.user?.token);
           localStorage.setItem('user', JSON.stringify(response?.user));
           this.router.navigate(['/']);
         },
         error => {
-          this.toastr.error('El usuario o contraseña son incorrectos', 'Error');
+          // Solo desbloquear el botón en caso de error y mostrar mensaje
+          this.isLoading = false;
+          this.errorMessage = 'El usuario o contraseña son incorrectos';
         }
       );
     } else {

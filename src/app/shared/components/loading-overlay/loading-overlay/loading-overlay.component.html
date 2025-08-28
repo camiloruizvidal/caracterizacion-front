@@ -1,0 +1,7 @@
+<div class="loading-overlay" *ngIf="isVisible">
+  <div class="loading-content">
+    <div class="spinner"></div>
+    <p class="loading-text">{{ mainText }}</p>
+    <p class="loading-subtext" *ngIf="subText">{{ subText }}</p>
+  </div>
+</div>
