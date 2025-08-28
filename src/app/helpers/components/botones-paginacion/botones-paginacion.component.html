@@ -1,11 +1,14 @@
-<div class="row">
-  <div class="col-md-6">
-    <label for="itemsPerPage">Regitros por página:</label>
+<!-- Información de paginación y controles -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+  <!-- Selector de registros por página -->
+  <div class="d-flex align-items-center gap-2">
+    <label for="itemsPerPage" class="text-muted fw-medium mb-0">Registros por página:</label>
     <select
-      class="form-control"
+      class="form-select form-select-sm"
       id="itemsPerPage"
       [(ngModel)]="itemsPerPage"
       (change)="onItemsPerPageChange($event)"
+      style="width: auto; min-width: 80px;"
     >
       <option value="5">5</option>
       <option value="10">10</option>
@@ -15,63 +18,82 @@
       <option value="200">200</option>
     </select>
   </div>
-</div>
-<div class="row mt-4">
-  <div class="col-md-12">
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <li class="page-item">
-          <button
-            class="page-link"
-            [disabled]="dataPagination.currentPage === 1"
-            (click)="changePage(1)"
-          >
-            <i class="bi bi-chevron-bar-left"></i>
-          </button>
-        </li>
-        <li class="page-item">
-          <button
-            class="page-link"
-            [disabled]="dataPagination.currentPage === 1"
-            (click)="changePage(dataPagination.currentPage - 1)"
-          >
-            <i class="bi bi-chevron-left"></i>
-          </button>
-        </li>
-        <ng-container *ngFor="let page of getPages()">
-          <li class="page-item">
-            <button
-              class="page-link"
-              [class.active]="page === dataPagination.currentPage"
-              (click)="changePage(page)"
-            >
-              {{ page }}
-            </button>
-          </li>
-        </ng-container>
-        <li class="page-item">
-          <button
-            class="page-link"
-            [disabled]="
-              dataPagination.currentPage === dataPagination.totalPages
-            "
-            (click)="changePage(dataPagination.currentPage + 1)"
-          >
-            <i class="bi bi-chevron-right"></i>
-          </button>
-        </li>
-        <li class="page-item">
-          <button
-            class="page-link"
-            [disabled]="
-              dataPagination.currentPage === dataPagination.totalPages
-            "
-            (click)="changePage(dataPagination.totalPages)"
-          >
-            <i class="bi bi-chevron-bar-right"></i>
-          </button>
-        </li>
-      </ul>
-    </nav>
+
+  <!-- Información de página actual -->
+  <div class="text-muted">
+    <span class="fw-medium">
+      Página {{ dataPagination.currentPage }} de {{ dataPagination.totalPages }} 
+    </span>
+    <span class="mx-2">|</span>
+    <span>
+      Total: {{ dataPagination.totalItems }} registros
+    </span>
   </div>
 </div>
+
+<!-- Navegación de páginas -->
+<nav aria-label="Navegación de páginas" class="d-flex justify-content-center">
+  <ul class="pagination pagination-modern">
+    <!-- Ir al inicio -->
+    <li class="page-item">
+      <button
+        class="page-link"
+        [disabled]="dataPagination.currentPage === 1"
+        (click)="changePage(1)"
+        [title]="'Ir a la primera página'"
+      >
+        <i class="bi bi-chevron-bar-left"></i>
+      </button>
+    </li>
+    
+    <!-- Página anterior -->
+    <li class="page-item">
+      <button
+        class="page-link"
+        [disabled]="dataPagination.currentPage === 1"
+        (click)="changePage(dataPagination.currentPage - 1)"
+        [title]="'Página anterior'"
+      >
+        <i class="bi bi-chevron-left"></i>
+      </button>
+    </li>
+    
+    <!-- Números de página -->
+    <ng-container *ngFor="let page of getPages()">
+      <li class="page-item">
+        <button
+          class="page-link"
+          [class.active]="page === dataPagination.currentPage"
+          (click)="changePage(page)"
+          [title]="'Ir a la página ' + page"
+        >
+          {{ page }}
+        </button>
+      </li>
+    </ng-container>
+    
+    <!-- Página siguiente -->
+    <li class="page-item">
+      <button
+        class="page-link"
+        [disabled]="dataPagination.currentPage === dataPagination.totalPages"
+        (click)="changePage(dataPagination.currentPage + 1)"
+        [title]="'Página siguiente'"
+      >
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </li>
+    
+    <!-- Ir al final -->
+    <li class="page-item">
+      <button
+        class="page-link"
+        [disabled]="dataPagination.currentPage === dataPagination.totalPages"
+        (click)="changePage(dataPagination.totalPages)"
+        [title]="'Ir a la última página'"
+      >
+        <i class="bi bi-chevron-bar-right"></i>
+      </button>
+    </li>
+  </ul>
+</nav>
