@@ -254,46 +254,57 @@
       </div>
     </div>
   </form>
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>Opciones</th>
-        <th>Tipo de tarjeta</th>
-        <th>Categoria</th>
-        <th>Pregunta</th>
-        <th>Condici&oacute;n</th>
-        <th>Valor</th>
-      </tr>
-    </thead>
-    <tbody *ngIf="filtros.length > 0">
-      <tr *ngFor="let filtro of filtros; let i = index">
-        <td>
-          <button
-            type="button"
-            (click)="eliminarFiltro(i)"
-            class="btn btn-danger"
-          >
-            Eliminar Filtro
-          </button>
-        </td>
-        <td>
-          {{ verTipoDeTarjeta(filtro.tipoTarjeta) }}
-        </td>
-        <td>
-          {{ filtro.grupo }}
-        </td>
-        <td>
-          {{ filtro.pregunta }}
-        </td>
-        <td>
-          {{ verCondicion(filtro.condicion) }}
-        </td>
-        <td>
-          {{ filtro.valor }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  
+  <!-- Tabla de filtros responsiva -->
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th style="min-width: 140px;">Opciones</th>
+          <th style="min-width: 150px;">Tipo de tarjeta</th>
+          <th style="min-width: 120px;">Categoría</th>
+          <th style="min-width: 200px;">Pregunta</th>
+          <th style="min-width: 120px;">Condición</th>
+          <th style="min-width: 150px;">Valor</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="filtros.length > 0">
+        <tr *ngFor="let filtro of filtros; let i = index">
+          <td>
+            <button
+              type="button"
+              (click)="eliminarFiltro(i)"
+              class="btn btn-danger btn-sm"
+            >
+              <i class="bi bi-trash"></i>
+              Eliminar
+            </button>
+          </td>
+          <td>
+            <span class="badge badge-primary">
+              {{ verTipoDeTarjeta(filtro.tipoTarjeta) }}
+            </span>
+          </td>
+          <td>{{ filtro.grupo }}</td>
+          <td>
+            <div class="text-truncate" style="max-width: 200px;" [title]="filtro.pregunta">
+              {{ filtro.pregunta }}
+            </div>
+          </td>
+          <td>
+            <span class="badge badge-warning">
+              {{ verCondicion(filtro.condicion) }}
+            </span>
+          </td>
+          <td>
+            <div class="text-truncate" style="max-width: 150px;" [title]="filtro.valor">
+              {{ filtro.valor }}
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <ngx-spinner

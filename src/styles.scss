@@ -1,27 +1,707 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap-icons/font/bootstrap-icons.css";
+
+/* ========================================
+   SISTEMA DE COLORES MÉDICO MODERNO
+======================================== */
+:root {
+  /* Colores médicos principales */
+  --medical-blue-50: #eff6ff;
+  --medical-blue-100: #dbeafe;
+  --medical-blue-200: #bfdbfe;
+  --medical-blue-300: #93c5fd;
+  --medical-blue-400: #60a5fa;
+  --medical-blue-500: #3b82f6;
+  --medical-blue-600: #2563eb;
+  --medical-blue-700: #1d4ed8;
+  --medical-blue-800: #1e40af;
+  --medical-blue-900: #1e3a8a;
+
+  /* Colores de soporte médico */
+  --medical-green-500: #10b981;
+  --medical-green-600: #059669;
+  --medical-red-500: #ef4444;
+  --medical-red-600: #dc2626;
+  --medical-yellow-500: #f59e0b;
+  --medical-yellow-600: #d97706;
+  
+  /* Grises médicos */
+  --medical-gray-50: #f9fafb;
+  --medical-gray-100: #f3f4f6;
+  --medical-gray-200: #e5e7eb;
+  --medical-gray-300: #d1d5db;
+  --medical-gray-400: #9ca3af;
+  --medical-gray-500: #6b7280;
+  --medical-gray-600: #4b5563;
+  --medical-gray-700: #374151;
+  --medical-gray-800: #1f2937;
+  --medical-gray-900: #111827;
+}
+
+/* ========================================
+   SISTEMA DE BOTONES PREMIUM
+======================================== */
+
+/* Botón Primary Médico */
+.btn-primary {
+  background: linear-gradient(135deg, var(--medical-blue-600) 0%, var(--medical-blue-500) 50%, var(--medical-blue-400) 100%) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.3px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 
+    0 4px 12px rgba(37, 99, 235, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  position: relative;
+  overflow: hidden;
+
+  /* Efecto de brillo */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, var(--medical-blue-700) 0%, var(--medical-blue-600) 50%, var(--medical-blue-500) 100%) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 
+      0 8px 25px rgba(37, 99, 235, 0.4),
+      0 4px 8px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98) !important;
+  }
+
+  &:focus {
+    box-shadow: 
+      0 4px 12px rgba(37, 99, 235, 0.3),
+      0 0 0 4px rgba(37, 99, 235, 0.2) !important;
+  }
+}
+
+/* Botón Success Médico */
+.btn-success {
+  background: linear-gradient(135deg, var(--medical-green-600) 0%, var(--medical-green-500) 100%) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.3px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 
+    0 4px 12px rgba(16, 185, 129, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+
+  &:hover {
+    background: linear-gradient(135deg, #047857 0%, var(--medical-green-600) 100%) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 
+      0 8px 25px rgba(16, 185, 129, 0.4),
+      0 4px 8px rgba(0, 0, 0, 0.15) !important;
+  }
+}
+
+/* Botón Warning Médico */
+.btn-warning {
+  background: linear-gradient(135deg, var(--medical-yellow-600) 0%, var(--medical-yellow-500) 100%) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  color: white !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.3px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 
+    0 4px 12px rgba(245, 158, 11, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.1) !important;
+
+  &:hover {
+    background: linear-gradient(135deg, #b45309 0%, var(--medical-yellow-600) 100%) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+    color: white !important;
+  }
+}
+
+/* Botón Danger Médico */
+.btn-danger {
+  background: linear-gradient(135deg, var(--medical-red-600) 0%, var(--medical-red-500) 100%) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.3px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 
+    0 4px 12px rgba(239, 68, 68, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.1) !important;
+
+  &:hover {
+    background: linear-gradient(135deg, #b91c1c 0%, var(--medical-red-600) 100%) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+  }
+}
+
+/* Botones Outline Médicos */
+.btn-outline-primary {
+  border: 2px solid var(--medical-blue-500) !important;
+  color: var(--medical-blue-600) !important;
+  background: rgba(59, 130, 246, 0.05) !important;
+  border-radius: 12px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+
+  &:hover {
+    background: var(--medical-blue-500) !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+  }
+}
+
+/* Botones pequeños */
+.btn-sm {
+  padding: 0.5rem 1rem !important;
+  font-size: 0.875rem !important;
+  border-radius: 8px !important;
+}
+
+/* ========================================
+   FORMULARIOS MODERNOS
+======================================== */
+.form-control {
+  border: 2px solid var(--medical-gray-200) !important;
+  border-radius: 10px !important;
+  padding: 0.875rem 1rem !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background: linear-gradient(145deg, #ffffff, #f8fafc) !important;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+
+  &:focus {
+    border-color: var(--medical-blue-500) !important;
+    box-shadow: 
+      0 0 0 4px rgba(59, 130, 246, 0.15),
+      0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-1px) !important;
+    background: linear-gradient(145deg, #ffffff, #f0f7ff) !important;
+  }
+
+  &:hover:not(:focus) {
+    border-color: var(--medical-gray-300) !important;
+    transform: translateY(-1px) !important;
+  }
+}
+
+.form-select {
+  border: 2px solid var(--medical-gray-200) !important;
+  border-radius: 10px !important;
+  padding: 0.875rem 1rem !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+  background: linear-gradient(145deg, #ffffff, #f8fafc) !important;
+
+  &:focus {
+    border-color: var(--medical-blue-500) !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+  }
+}
+
 .error-required {
-  color: red;
+  color: var(--medical-red-500);
+  font-weight: 500;
 }
-/*
-.ng-invalid.ng-touched {
-  border-color: #dc3545;
-  padding-right: calc(1.5em + 0.75rem);
-  background-repeat: no-repeat;
-  background-position: right calc(0.375em + 0.1875rem) center;
-  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-}
-.ng-invalid.ng-touched:focus {
-  border-color: #dc3545;
-  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
-}*/
 
 .invalid-feedback {
   display: contents !important;
   width: 100%;
   margin-top: 0.25rem;
   font-size: 0.875em;
-  color: #dc3545;
+  color: var(--medical-red-500);
+  font-weight: 500;
 }
+
+/* ========================================
+   TABLAS MODERNAS
+======================================== */
+.table {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid var(--medical-gray-200) !important;
+  background: white !important;
+
+  thead {
+    background: linear-gradient(135deg, var(--medical-blue-50) 0%, var(--medical-blue-100) 100%) !important;
+    
+    th {
+      border: none !important;
+      padding: 1rem 1.25rem !important;
+      font-weight: 700 !important;
+      font-size: 0.9rem !important;
+      letter-spacing: 0.5px !important;
+      text-transform: uppercase !important;
+      color: var(--medical-blue-800) !important;
+      background: transparent !important;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--medical-blue-400), var(--medical-blue-500), var(--medical-blue-400));
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: all 0.3s ease !important;
+      border: none !important;
+      
+      &:nth-child(even) {
+        background: rgba(59, 130, 246, 0.02) !important;
+      }
+
+      &:hover {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.05)) !important;
+        transform: translateX(4px) !important;
+        box-shadow: 
+          4px 0 12px rgba(59, 130, 246, 0.15),
+          0 2px 8px rgba(0, 0, 0, 0.08) !important;
+      }
+
+      td {
+        border: none !important;
+        padding: 1rem 1.25rem !important;
+        font-weight: 500 !important;
+        color: var(--medical-gray-700) !important;
+        vertical-align: middle !important;
+        border-bottom: 1px solid rgba(229, 231, 235, 0.5) !important;
+      }
+    }
+  }
+}
+
+.table-hover tbody tr:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.05)) !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background: rgba(59, 130, 246, 0.02) !important;
+}
+
+.table-responsive {
+  border-radius: 12px !important;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.05) !important;
+  
+  /* Scroll horizontal suave */
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  
+  /* Scroll personalizado para tablas */
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--medical-gray-100);
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--medical-blue-400), var(--medical-blue-500));
+    border-radius: 3px;
+    
+    &:hover {
+      background: linear-gradient(90deg, var(--medical-blue-500), var(--medical-blue-600));
+    }
+  }
+  
+  /* Indicador visual de scroll */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(248, 250, 252, 0.8));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   CARDS MODERNAS
+======================================== */
+.card {
+  border: none !important;
+  border-radius: 16px !important;
+  background: linear-gradient(145deg, #ffffff, #f8fafc) !important;
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.08),
+    0 4px 10px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+  position: relative !important;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--medical-blue-500), var(--medical-blue-400), var(--medical-blue-500));
+  }
+
+  &:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 
+      0 12px 35px rgba(0, 0, 0, 0.12),
+      0 6px 15px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, var(--medical-blue-50), rgba(59, 130, 246, 0.05)) !important;
+    border: none !important;
+    padding: 1.25rem 1.5rem !important;
+    font-weight: 700 !important;
+    color: var(--medical-blue-800) !important;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.1) !important;
+  }
+
+  .card-body {
+    padding: 1.5rem !important;
+  }
+
+  .card-title {
+    color: var(--medical-blue-800) !important;
+    font-weight: 700 !important;
+    font-size: 1.25rem !important;
+    margin-bottom: 1rem !important;
+    position: relative !important;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -0.5rem;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--medical-blue-500), var(--medical-blue-400));
+      border-radius: 2px;
+    }
+  }
+}
+
+/* ========================================
+   PAGINACIÓN MODERNA
+======================================== */
+.pagination {
+  .page-item {
+    margin: 0 0.125rem !important;
+
+    .page-link {
+      border: none !important;
+      border-radius: 10px !important;
+      padding: 0.75rem 1rem !important;
+      font-weight: 600 !important;
+      color: var(--medical-blue-600) !important;
+      background: var(--medical-gray-50) !important;
+      transition: all 0.3s ease !important;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+
+      &:hover {
+        background: var(--medical-blue-500) !important;
+        color: white !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3) !important;
+      }
+    }
+
+    &.active .page-link {
+      background: linear-gradient(135deg, var(--medical-blue-600), var(--medical-blue-500)) !important;
+      color: white !important;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+    }
+
+    &.disabled .page-link {
+      background: var(--medical-gray-100) !important;
+      color: var(--medical-gray-400) !important;
+    }
+  }
+}
+
+/* ========================================
+   BADGES Y ETIQUETAS
+======================================== */
+.badge {
+  border-radius: 8px !important;
+  padding: 0.5rem 0.75rem !important;
+  font-weight: 600 !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.3px !important;
+}
+
+.badge-primary {
+  background: linear-gradient(135deg, var(--medical-blue-500), var(--medical-blue-400)) !important;
+  color: white !important;
+}
+
+.badge-success {
+  background: linear-gradient(135deg, var(--medical-green-500), #34d399) !important;
+  color: white !important;
+}
+
+.badge-warning {
+  background: linear-gradient(135deg, var(--medical-yellow-500), #fbbf24) !important;
+  color: white !important;
+}
+
+.badge-danger {
+  background: linear-gradient(135deg, var(--medical-red-500), #f87171) !important;
+  color: white !important;
+}
+
+/* ========================================
+   MEJORAS GENERALES
+======================================== */
+
+/* Scrollbars personalizados */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--medical-gray-100);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--medical-blue-400), var(--medical-blue-500));
+  border-radius: 4px;
+  
+  &:hover {
+    background: linear-gradient(135deg, var(--medical-blue-500), var(--medical-blue-600));
+  }
+}
+
+/* Inputs de búsqueda mejorados */
+.input-group {
+  .form-control {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  
+  .btn {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-left: none !important;
+  }
+}
+
+/* Alertas modernas */
+.alert {
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 1rem 1.25rem !important;
+  font-weight: 500 !important;
+  
+  &.alert-info {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05)) !important;
+    color: var(--medical-blue-700) !important;
+    border-left: 4px solid var(--medical-blue-500) !important;
+  }
+  
+  &.alert-success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05)) !important;
+    color: var(--medical-green-700) !important;
+    border-left: 4px solid var(--medical-green-500) !important;
+  }
+  
+  &.alert-warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05)) !important;
+    color: var(--medical-yellow-700) !important;
+    border-left: 4px solid var(--medical-yellow-500) !important;
+  }
+  
+  &.alert-danger {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05)) !important;
+    color: var(--medical-red-700) !important;
+    border-left: 4px solid var(--medical-red-500) !important;
+  }
+}
+
+/* Modales modernos */
+.modal-content {
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.15),
+    0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.modal-header {
+  background: linear-gradient(135deg, var(--medical-blue-50), rgba(59, 130, 246, 0.05)) !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.1) !important;
+  padding: 1.5rem !important;
+  
+  .modal-title {
+    color: var(--medical-blue-800) !important;
+    font-weight: 700 !important;
+  }
+}
+
+.modal-body {
+  padding: 1.5rem !important;
+}
+
+.modal-footer {
+  border: none !important;
+  padding: 1rem 1.5rem 1.5rem !important;
+}
+
+/* Tooltips mejorados */
+.tooltip {
+  .tooltip-inner {
+    background: var(--medical-gray-800) !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 0.75rem !important;
+    font-weight: 500 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+/* Breadcrumbs modernos */
+.breadcrumb {
+  background: transparent !important;
+  padding: 0 !important;
+  margin-bottom: 1.5rem !important;
+  
+  .breadcrumb-item {
+    color: var(--medical-gray-600) !important;
+    font-weight: 500 !important;
+    
+    &.active {
+      color: var(--medical-blue-600) !important;
+      font-weight: 600 !important;
+    }
+    
+    a {
+      color: var(--medical-blue-500) !important;
+      text-decoration: none !important;
+      transition: color 0.3s ease !important;
+      
+      &:hover {
+        color: var(--medical-blue-700) !important;
+      }
+    }
+  }
+}
+
+/* ========================================
+   UTILIDADES DE TEXTO
+======================================== */
+.text-truncate {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  cursor: help !important;
+  
+  &:hover {
+    color: var(--medical-blue-600) !important;
+  }
+}
+
+/* Tooltips para texto truncado */
+.text-truncate[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--medical-gray-800);
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  white-space: normal;
+  max-width: 300px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  animation: fadeInTooltip 0.3s ease-out forwards;
+}
+
+@keyframes fadeInTooltip {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Mejoras para botones pequeños en tablas */
+.table .btn-sm {
+  padding: 0.375rem 0.75rem !important;
+  font-size: 0.8rem !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  
+  i {
+    margin-right: 0.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Animaciones suaves globales */
+* {
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';

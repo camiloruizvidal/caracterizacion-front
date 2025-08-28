@@ -44,43 +44,53 @@
           </div>
         </div>
       </form>
-      <table *ngIf="usersPagination" class="table table-hover w-100">
-        <thead>
-          <tr>
-            <th>Opciones</th>
-            <th>Rol</th>
-            <th>Nombre</th>
-            <th>Documento</th>
-            <th>Número de Identificación EBS</th>
-            <th>Prestador Primario EBS</th>
-            <th>Perfil de Evaluador</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let user of usersPagination.data">
-            <td>
-              <a
-                [routerLink]="'/usuarios/' + user.id + '/update'"
-                class="btn btn-success"
-              >
-                <i class="bi bi-pencil-square"></i>
-                Editar
-              </a>
-            </td>
-            <td>{{ user.roles?.type }}</td>
-            <td>
-              {{ user.nombrePrimero }}
-              {{ user.nombreSegundo }}
-              {{ user.apellidoPrimero }}
-              {{ user.apellidoSegundo }}
-            </td>
-            <td>{{ user.documento }}</td>
-            <td>{{ user.numeroIdentificacionEBS }}</td>
-            <td>{{ user.prestadorPrimarioEBS }}</td>
-            <td>{{ user.perfilEvaluador }}</td>
-          </tr>
-        </tbody>
-      </table>
+      
+      <!-- Tabla responsiva -->
+      <div class="table-responsive" *ngIf="usersPagination">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th style="min-width: 120px;">Opciones</th>
+              <th style="min-width: 150px;">Rol</th>
+              <th style="min-width: 200px;">Nombre</th>
+              <th style="min-width: 120px;">Documento</th>
+              <th style="min-width: 180px;">Número de Identificación EBS</th>
+              <th style="min-width: 180px;">Prestador Primario EBS</th>
+              <th style="min-width: 150px;">Perfil de Evaluador</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of usersPagination.data">
+              <td>
+                <a
+                  [routerLink]="'/usuarios/' + user.id + '/update'"
+                  class="btn btn-success btn-sm"
+                >
+                  <i class="bi bi-pencil-square"></i>
+                  Editar
+                </a>
+              </td>
+              <td>{{ user.roles?.type }}</td>
+              <td>
+                <div class="text-truncate" style="max-width: 200px;" [title]="user.nombrePrimero + ' ' + user.nombreSegundo + ' ' + user.apellidoPrimero + ' ' + user.apellidoSegundo">
+                  {{ user.nombrePrimero }}
+                  {{ user.nombreSegundo }}
+                  {{ user.apellidoPrimero }}
+                  {{ user.apellidoSegundo }}
+                </div>
+              </td>
+              <td>{{ user.documento }}</td>
+              <td>{{ user.numeroIdentificacionEBS }}</td>
+              <td>
+                <div class="text-truncate" style="max-width: 180px;" [title]="user.prestadorPrimarioEBS">
+                  {{ user.prestadorPrimarioEBS }}
+                </div>
+              </td>
+              <td>{{ user.perfilEvaluador }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
   <div class="m-4">

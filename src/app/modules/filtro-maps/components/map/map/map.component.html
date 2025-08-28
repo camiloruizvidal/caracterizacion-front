@@ -80,40 +80,53 @@
             </div>
           </form>
           <hr />
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Detalle</th>
-                <th>C&oacute;digo</th>
-                <th>Fecha de registro</th>
-                <th>Dirección</th>
-                <th>Caracterizadas</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let card of cards.data">
-                <td>
-                  <a [routerLink]="'/ficha/' + card.id" class="btn btn-primary">
-                    <i class="bi bi-person-badge-fill"></i>
-                    Tarjeta
-                  </a>
-                </td>
-                <td>{{ card.codigo }}</td>
-                <td>
-                  {{ card.fecha_registro | date : 'YYYY-MM-dd' }}<br />
-                  {{ card.fecha_registro | date : 'HH:mm a' }}
-                </td>
-                <td>
-                  {{ card.tarjetasFamiliares.municipio }}
-                  <br />
-                  {{ card.tarjetasFamiliares.direccion }}
-                </td>
-                <td>
-                  {{ card.psicosocialPersonas.length }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          
+          <!-- Tabla de fichas responsiva -->
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th style="min-width: 120px;">Detalle</th>
+                  <th style="min-width: 120px;">Código</th>
+                  <th style="min-width: 160px;">Fecha de registro</th>
+                  <th style="min-width: 200px;">Dirección</th>
+                  <th style="min-width: 120px;">Caracterizadas</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let card of cards.data">
+                  <td>
+                    <a [routerLink]="'/ficha/' + card.id" class="btn btn-primary btn-sm">
+                      <i class="bi bi-person-badge-fill"></i>
+                      Tarjeta
+                    </a>
+                  </td>
+                  <td>{{ card.codigo }}</td>
+                  <td>
+                    <div>
+                      <i class="bi bi-calendar3"></i>
+                      {{ card.fecha_registro | date : 'yyyy-MM-dd' }}
+                    </div>
+                    <div class="text-muted">
+                      <i class="bi bi-clock"></i>
+                      {{ card.fecha_registro | date : 'HH:mm a' }}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="text-truncate" style="max-width: 200px;" [title]="card.tarjetasFamiliares.municipio + ' - ' + card.tarjetasFamiliares.direccion">
+                      <strong>{{ card.tarjetasFamiliares.municipio }}</strong><br />
+                      <span class="text-muted">{{ card.tarjetasFamiliares.direccion }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge badge-success">
+                      {{ card.psicosocialPersonas.length }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <div class="col-md-6">
