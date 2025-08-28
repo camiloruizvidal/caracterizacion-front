@@ -269,15 +269,19 @@
       color: var(--medical-blue-800) !important;
       background: transparent !important;
       position: relative;
+      vertical-align: middle !important;
+      text-align: center !important;
 
       &::after {
         content: '';
         position: absolute;
         bottom: 0;
-        left: 0;
-        right: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
         height: 2px;
         background: linear-gradient(90deg, var(--medical-blue-400), var(--medical-blue-500), var(--medical-blue-400));
+        border-radius: 1px;
       }
     }
   }

@@ -28,6 +28,7 @@
           routerLink="/usuarios"
           class="nav-link text-white"
           [class]="getActiveClass('usuarios')"
+          [title]="isSidebarCollapsed ? 'Usuarios' : ''"
           aria-current="page"
         >
           <i class="bi bi-person-lines-fill"></i>
@@ -39,6 +40,7 @@
           routerLink="/formularios"
           [class]="getActiveClass('formularios')"
           class="nav-link text-white"
+          [title]="isSidebarCollapsed ? 'Formularios' : ''"
           aria-current="page"
         >
           <i class="bi bi-newspaper"></i>
@@ -50,8 +52,9 @@
           routerLink="/cargas"
           [class]="getActiveClass('cargas')"
           class="nav-link text-white"
+          [title]="isSidebarCollapsed ? 'Carga Masiva' : ''"
         >
-          <i class="bi bi-person-lines-fill"></i>
+          <i class="bi bi-upload"></i>
           <span [class.d-none]="isSidebarCollapsed">Carga Masiva</span>
         </a>
       </li>
@@ -60,6 +63,7 @@
           routerLink="/generador"
           [class]="getActiveClass('generador')"
           class="nav-link text-white"
+          [title]="isSidebarCollapsed ? 'Generador de formularios' : ''"
         >
           <i class="bi bi-window-stack"></i>
           <span [class.d-none]="isSidebarCollapsed"
@@ -72,6 +76,7 @@
           routerLink="/ficha/informe"
           [class]="getActiveClass('ficha')"
           class="nav-link text-white"
+          [title]="isSidebarCollapsed ? 'Informes' : ''"
         >
           <i class="bi bi-list-columns-reverse"></i>
           <span [class.d-none]="isSidebarCollapsed">Informes</span>
@@ -79,11 +84,11 @@
       </li>
     </ul>
     <hr />
-    <div class="dropdown">
+    <div class="dropdown" [title]="isSidebarCollapsed ? nombres : ''">
       <i class="bi bi-person"></i>
       <strong [class.d-none]="isSidebarCollapsed">{{ nombres }}</strong>
     </div>
-    <div class="dropdown pointer-clic" (click)="cerrarSesion()">
+    <div class="dropdown pointer-clic" (click)="cerrarSesion()" [title]="isSidebarCollapsed ? 'Cerrar sesión' : ''">
       <i class="bi bi-person-fill-slash"></i>
       <strong [class.d-none]="isSidebarCollapsed">Cerrar sesi&oacute;n</strong>
     </div>
