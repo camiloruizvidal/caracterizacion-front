@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   IVersiones,
-  EEstadoGeneracionExcel
+  EEstadoGeneracionExcel,
+  IPagination
 } from 'src/app/helpers/interface/interface';
 import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
 import {
@@ -69,6 +70,11 @@ export class InformeDinamicoComponent implements OnInit, OnDestroy {
   public totalRegistrosCaracterizadores: number = 0;
   public totalPaginasCaracterizadores: number = 0;
 
+  // Objetos de paginación unificados
+  public paginationExportacion!: IPagination<any>;
+  public paginationPrincipal!: IPagination<ITarjetaRespondidas>;
+  public paginationCaracterizadores!: IPagination<IEstadisticaCaracterizador>;
+
   constructor(
     private formulariosService: FormulariosService,
     private inputsService: InputsService,
@@ -91,7 +97,7 @@ export class InformeDinamicoComponent implements OnInit, OnDestroy {
   private cargarCaracterizadores(): void {
     this.usersService.getUsers(1, 1000000, 2, '').subscribe(response => {
       this.caracterizadores = response.data;
-    });
+      });
   }
 
   public cargarTipoFichas(): void {
@@ -115,6 +121,16 @@ export class InformeDinamicoComponent implements OnInit, OnDestroy {
           this.registrosExportacion = response.data.data;
           this.totalRegistrosExportacion = response.data.totalItems;
           this.totalPaginasExportacion = response.data.totalPages;
+          
+          // Actualizar objeto de paginación unificado
+          this.paginationExportacion = {
+            data: this.registrosExportacion,
+            totalItems: this.totalRegistrosExportacion,
+            currentPage: this.paginaActualExportacion,
+            totalPages: this.totalPaginasExportacion,
+            itemsPerPage: this.registrosPorPaginaExportacion
+          };
+          
           this.verificarYConfigurarRecarga();
         });
     }
@@ -168,6 +184,15 @@ export class InformeDinamicoComponent implements OnInit, OnDestroy {
         this.tarjetasRespondidas = response.data.rows;
         this.totalRegistros = response.data.count;
         this.totalPaginas = response.data.totalPages;
+        
+        // Actualizar objeto de paginación unificado
+        this.paginationPrincipal = {
+          data: this.tarjetasRespondidas,
+          totalItems: this.totalRegistros,
+          currentPage: this.paginaActual,
+          totalPages: this.totalPaginas,
+          itemsPerPage: this.registrosPorPagina
+        };
       });
   }
 
@@ -222,6 +247,15 @@ export class InformeDinamicoComponent implements OnInit, OnDestroy {
         this.estadisticasCaracterizadores = response.data;
         this.totalRegistrosCaracterizadores = response.data.count;
         this.totalPaginasCaracterizadores = response.data.totalPages;
+        
+        // Actualizar objeto de paginación unificado
+        this.paginationCaracterizadores = {
+          data: this.estadisticasCaracterizadores.rows,
+          totalItems: this.totalRegistrosCaracterizadores,
+          currentPage: this.paginaActualCaracterizadores,
+          totalPages: this.totalPaginasCaracterizadores,
+          itemsPerPage: this.registrosPorPaginaCaracterizadores
+        };
       });
   }
 
@@ -256,6 +290,27 @@ export class InformeDinamicoComponent implements OnInit, OnDestroy {
 
   public cambiarLimiteCaracterizadores(): void {
     this.paginaActualCaracterizadores = 1;
+    this.cargarEstadisticasCaracterizadores();
+  }
+
+  // Métodos para manejar eventos de paginación unificada
+  public onPageChangedExportacion(event: { itemsPerPage: number; currentPage: number }): void {
+    this.paginaActualExportacion = event.currentPage;
+    this.registrosPorPaginaExportacion = event.itemsPerPage;
+    this.cargarRegistrosExportacion();
+  }
+
+  public onPageChangedPrincipal(event: { itemsPerPage: number; currentPage: number }): void {
+    this.paginaActual = event.currentPage;
+    this.registrosPorPagina = event.itemsPerPage;
+    // Necesitamos llamar al método de filtrado con los filtros actuales
+    // Por ahora, llamaremos a filtrar con un array vacío
+    this.filtrar([]);
+  }
+
+  public onPageChangedCaracterizadores(event: { itemsPerPage: number; currentPage: number }): void {
+    this.paginaActualCaracterizadores = event.currentPage;
+    this.registrosPorPaginaCaracterizadores = event.itemsPerPage;
     this.cargarEstadisticasCaracterizadores();
   }
 

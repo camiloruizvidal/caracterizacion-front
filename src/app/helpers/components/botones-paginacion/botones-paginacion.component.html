@@ -1,6 +1,8 @@
-<!-- Panel de control premium -->
-<div class="pagination-luxury-panel">
-  <div class="luxury-controls-container">
+<!-- Paginador ULTRA PREMIUM unificado -->
+<div class="pagination-luxury-unified" *ngIf="dataPagination && dataPagination.totalItems > 0">
+  
+  <!-- Parte superior: Controles y información -->
+  <div class="luxury-top-section">
     <!-- Selector de registros premium -->
     <div class="luxury-selector-group">
       <div class="luxury-label">
@@ -40,103 +42,67 @@
       </div>
     </div>
   </div>
-</div>
 
-<!-- Navegación de páginas ULTRA PREMIUM -->
-<div class="luxury-navigation-container">
-  <div class="luxury-nav-wrapper">
-    
-    <!-- Control de navegación principal -->
-    <div class="luxury-nav-controls">
+  <!-- Parte inferior: Navegación -->
+  <div class="luxury-bottom-section">
+    <div class="luxury-nav-wrapper">
       
-      <!-- Botón ULTRA PREMIUM - Primera página -->
-      <button
-        class="luxury-nav-btn luxury-nav-first"
-        [disabled]="dataPagination.currentPage === 1"
-        (click)="changePage(1)"
-        [title]="'Ir a la primera página'"
-      >
-        <div class="luxury-btn-content">
-          <div class="luxury-btn-icon">
-            <i class="bi bi-skip-start-fill"></i>
-          </div>
-          <div class="luxury-btn-effect"></div>
-          <div class="luxury-btn-shimmer"></div>
-        </div>
-      </button>
-      
-      <!-- Botón ULTRA PREMIUM - Página anterior -->
-      <button
-        class="luxury-nav-btn luxury-nav-prev"
-        [disabled]="dataPagination.currentPage === 1"
-        (click)="changePage(dataPagination.currentPage - 1)"
-        [title]="'Página anterior'"
-      >
-        <div class="luxury-btn-content">
-          <div class="luxury-btn-icon">
-            <i class="bi bi-chevron-left"></i>
-          </div>
-          <div class="luxury-btn-text">Anterior</div>
-          <div class="luxury-btn-effect"></div>
-          <div class="luxury-btn-shimmer"></div>
-        </div>
-      </button>
-    </div>
-    
-    <!-- Números de página PREMIUM -->
-    <div class="luxury-pages-container">
-      <ng-container *ngFor="let page of getPages()">
+      <!-- Todos los botones unidos en un solo grupo -->
+      <div class="luxury-unified-buttons">
+        
+        <!-- Botón ULTRA PREMIUM - Primera página -->
         <button
-          class="luxury-page-btn"
-          [class.luxury-page-active]="page === dataPagination.currentPage"
-          (click)="changePage(page)"
-          [title]="'Ir a la página ' + page"
+          class="luxury-nav-btn luxury-nav-first"
+          [disabled]="dataPagination.currentPage <= 1"
+          (click)="changePage(1)"
+          [title]="'Ir a la primera página'"
         >
-          <div class="luxury-page-content">
-            <span class="luxury-page-number">{{ page }}</span>
-            <div class="luxury-page-glow"></div>
-            <div class="luxury-page-ripple"></div>
-          </div>
+          <i class="bi bi-skip-start-fill"></i>
         </button>
-      </ng-container>
-    </div>
-    
-    <!-- Control de navegación secundario -->
-    <div class="luxury-nav-controls">
-      
-      <!-- Botón ULTRA PREMIUM - Página siguiente -->
-      <button
-        class="luxury-nav-btn luxury-nav-next"
-        [disabled]="dataPagination.currentPage === dataPagination.totalPages"
-        (click)="changePage(dataPagination.currentPage + 1)"
-        [title]="'Página siguiente'"
-      >
-        <div class="luxury-btn-content">
-          <div class="luxury-btn-text">Siguiente</div>
-          <div class="luxury-btn-icon">
-            <i class="bi bi-chevron-right"></i>
-          </div>
-          <div class="luxury-btn-effect"></div>
-          <div class="luxury-btn-shimmer"></div>
-        </div>
-      </button>
-      
-      <!-- Botón ULTRA PREMIUM - Última página -->
-      <button
-        class="luxury-nav-btn luxury-nav-last"
-        [disabled]="dataPagination.currentPage === dataPagination.totalPages"
-        (click)="changePage(dataPagination.totalPages)"
-        [title]="'Ir a la última página'"
-      >
-        <div class="luxury-btn-content">
-          <div class="luxury-btn-icon">
-            <i class="bi bi-skip-end-fill"></i>
-          </div>
-          <div class="luxury-btn-effect"></div>
-          <div class="luxury-btn-shimmer"></div>
-        </div>
-      </button>
-    </div>
+        
+        <!-- Botón ULTRA PREMIUM - Página anterior -->
+        <button
+          class="luxury-nav-btn luxury-nav-prev"
+          [disabled]="dataPagination.currentPage <= 1"
+          (click)="changePage(dataPagination.currentPage - 1)"
+          [title]="'Página anterior'"
+        >
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        
+        <!-- Números de página PREMIUM -->
+        <ng-container *ngFor="let page of getPages()">
+          <button
+            class="luxury-page-btn"
+            [class.luxury-page-active]="page === dataPagination.currentPage"
+            (click)="changePage(page)"
+            [title]="'Ir a la página ' + page"
+          >
+            {{ page }}
+          </button>
+        </ng-container>
+        
+        <!-- Botón ULTRA PREMIUM - Página siguiente -->
+        <button
+          class="luxury-nav-btn luxury-nav-next"
+          [disabled]="dataPagination.currentPage >= dataPagination.totalPages"
+          (click)="changePage(dataPagination.currentPage + 1)"
+          [title]="'Página siguiente'"
+        >
+          <i class="bi bi-chevron-right"></i>
+        </button>
+        
+        <!-- Botón ULTRA PREMIUM - Última página -->
+        <button
+          class="luxury-nav-btn luxury-nav-last"
+          [disabled]="dataPagination.currentPage >= dataPagination.totalPages"
+          (click)="changePage(dataPagination.totalPages)"
+          [title]="'Ir a la última página'"
+        >
+          <i class="bi bi-skip-end-fill"></i>
+        </button>
+        
+      </div>
     
   </div>
   
@@ -147,4 +113,5 @@
       [style.width.%]="(dataPagination.currentPage / dataPagination.totalPages) * 100"
     ></div>
   </div>
+  
 </div>

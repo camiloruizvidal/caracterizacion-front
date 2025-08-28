@@ -142,84 +142,12 @@
                       </tr>
                     </tbody>
                   </table>
-                  <div>
-                    <nav>
-                      <ul class="pagination mb-2">
-                        <li
-                          class="page-item"
-                          [class.disabled]="paginaActualExportacion === 1"
-                        >
-                          <a
-                            class="page-link"
-                            href="#"
-                            (click)="
-                              $event.preventDefault();
-                              cambiarPaginaExportacion(
-                                paginaActualExportacion - 1
-                              )
-                            "
-                            >Anterior</a
-                          >
-                        </li>
-                        <li
-                          class="page-item"
-                          *ngFor="let pagina of obtenerPaginasExportacion()"
-                        >
-                          <a
-                            class="page-link"
-                            href="#"
-                            [class.active]="paginaActualExportacion === pagina"
-                            (click)="
-                              $event.preventDefault();
-                              cambiarPaginaExportacion(pagina)
-                            "
-                          >
-                            {{ pagina }}
-                          </a>
-                        </li>
-                        <li
-                          class="page-item"
-                          [class.disabled]="
-                            paginaActualExportacion === totalPaginasExportacion
-                          "
-                        >
-                          <a
-                            class="page-link"
-                            href="#"
-                            (click)="
-                              $event.preventDefault();
-                              cambiarPaginaExportacion(
-                                paginaActualExportacion + 1
-                              )
-                            "
-                            >Siguiente</a
-                          >
-                        </li>
-                      </ul>
-                    </nav>
-                    <div class="col-auto mb-2">
-                      <label class="me-2">Registros por página:</label>
-                      <select
-                        class="form-select form-select-sm d-inline-block w-auto"
-                        [(ngModel)]="registrosPorPaginaExportacion"
-                        (change)="cambiarLimiteExportacion()"
-                      >
-                        <option [value]="1">1</option>
-                        <option [value]="5">5</option>
-                        <option [value]="10">10</option>
-                        <option [value]="25">25</option>
-                        <option [value]="50">50</option>
-                        <option [value]="100">100</option>
-                      </select>
-                    </div>
-                    <div class="col-md-12">
-                      <span class="text-muted">
-                        Página {{ paginaActualExportacion }} de
-                        {{ totalPaginasExportacion }} | Total:
-                        {{ totalRegistrosExportacion }} registros
-                      </span>
-                    </div>
-                  </div>
+                                    <!-- Paginador unificado para exportación -->
+                  <app-botones-paginacion 
+                    *ngIf="paginationExportacion"
+                    [dataPagination]="paginationExportacion"
+                    (pageChanged)="onPageChangedExportacion($event)"
+                  ></app-botones-paginacion>
                 </div>
               </div>
             </div>
@@ -265,71 +193,12 @@
                   </tr>
                 </tbody>
               </table>
-              <div class="table-responsive">
-                <nav aria-label="Navegación de páginas">
-                  <ul class="pagination">
-                    <li class="page-item" [class.disabled]="paginaActual === 1">
-                      <a
-                        class="page-link"
-                        href="#"
-                        (click)="
-                          $event.preventDefault();
-                          cambiarPagina(paginaActual - 1)
-                        "
-                        >Anterior</a
-                      >
-                    </li>
-                    <li
-                      class="page-item"
-                      *ngFor="let pagina of obtenerPaginas()"
-                    >
-                      <a
-                        class="page-link"
-                        href="#"
-                        [class.active]="paginaActual === pagina"
-                        (click)="$event.preventDefault(); cambiarPagina(pagina)"
-                      >
-                        {{ pagina }}
-                      </a>
-                    </li>
-                    <li
-                      class="page-item"
-                      [class.disabled]="paginaActual === totalPaginas"
-                    >
-                      <a
-                        class="page-link"
-                        href="#"
-                        (click)="
-                          $event.preventDefault();
-                          cambiarPagina(paginaActual + 1)
-                        "
-                        >Siguiente</a
-                      >
-                    </li>
-                  </ul>
-                </nav>
-                <div class="col-auto">
-                  <label class="me-2">Registros por página:</label>
-                  <select
-                    class="form-select form-select-sm d-inline-block w-auto"
-                    [(ngModel)]="registrosPorPagina"
-                    (change)="cambiarLimite()"
-                  >
-                    <option [value]="1">1</option>
-                    <option [value]="5">5</option>
-                    <option [value]="10">10</option>
-                    <option [value]="25">25</option>
-                    <option [value]="50">50</option>
-                    <option [value]="100">100</option>
-                  </select>
-                </div>
-                <div class="col-md-12">
-                  <span class="text-muted">
-                    Página {{ paginaActual }} de {{ totalPaginas }} | Total:
-                    {{ totalRegistros }} registros
-                  </span>
-                </div>
-              </div>
+              <!-- Paginador unificado para tabla principal -->
+              <app-botones-paginacion 
+                *ngIf="paginationPrincipal"
+                [dataPagination]="paginationPrincipal"
+                (pageChanged)="onPageChangedPrincipal($event)"
+              ></app-botones-paginacion>
             </div>
           </div>
         </div>
@@ -427,85 +296,12 @@
                   </tr>
                 </tbody>
               </table>
-              <div class="table-responsive">
-                <nav aria-label="Navegación de páginas">
-                  <ul class="pagination">
-                    <li
-                      class="page-item"
-                      [class.disabled]="paginaActualCaracterizadores === 1"
-                    >
-                      <a
-                        class="page-link"
-                        href="#"
-                        (click)="
-                          $event.preventDefault();
-                          cambiarPaginaCaracterizadores(
-                            paginaActualCaracterizadores - 1
-                          )
-                        "
-                        >Anterior</a
-                      >
-                    </li>
-                    <li
-                      class="page-item"
-                      *ngFor="let pagina of obtenerPaginasCaracterizadores()"
-                    >
-                      <a
-                        class="page-link"
-                        href="#"
-                        [class.active]="paginaActualCaracterizadores === pagina"
-                        (click)="
-                          $event.preventDefault();
-                          cambiarPaginaCaracterizadores(pagina)
-                        "
-                      >
-                        {{ pagina }}
-                      </a>
-                    </li>
-                    <li
-                      class="page-item"
-                      [class.disabled]="
-                        paginaActualCaracterizadores ===
-                        totalPaginasCaracterizadores
-                      "
-                    >
-                      <a
-                        class="page-link"
-                        href="#"
-                        (click)="
-                          $event.preventDefault();
-                          cambiarPaginaCaracterizadores(
-                            paginaActualCaracterizadores + 1
-                          )
-                        "
-                        >Siguiente</a
-                      >
-                    </li>
-                  </ul>
-                </nav>
-                <div class="col-auto">
-                  <label class="me-2">Registros por página:</label>
-                  <select
-                    class="form-select form-select-sm d-inline-block w-auto"
-                    [(ngModel)]="registrosPorPaginaCaracterizadores"
-                    (change)="cambiarLimiteCaracterizadores()"
-                  >
-                    <option [value]="1">1</option>
-                    <option [value]="5">5</option>
-                    <option [value]="10">10</option>
-                    <option [value]="25">25</option>
-                    <option [value]="50">50</option>
-                    <option [value]="100">100</option>
-                  </select>
-                </div>
-                <div class="col-md-12">
-                  <span class="text-muted">
-                    Página {{ paginaActualCaracterizadores }} de
-                    {{ totalPaginasCaracterizadores }} | Total:
-                    {{ totalRegistrosCaracterizadores }} registros
-                  </span>
-                </div>
-              </div>
+              <!-- Paginador unificado para caracterizadores -->
+              <app-botones-paginacion 
+                *ngIf="paginationCaracterizadores"
+                [dataPagination]="paginationCaracterizadores"
+                (pageChanged)="onPageChangedCaracterizadores($event)"
+              ></app-botones-paginacion>
             </div>
           </div>
         </div>

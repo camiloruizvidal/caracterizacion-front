@@ -88,85 +88,12 @@
       </table>
     </div>
   </div>
+  <!-- Paginador unificado para formularios -->
   <div class="mb-4 mx-4">
-    <div class="table-responsive">
-      <nav aria-label="Navegación de páginas">
-        <ul class="pagination">
-          <li class="page-item" [class.disabled]="forms.currentPage === 1">
-            <a
-              class="page-link"
-              href="#"
-              (click)="
-                $event.preventDefault();
-                changePagination({
-                  currentPage: forms.currentPage - 1,
-                  itemsPerPage: forms.itemsPerPage
-                })
-              "
-              >Anterior</a
-            >
-          </li>
-          <li class="page-item" *ngFor="let pagina of obtenerPaginas()">
-            <a
-              class="page-link"
-              href="#"
-              [class.active]="forms.currentPage === pagina"
-              (click)="
-                $event.preventDefault();
-                changePagination({
-                  currentPage: pagina,
-                  itemsPerPage: forms.itemsPerPage
-                })
-              "
-            >
-              {{ pagina }}
-            </a>
-          </li>
-          <li
-            class="page-item"
-            [class.disabled]="forms.currentPage === forms.totalPages"
-          >
-            <a
-              class="page-link"
-              href="#"
-              (click)="
-                $event.preventDefault();
-                changePagination({
-                  currentPage: forms.currentPage + 1,
-                  itemsPerPage: forms.itemsPerPage
-                })
-              "
-              >Siguiente</a
-            >
-          </li>
-        </ul>
-      </nav>
-      <div class="col-auto">
-        <label class="me-2">Registros por página:</label>
-        <select
-          class="form-select form-select-sm d-inline-block w-auto"
-          [(ngModel)]="forms.itemsPerPage"
-          (change)="
-            changePagination({
-              currentPage: 1,
-              itemsPerPage: forms.itemsPerPage
-            })
-          "
-        >
-          <option [value]="1">1</option>
-          <option [value]="5">5</option>
-          <option [value]="10">10</option>
-          <option [value]="25">25</option>
-          <option [value]="50">50</option>
-          <option [value]="100">100</option>
-        </select>
-      </div>
-      <div class="col-md-12">
-        <span class="text-muted">
-          Página {{ forms.currentPage }} de {{ forms.totalPages }} | Total:
-          {{ forms.totalItems }} registros
-        </span>
-      </div>
-    </div>
+    <app-botones-paginacion 
+      *ngIf="forms"
+      [dataPagination]="forms"
+      (pageChanged)="changePagination($event)"
+    ></app-botones-paginacion>
   </div>
 </div>

@@ -94,90 +94,10 @@
     </div>
   </div>
   <div class="m-4">
-    <div class="table-responsive">
-      <nav aria-label="Navegación de páginas">
-        <ul class="pagination">
-          <li
-            class="page-item"
-            [class.disabled]="usersPagination.currentPage === 1"
-          >
-            <a
-              class="page-link"
-              href="#"
-              (click)="
-                $event.preventDefault();
-                changePagination({
-                  currentPage: usersPagination.currentPage - 1,
-                  itemsPerPage: registrosPorPagina
-                })
-              "
-              >Anterior</a
-            >
-          </li>
-          <li class="page-item" *ngFor="let pagina of obtenerPaginas()">
-            <a
-              class="page-link"
-              href="#"
-              [class.active]="usersPagination.currentPage === pagina"
-              (click)="
-                $event.preventDefault();
-                changePagination({
-                  currentPage: pagina,
-                  itemsPerPage: registrosPorPagina
-                })
-              "
-            >
-              {{ pagina }}
-            </a>
-          </li>
-          <li
-            class="page-item"
-            [class.disabled]="
-              usersPagination.currentPage === usersPagination.totalPages
-            "
-          >
-            <a
-              class="page-link"
-              href="#"
-              (click)="
-                $event.preventDefault();
-                changePagination({
-                  currentPage: usersPagination.currentPage + 1,
-                  itemsPerPage: registrosPorPagina
-                })
-              "
-              >Siguiente</a
-            >
-          </li>
-        </ul>
-      </nav>
-      <div class="col-auto">
-        <label class="me-2">Registros por página:</label>
-        <select
-          class="form-select form-select-sm d-inline-block w-auto"
-          [(ngModel)]="registrosPorPagina"
-          (change)="
-            changePagination({
-              currentPage: 1,
-              itemsPerPage: registrosPorPagina
-            })
-          "
-        >
-          <option [value]="1">1</option>
-          <option [value]="5">5</option>
-          <option [value]="10">10</option>
-          <option [value]="25">25</option>
-          <option [value]="50">50</option>
-          <option [value]="100">100</option>
-        </select>
-      </div>
-      <div class="col-md-12">
-        <span class="text-muted">
-          Página {{ usersPagination.currentPage }} de
-          {{ usersPagination.totalPages }} | Total:
-          {{ usersPagination.totalItems }} registros
-        </span>
-      </div>
-    </div>
+    <!-- Paginador unificado -->
+    <app-botones-paginacion 
+      [dataPagination]="usersPagination"
+      (pageChanged)="changePagination($event)"
+    ></app-botones-paginacion>
   </div>
 </div>

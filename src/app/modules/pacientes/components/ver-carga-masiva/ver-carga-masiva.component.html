@@ -39,64 +39,12 @@
             </tbody>
           </table>
 
-          <nav aria-label="Navegación de páginas">
-            <ul class="pagination">
-              <li class="page-item" [class.disabled]="paginaActual === 1">
-                <a
-                  class="page-link"
-                  href="#"
-                  (click)="
-                    $event.preventDefault(); cambiarPagina(paginaActual - 1)
-                  "
-                  >Anterior</a
-                >
-              </li>
-              <li class="page-item" *ngFor="let pagina of obtenerPaginas()">
-                <a
-                  class="page-link"
-                  href="#"
-                  [class.active]="paginaActual === pagina"
-                  (click)="$event.preventDefault(); cambiarPagina(pagina)"
-                >
-                  {{ pagina }}
-                </a>
-              </li>
-              <li
-                class="page-item"
-                [class.disabled]="paginaActual === totalPaginas"
-              >
-                <a
-                  class="page-link"
-                  href="#"
-                  (click)="
-                    $event.preventDefault(); cambiarPagina(paginaActual + 1)
-                  "
-                  >Siguiente</a
-                >
-              </li>
-            </ul>
-          </nav>
-          <div class="col-auto">
-            <label class="me-2">Registros por página:</label>
-            <select
-              class="form-select form-select-sm d-inline-block w-auto"
-              [(ngModel)]="registrosPorPagina"
-              (change)="cambiarLimite()"
-            >
-              <option [value]="1">1</option>
-              <option [value]="5">5</option>
-              <option [value]="10">10</option>
-              <option [value]="25">25</option>
-              <option [value]="50">50</option>
-              <option [value]="100">100</option>
-            </select>
-          </div>
-          <div class="col-md-12">
-            <span class="text-muted">
-              Página {{ paginaActual }} de {{ totalPaginas }} | Total:
-              {{ totalRegistros }} registros
-            </span>
-          </div>
+          <!-- Paginador unificado para carga masiva -->
+          <app-botones-paginacion 
+            *ngIf="paginationCarga"
+            [dataPagination]="paginationCarga"
+            (pageChanged)="onPageChanged($event)"
+          ></app-botones-paginacion>
         </div>
       </div>
     </div>

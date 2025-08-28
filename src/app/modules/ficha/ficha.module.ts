@@ -8,6 +8,7 @@ import { DynamicFiltersComponent } from './components/dynamic-filters/dynamic-fi
 import { MomentPipe } from 'src/app/pipes/moment.pipe';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { HttpClientModule } from '@angular/common/http';
+import { HelpersModule } from 'src/app/helpers/helpers.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     ReactiveFormsModule,
     NgxSpinnerModule,
-    HttpClientModule
+    HttpClientModule,
+    HelpersModule
   ]
 })
 export class FichaModule {}

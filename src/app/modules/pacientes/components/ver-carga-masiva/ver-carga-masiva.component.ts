@@ -5,7 +5,7 @@ import {
   IRegistroCarga
 } from '../../services/cargas/cargas.service';
 import { FormulariosService } from 'src/app/modules/formularios/services/formularios.service';
-import { IVersiones } from 'src/app/helpers/interface/interface';
+import { IVersiones, IPagination } from 'src/app/helpers/interface/interface';
 
 @Component({
   selector: 'app-ver-carga-masiva',
@@ -21,6 +21,9 @@ export class VerCargaMasivaComponent implements OnInit {
   public cargando: boolean = false;
   public versiones: IVersiones[] = [];
   public versionSeleccionada: string = '';
+
+  // Objeto de paginación unificado
+  public paginationCarga!: IPagination<IRegistroCarga>;
 
   // Campos a excluir de la tabla
   private camposExcluidos: string[] = ['id', 'ficha_id'];
@@ -58,6 +61,16 @@ export class VerCargaMasivaComponent implements OnInit {
           this.registros = response.data.rows;
           this.totalRegistros = response.data.count;
           this.totalPaginas = response.data.totalPages;
+          
+          // Actualizar objeto de paginación unificado
+          this.paginationCarga = {
+            data: this.registros,
+            totalItems: this.totalRegistros,
+            currentPage: this.paginaActual,
+            totalPages: this.totalPaginas,
+            itemsPerPage: this.registrosPorPagina
+          };
+          
           this.cargando = false;
         },
         error: error => {
@@ -111,6 +124,13 @@ export class VerCargaMasivaComponent implements OnInit {
 
   public cambiarLimite(): void {
     this.paginaActual = 1;
+    this.cargarRegistros();
+  }
+
+  // Método para manejar eventos de paginación unificada
+  public onPageChanged(event: { itemsPerPage: number; currentPage: number }): void {
+    this.paginaActual = event.currentPage;
+    this.registrosPorPagina = event.itemsPerPage;
     this.cargarRegistros();
   }
 }

@@ -21,7 +21,12 @@
         ></i>
       </button>
     </div>
+    <div class="dropdown">
+      <i class="bi bi-person-badge"></i>
+      <strong [class.d-none]="isSidebarCollapsed">{{ nombres }}</strong>
+    </div>
     <hr />
+
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
         <a
@@ -84,10 +89,6 @@
       </li>
     </ul>
     <hr />
-    <div class="dropdown" [title]="isSidebarCollapsed ? nombres : ''">
-      <i class="bi bi-person"></i>
-      <strong [class.d-none]="isSidebarCollapsed">{{ nombres }}</strong>
-    </div>
     <div class="dropdown pointer-clic" (click)="cerrarSesion()" [title]="isSidebarCollapsed ? 'Cerrar sesión' : ''">
       <i class="bi bi-person-fill-slash"></i>
       <strong [class.d-none]="isSidebarCollapsed">Cerrar sesi&oacute;n</strong>
